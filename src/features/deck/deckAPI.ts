@@ -1,14 +1,6 @@
 import StorageWrapper from '../../utils/StorageWrapper';
-import { DeckState } from './deckSlice';
 
-export async function load() {
-  const storage = new StorageWrapper();
-  const data = await storage.getItem('deck');
-
-  return { data };
-}
-
-export interface SaveDeckDO {
+export interface DeckDO {
   cards: {
     [key: string]: {
       id: string;
@@ -19,7 +11,14 @@ export interface SaveDeckDO {
   lastId: string;
 }
 
-export async function save(deck: SaveDeckDO) {
+export async function load(): Promise<{ data: DeckDO }> {
+  const storage = new StorageWrapper();
+  const data = await storage.getItem('deck') as DeckDO;
+
+  return { data };
+}
+
+export async function save(deck: DeckDO) {
   const storage = new StorageWrapper();
   const data = await storage.setItem('deck', deck);
 

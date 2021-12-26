@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 import logo from './logo.svg';
 import { useAppDispatch } from './app/hooks';
 import { Counter } from './features/counter/Counter';
-import { addCards, saveDeck } from './features/deck/deckSlice';
+import { addCards, loadDeck, saveDeck } from './features/deck/deckSlice';
 import './App.css';
 
 function App() {
@@ -15,7 +15,8 @@ function App() {
       { frontSide: 'finom, ízletes', backSide: 'delicious' },
     ]);
 
-    dispatch(action);
+    // dispatch(action);
+    dispatch(loadDeck());
   }, [dispatch]);
 
   const onSaveDeckClick = () => {

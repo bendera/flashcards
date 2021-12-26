@@ -1,7 +1,6 @@
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { RootState } from '../../app/store';
 import * as deckAPI from './deckAPI';
-import { SaveDeckDO } from './deckAPI';
 
 type AsyncStatus = 'idle' | 'loading' | 'failed';
 
@@ -41,14 +40,25 @@ export const saveDeck = createAsyncThunk(
   async (_, { getState }) => {
     const state = getState() as RootState;
     const { cards, lastId } = state.deck;
-    const data: SaveDeckDO = {
+    const data: deckAPI.DeckDO = {
       cards: cards.byId,
       lastId,
     };
 
     const res = await deckAPI.save(data);
     return res;
-  },
+  }
+);
+
+export const loadDeck = createAsyncThunk(
+  'deck/load',
+  async (_, { dispatch }) => {
+    const res = await deckAPI.load();
+
+    dispatch(replaceCards(res.data));
+
+    return res;
+  }
 );
 
 export const deckSlice = createSlice({
@@ -71,6 +81,17 @@ export const deckSlice = createSlice({
 
       state.lastId = Number(lastId + action.payload.length).toString(26);
     },
+    replaceCards(state, action: PayloadAction<deckAPI.DeckDO>) {
+      const { lastId, cards } = action.payload;
+      const keys = Object.keys(cards);
+
+      state.lastId = lastId;
+      state.cards.allIds = keys;
+
+      keys.forEach((k) => {
+        state.cards.byId[k] = cards[k];
+      });
+    },
   },
   extraReducers(builder) {
     builder
@@ -82,10 +103,19 @@ export const deckSlice = createSlice({
       })
       .addCase(saveDeck.rejected, (state) => {
         state.saveStatus = 'failed';
+      })
+      .addCase(loadDeck.pending, (state) => {
+        state.loadStatus = 'loading';
+      })
+      .addCase(loadDeck.fulfilled, (state) => {
+        state.loadStatus = 'idle';
+      })
+      .addCase(loadDeck.rejected, (state) => {
+        state.loadStatus = 'failed';
       });
   },
 });
 
-export const { addCards } = deckSlice.actions;
+export const { addCards, replaceCards } = deckSlice.actions;
 
 export default deckSlice.reducer;
