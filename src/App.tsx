@@ -1,9 +1,23 @@
-import React from 'react';
+import { useEffect } from 'react';
 import logo from './logo.svg';
+import { useAppDispatch } from './app/hooks';
 import { Counter } from './features/counter/Counter';
+import { addCards } from './features/deck/deckSlice';
 import './App.css';
 
 function App() {
+  const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    const action = addCards([
+      { frontSide: 'esernyő', backSide: 'umbrella' },
+      { frontSide: 'osztályterem', backSide: 'classroom' },
+      { frontSide: 'finom, ízletes', backSide: 'delicious' },
+    ]);
+
+    dispatch(action);
+  }, [dispatch]);
+
   return (
     <div className="App">
       <header className="App-header">
