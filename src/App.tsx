@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 import logo from './logo.svg';
 import { useAppDispatch } from './app/hooks';
 import { Counter } from './features/counter/Counter';
-import { addCards } from './features/deck/deckSlice';
+import { addCards, saveDeck } from './features/deck/deckSlice';
 import './App.css';
 
 function App() {
@@ -18,9 +18,16 @@ function App() {
     dispatch(action);
   }, [dispatch]);
 
+  const onSaveDeckClick = () => {
+    dispatch(saveDeck());
+  };
+
   return (
     <div className="App">
       <header className="App-header">
+        <button type="button" onClick={onSaveDeckClick}>
+          Save deck
+        </button>
         <img src={logo} className="App-logo" alt="logo" />
         <Counter />
         <p>

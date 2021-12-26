@@ -1,6 +1,9 @@
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { stat } from 'fs';
-import { RootState, AppThunk } from '../../app/store';
+import { RootState } from '../../app/store';
+import * as deckAPI from './deckAPI';
+import { SaveDeckDO } from './deckAPI';
+
+type AsyncStatus = 'idle' | 'loading' | 'failed';
 
 export interface CardDO {
   frontSide: string;
@@ -19,7 +22,8 @@ export interface DeckState {
     allIds: string[];
   };
   lastId: string;
-  status: 'idle' | 'loading' | 'failed';
+  saveStatus: AsyncStatus;
+  loadStatus: AsyncStatus;
 }
 
 const initialState: DeckState = {
@@ -28,8 +32,24 @@ const initialState: DeckState = {
     allIds: [],
   },
   lastId: '0',
-  status: 'idle',
+  saveStatus: 'idle',
+  loadStatus: 'idle',
 };
+
+export const saveDeck = createAsyncThunk(
+  'deck/save',
+  async (_, { getState }) => {
+    const state = getState() as RootState;
+    const { cards, lastId } = state.deck;
+    const data: SaveDeckDO = {
+      cards: cards.byId,
+      lastId,
+    };
+
+    const res = await deckAPI.save(data);
+    return res;
+  },
+);
 
 export const deckSlice = createSlice({
   name: 'deck',
@@ -51,6 +71,18 @@ export const deckSlice = createSlice({
 
       state.lastId = Number(lastId + action.payload.length).toString(26);
     },
+  },
+  extraReducers(builder) {
+    builder
+      .addCase(saveDeck.pending, (state) => {
+        state.saveStatus = 'loading';
+      })
+      .addCase(saveDeck.fulfilled, (state) => {
+        state.saveStatus = 'idle';
+      })
+      .addCase(saveDeck.rejected, (state) => {
+        state.saveStatus = 'failed';
+      });
   },
 });
 
