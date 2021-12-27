@@ -33,7 +33,7 @@ function App() {
     setShowSettings(false);
   };
 
-  const classes = cn(styles.App, 'bp3-dark');
+  const classes = cn(styles.App);
 
   return (
     <div className={classes}>

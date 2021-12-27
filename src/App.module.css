@@ -9,3 +9,7 @@
   right: 20px;
   top: 20px;
 }
+
+.menuButton svg[data-icon="menu"] {
+  fill: var(--color-text-default);
+}

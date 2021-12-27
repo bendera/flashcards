@@ -7,3 +7,11 @@ body {
   height: 100%;
   margin: 0;
 }
+
+:root {
+  --color-text-default: #182026;
+}
+
+.bp3-dark {
+  --color-text-default: #f5f8fa;
+}
