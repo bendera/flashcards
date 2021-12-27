@@ -1,8 +1,9 @@
 import { useEffect, useState } from 'react';
 import { Button, Drawer, DrawerSize } from '@blueprintjs/core';
+import cn from 'classnames';
 import { useAppDispatch } from './app/hooks';
 import { addCards, loadDeck, saveDeck } from './features/deck/deckSlice';
-import Settings from './components/Settings';
+import Settings from './components/Settings/Settings';
 import styles from './App.module.css';
 
 function App() {
@@ -32,8 +33,10 @@ function App() {
     setShowSettings(false);
   };
 
+  const classes = cn(styles.App, 'bp3-dark');
+
   return (
-    <div className={styles.App}>
+    <div className={classes}>
       <header className="App-header">
         <button type="button" onClick={onSaveDeckClick}>
           Save deck

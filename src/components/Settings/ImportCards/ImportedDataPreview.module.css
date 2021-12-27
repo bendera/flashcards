@@ -1,0 +1,36 @@
+.wrapper {
+  height: 210px;
+  margin-bottom: 15px;
+  overflow: hidden;
+}
+
+.tableWrapper {
+  position: relative;
+}
+
+.tableWrapper:after {
+  background: linear-gradient(#ffffff00, #ffffffff);
+  bottom: 0;
+  content: '';
+  display: block;
+  height: 100px;
+  left: 0;
+  position: absolute;
+  width: 100%;
+}
+
+.table {
+  width: 100%;
+}
+
+.table caption {
+  margin-bottom: 10px;
+  text-align: left;
+}
+
+.empty {
+  align-items: center;
+  display: flex;
+  height: 100%;
+  justify-content: center;
+}
