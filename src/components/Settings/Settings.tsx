@@ -1,12 +1,19 @@
-import { FC } from 'react';
-import { Classes } from '@blueprintjs/core';
+import { FC, createContext, useState } from 'react';
+import { Classes, Tab, Tabs } from '@blueprintjs/core';
 import ImportCards from './ImportCards/ImportCards';
+import EditCards from './EditCards/EditCards';
 
 const Settings: FC = () => {
   return (
     <div className={Classes.DRAWER_BODY}>
       <div className={Classes.DIALOG_BODY}>
-        <ImportCards />
+        <Tabs
+          id="settingsTab"
+          renderActiveTabPanelOnly
+        >
+          <Tab id="import" title="Import" panel={<ImportCards />} />
+          <Tab id="edit" title="Edit" panel={<EditCards />} />
+        </Tabs>
       </div>
     </div>
   );

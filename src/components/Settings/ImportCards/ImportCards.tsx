@@ -1,5 +1,12 @@
-import { FC, FormEvent, useEffect, useState } from 'react';
-import { Button, FormGroup, Radio, RadioGroup, TextArea } from '@blueprintjs/core';
+import { FC, FormEvent, useContext, useEffect, useState } from 'react';
+import {
+  Button,
+  Checkbox,
+  FormGroup,
+  Radio,
+  RadioGroup,
+  TextArea,
+} from '@blueprintjs/core';
 import { IconNames } from '@blueprintjs/icons';
 import { useDebounce } from 'rooks';
 import { parseCsv } from 'utils/csv';
@@ -7,7 +14,11 @@ import { CardDO } from 'features/deck/deckSlice';
 import styles from './ImportCards.module.css';
 import ImportedDataPreview from './ImportedDataPreview';
 
-const ImportCards: FC = () => {
+interface ImportCardsProps {
+  onSave?: () => void;
+}
+
+const ImportCards: FC<ImportCardsProps> = ({ onSave }) => {
   const [csvData, setCsvData] = useState('');
   const setCsvDataDebounced = useDebounce(setCsvData, 500);
   const [columnSeparator, setColumnSeparator] = useState('\t');
@@ -26,6 +37,10 @@ const ImportCards: FC = () => {
 
   const handleRowSeparatorChange = (event: FormEvent<HTMLInputElement>) => {
     setRowSeparator((event.target as HTMLInputElement).value);
+  };
+
+  const handleSaveClick = () => {
+
   };
 
   useEffect(() => {
@@ -70,7 +85,10 @@ const ImportCards: FC = () => {
         </RadioGroup>
       </div>
       <ImportedDataPreview data={importedData} />
-      <Button icon={IconNames.FLOPPY_DISK}>Save &amp; Edit</Button>
+      <Button icon={IconNames.FLOPPY_DISK} onClick={handleSaveClick}>
+        Save &amp; Edit
+      </Button>
+      <Checkbox label="Overwrite existing items" />
     </div>
   );
 };
