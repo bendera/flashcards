@@ -1,12 +1,13 @@
-import { useEffect } from 'react';
-import logo from './logo.svg';
+import { useEffect, useState } from 'react';
+import { Button, Drawer, DrawerSize } from '@blueprintjs/core';
 import { useAppDispatch } from './app/hooks';
-import { Counter } from './features/counter/Counter';
 import { addCards, loadDeck, saveDeck } from './features/deck/deckSlice';
-import './App.css';
+import Settings from './components/Settings';
+import styles from './App.module.css';
 
 function App() {
   const dispatch = useAppDispatch();
+  const [showSettings, setShowSettings] = useState(false);
 
   useEffect(() => {
     const action = addCards([
@@ -23,55 +24,34 @@ function App() {
     dispatch(saveDeck());
   };
 
+  const onOpenOverlayClick = () => {
+    setShowSettings(true);
+  };
+
+  const onModalClose = () => {
+    setShowSettings(false);
+  };
+
   return (
-    <div className="App">
+    <div className={styles.App}>
       <header className="App-header">
         <button type="button" onClick={onSaveDeckClick}>
           Save deck
         </button>
-        <img src={logo} className="App-logo" alt="logo" />
-        <Counter />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <span>
-          <span>Learn </span>
-          <a
-            className="App-link"
-            href="https://reactjs.org/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            React
-          </a>
-          <span>, </span>
-          <a
-            className="App-link"
-            href="https://redux.js.org/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Redux
-          </a>
-          <span>, </span>
-          <a
-            className="App-link"
-            href="https://redux-toolkit.js.org/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Redux Toolkit
-          </a>
-          ,<span> and </span>
-          <a
-            className="App-link"
-            href="https://react-redux.js.org/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            React Redux
-          </a>
-        </span>
+        <Button
+          icon="menu"
+          onClick={onOpenOverlayClick}
+          minimal
+          className={styles.menuButton}
+        />
+        <Drawer
+          isOpen={showSettings}
+          onClose={onModalClose}
+          size={DrawerSize.LARGE}
+          title="Settings"
+        >
+          <Settings />
+        </Drawer>
       </header>
     </div>
   );
