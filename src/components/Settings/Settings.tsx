@@ -1,7 +1,7 @@
 import { FC } from 'react';
 import { Classes, Tab, Tabs } from '@blueprintjs/core';
-import ImportCards from './ImportCards/ImportCards';
 import EditCards from './EditCards/EditCards';
+import EditDecks from './EditDecks/EditDecks';
 
 const Settings: FC = () => {
   return (
@@ -11,7 +11,7 @@ const Settings: FC = () => {
           id="settingsTab"
           renderActiveTabPanelOnly
         >
-          <Tab id="import" title="Edit decks" panel={<ImportCards />} />
+          <Tab id="import" title="Edit decks" panel={<EditDecks />} />
           <Tab id="edit" title="Edit" panel={<EditCards />} />
         </Tabs>
       </div>

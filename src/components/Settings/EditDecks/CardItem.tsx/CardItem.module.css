@@ -1,0 +1,19 @@
+.wrapper {
+  align-items: flex-end;
+  display: flex;
+  margin-bottom: 10px;
+  width: 100%;
+}
+
+.wrapper .formGroup {
+  margin-bottom: 0;
+  width: 100%;
+}
+
+.swapButton {
+  margin: 0 4px;
+}
+
+.deleteButton {
+  margin-left: 4px;
+}
