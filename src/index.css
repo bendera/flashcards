@@ -1,6 +1,7 @@
 @import "~normalize.css";
 @import "~@blueprintjs/core/lib/css/blueprint.css";
 @import "~@blueprintjs/icons/lib/css/blueprint-icons.css";
+@import "~@blueprintjs/popover2/lib/css/blueprint-popover2.css";
 
 body {
   background: linear-gradient(#e7e7e7, #fcfcfc);
@@ -14,4 +15,12 @@ body {
 
 .bp3-dark {
   --color-text-default: #f5f8fa;
+}
+
+.bp3-select-popover .bp3-popover-content {
+    padding: 5px;
+}
+
+.bp3-select-popover .bp3-menu {
+  padding: 5px 0 0;
 }
