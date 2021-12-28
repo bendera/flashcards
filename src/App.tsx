@@ -6,6 +6,9 @@ import { addCards, loadDeck, saveDeck } from './features/deck/deckSlice';
 import Settings from './components/Settings/Settings';
 import styles from './App.module.css';
 
+import FlashcardsAPI from 'utils/api';
+import { nanoid } from 'nanoid';
+
 function App() {
   const dispatch = useAppDispatch();
   const [showSettings, setShowSettings] = useState(false);
@@ -34,6 +37,39 @@ function App() {
   };
 
   const classes = cn(styles.App);
+
+  useEffect(() => {
+    async function demo() {
+      const api = new FlashcardsAPI();
+
+      /* await api.addCard({
+        frontSide: 'Lorem',
+        backSide: 'Ipsum',
+      });
+      await api.addCard({
+        frontSide: 'Dolor',
+        backSide: 'Sit',
+      }); */
+      await api.addCards([
+        {
+          id: nanoid(),
+          frontSide: 'Lorem',
+          backSide: new Date().toString(),
+        },
+        {
+          id: nanoid(),
+          frontSide: 'Ipsum',
+          backSide: new Date().toString(),
+        },
+      ]);
+      const card = await api.getCards([
+        'TkTIXkXt4mMbLFi11v4Je',
+        'c9MUnyGTTaDn46MDoNCch',
+      ]);
+    }
+
+    demo();
+  }, []);
 
   return (
     <div className={classes}>
