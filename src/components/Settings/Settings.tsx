@@ -1,4 +1,4 @@
-import { FC, createContext, useState } from 'react';
+import { FC } from 'react';
 import { Classes, Tab, Tabs } from '@blueprintjs/core';
 import ImportCards from './ImportCards/ImportCards';
 import EditCards from './EditCards/EditCards';
@@ -11,7 +11,7 @@ const Settings: FC = () => {
           id="settingsTab"
           renderActiveTabPanelOnly
         >
-          <Tab id="import" title="Import" panel={<ImportCards />} />
+          <Tab id="import" title="Edit decks" panel={<ImportCards />} />
           <Tab id="edit" title="Edit" panel={<EditCards />} />
         </Tabs>
       </div>

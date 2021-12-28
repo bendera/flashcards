@@ -1,7 +1,7 @@
-import { FC, FormEvent, useContext, useEffect, useState } from 'react';
+import { FC, FormEvent, useEffect, useState } from 'react';
 import {
   Button,
-  Checkbox,
+  Collapse,
   FormGroup,
   Radio,
   RadioGroup,
@@ -19,6 +19,7 @@ interface ImportCardsProps {
 }
 
 const ImportCards: FC<ImportCardsProps> = ({ onSave }) => {
+  const [isOpen, setIsOpen] = useState(false);
   const [csvData, setCsvData] = useState('');
   const setCsvDataDebounced = useDebounce(setCsvData, 500);
   const [columnSeparator, setColumnSeparator] = useState('\t');
@@ -39,9 +40,11 @@ const ImportCards: FC<ImportCardsProps> = ({ onSave }) => {
     setRowSeparator((event.target as HTMLInputElement).value);
   };
 
-  const handleSaveClick = () => {
-
+  const handleToggleClick = () => {
+    setIsOpen(!isOpen);
   };
+
+  const handleSaveClick = () => {};
 
   useEffect(() => {
     console.log(csvData);
@@ -50,45 +53,51 @@ const ImportCards: FC<ImportCardsProps> = ({ onSave }) => {
 
   return (
     <div>
-      <h2 className="bp3-heading">Import cards</h2>
-      <FormGroup labelFor="import-data" label="Imported data">
-        <TextArea
-          className={styles.textarea}
-          fill
-          id="import-data"
-          onChange={handleCsvDataChange}
-          rows={10}
-        />
-      </FormGroup>
-      <div className={styles.separatorOptions}>
-        <RadioGroup
-          className={styles.radioGroup}
-          inline
-          label="Column separator"
-          name="column-separator"
-          onChange={handleColumnSeparatorChange}
-          selectedValue={columnSeparator}
-        >
-          <Radio label="Tab" value={'\t'} />
-          <Radio label="Comma" value="," />
-        </RadioGroup>
-        <RadioGroup
-          className={styles.radioGroup}
-          inline
-          label="Row separator"
-          name="row-separator"
-          onChange={handleRowSeparatorChange}
-          selectedValue={rowSeparator}
-        >
-          <Radio label="Newline" value={'\n'} />
-          <Radio label="Semicolon" value=";" />
-        </RadioGroup>
-      </div>
-      <ImportedDataPreview data={importedData} />
-      <Button icon={IconNames.FLOPPY_DISK} onClick={handleSaveClick}>
-        Save &amp; Edit
+      <Button
+        icon={isOpen ? IconNames.DELETE : IconNames.IMPORT}
+        onClick={handleToggleClick}
+      >
+        {isOpen ? 'Cancel import' : 'Import'}
       </Button>
-      <Checkbox label="Overwrite existing items" />
+      <Collapse isOpen={isOpen}>
+        <div className={styles.form}>
+          <FormGroup labelFor="import-data" label="Imported data">
+            <TextArea
+              className={styles.textarea}
+              fill
+              id="import-data"
+              onChange={handleCsvDataChange}
+              rows={10}
+            />
+          </FormGroup>
+          <div className={styles.separatorOptions}>
+            <RadioGroup
+              className={styles.radioGroup}
+              inline
+              label="Column separator"
+              name="column-separator"
+              onChange={handleColumnSeparatorChange}
+              selectedValue={columnSeparator}
+            >
+              <Radio label="Tab" value={'\t'} />
+              <Radio label="Comma" value="," />
+            </RadioGroup>
+            <RadioGroup
+              className={styles.radioGroup}
+              inline
+              label="Row separator"
+              name="row-separator"
+              onChange={handleRowSeparatorChange}
+              selectedValue={rowSeparator}
+            >
+              <Radio label="Newline" value={'\n'} />
+              <Radio label="Semicolon" value=";" />
+            </RadioGroup>
+          </div>
+          <ImportedDataPreview data={importedData} />
+          <Button onClick={handleSaveClick}>Use items</Button>
+        </div>
+      </Collapse>
     </div>
   );
 };
