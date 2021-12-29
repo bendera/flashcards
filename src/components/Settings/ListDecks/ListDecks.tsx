@@ -17,22 +17,35 @@ interface DeckListItem {
 
 interface ListDecksProps {
   onEdit: (item: DeckCatalogItem) => void;
+  onDelete: (item: DeckCatalogItem) => void;
+  onCreate: () => void;
 }
 
-const ListDecks: FC<ListDecksProps> = ({ onEdit }) => {
+const ListDecks: FC<ListDecksProps> = ({ onEdit, onDelete, onCreate }) => {
   const dispatch = useAppDispatch();
   const decks = useAppSelector(selectDeckCatalogItems);
-  const [selectedDeck, setSelectedDeck] = useState('MWUtqgKzbKYqK9Sh3CqP9');
+
+  const deckById = (id: string) => decks.find((d) => d.id === id);
 
   const handleEdit = (id: string) => {
-    const deckToEdit = decks.find((d) => d.id === id);
+    const deckToEdit = deckById(id);
 
     if (deckToEdit) {
       onEdit(deckToEdit);
     }
   };
 
-  const handleDelete = (id: string) => {};
+  const handleDelete = (id: string) => {
+    const deckToEdit = deckById(id);
+
+    if (deckToEdit) {
+      onDelete(deckToEdit);
+    }
+  };
+
+  const handleAddNew = () => {
+    onCreate();
+  };
 
   useEffect(() => {
     dispatch(fetchCatalog());
@@ -50,7 +63,12 @@ const ListDecks: FC<ListDecksProps> = ({ onEdit }) => {
         />
       ))}
       <Card className={styles.addNew} elevation={Elevation.TWO}>
-        <Button icon={IconNames.ADD} intent={Intent.PRIMARY} large>
+        <Button
+          icon={IconNames.ADD}
+          intent={Intent.PRIMARY}
+          large
+          onClick={handleAddNew}
+        >
           Add new
         </Button>
       </Card>

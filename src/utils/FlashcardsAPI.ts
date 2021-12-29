@@ -126,6 +126,15 @@ class FlashcardsAPI {
       data,
     };
   }
+
+  public async deleteDeckCatalogItem(id: string) {
+    const db = this.getDB();
+    const data = await (await db).delete('deckCatalog', id);
+
+    return {
+      data
+    }
+  }
 }
 
 export default FlashcardsAPI;
