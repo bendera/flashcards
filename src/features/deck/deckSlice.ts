@@ -3,15 +3,6 @@ import FlashcardsAPI, { DeckItem } from 'utils/FlashcardsAPI';
 
 type AsyncStatus = 'idle' | 'loading' | 'failed';
 
-export interface CardDO {
-  frontSide: string;
-  backSide: string;
-}
-
-export interface Card extends CardDO {
-  id: string;
-}
-
 export interface DeckState {
   data: DeckItem;
   saveStatus: AsyncStatus;

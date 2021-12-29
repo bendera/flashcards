@@ -1,10 +1,3 @@
-import { CardDO } from 'features/deck/deckSlice';
-
-export interface Term {
-  term: string;
-  definition: string;
-}
-
 enum SeparatorCharacters {
   tab = '\t',
   comma = ',',
@@ -50,7 +43,7 @@ export const parseCsv = (
 };
 
 export const generateCsv = (
-  data: CardDO[],
+  data: ParsedCsvRow[],
   options?: CsvParserOptions
 ): string => {
   const defaultOptions = {
