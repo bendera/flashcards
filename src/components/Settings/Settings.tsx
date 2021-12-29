@@ -32,7 +32,7 @@ const Settings: FC = () => {
   const handleCreate = () => {
     const item: DeckCatalogItem = {
       id: nanoid(),
-      title: 'Untitled deck',
+      title: '',
       active: 0,
     };
 

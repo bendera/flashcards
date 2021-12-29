@@ -35,23 +35,35 @@ export const fetchCatalog = createAsyncThunk(
   }
 );
 
+export const createCatalogItem = createAsyncThunk(
+  'deckCatalog/create',
+  async (item: DeckCatalogItem, { dispatch, getState }) => {
+    const api = new FlashcardsAPI();
+    const res = await api.addDeckCatalogItem(item);
+
+    return res.data;
+  }
+);
+
 export const updateCatalogItem = createAsyncThunk(
   'deckCatalog/update',
   async (item: DeckCatalogItem, { dispatch, getState }) => {
     const api = new FlashcardsAPI();
-    const res = api.updateDeckCatalogItem(item);
+    const res = await api.updateDeckCatalogItem(item);
+
+    return res.data;
   }
 );
 
 export const deleteCatalogItem = createAsyncThunk(
   'deckCatalog/delete',
-  async(id: string, {dispatch}) => {
+  async (id: string, { dispatch }) => {
     const api = new FlashcardsAPI();
     const res = await api.deleteDeckCatalogItem(id);
 
     return res.data;
   }
-)
+);
 
 export const deckCatalogSlice = createSlice({
   name: 'deckCatalog',
