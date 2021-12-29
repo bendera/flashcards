@@ -1,6 +1,7 @@
 import { FC, FormEvent, useEffect, useState } from 'react';
 import {
   Button,
+  Card,
   Collapse,
   FormGroup,
   Radio,
@@ -73,7 +74,7 @@ const ImportCards: FC<ImportCardsProps> = ({ onImport: onSave = noop }) => {
   }, [csvDataDelayed]);
 
   return (
-    <div>
+    <Card>
       <Button
         icon={isOpen ? IconNames.DELETE : IconNames.IMPORT}
         onClick={handleToggleClick}
@@ -82,7 +83,11 @@ const ImportCards: FC<ImportCardsProps> = ({ onImport: onSave = noop }) => {
       </Button>
       <Collapse isOpen={isOpen}>
         <div className={styles.form}>
-          <FormGroup labelFor="import-data" label="Imported data">
+          <FormGroup
+            labelFor="import-data"
+            label="Data to import"
+            helperText="Copy and paste tabular data here from your favorite spreadsheet application (Excel, Google Spreadsheets, OpenOffice Calc, etc.)"
+          >
             <TextArea
               className={styles.textarea}
               fill
@@ -125,7 +130,7 @@ const ImportCards: FC<ImportCardsProps> = ({ onImport: onSave = noop }) => {
           </Button>
         </div>
       </Collapse>
-    </div>
+    </Card>
   );
 };
 
