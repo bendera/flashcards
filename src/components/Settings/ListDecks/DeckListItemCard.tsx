@@ -1,23 +1,30 @@
+import { FC } from 'react';
 import { Button, Card, Elevation, Intent, Tag } from '@blueprintjs/core';
 import { IconNames } from '@blueprintjs/icons';
-import { FC } from 'react';
+import noop from 'utils/noop';
 import styles from './DeckListItemCard.module.css';
 
 interface DeckListItemCardProps {
+  active?: boolean;
   id: string;
+  onActive?: (id: string) => void;
+  onDelete?: (id: string) => void;
+  onEdit?: (id: string) => void;
   title: string;
-  onEdit: (id: string) => void;
-  onDelete: (id: string) => void;
-  selected?: boolean;
 }
 
 const DeckListItemCard: FC<DeckListItemCardProps> = ({
+  active,
   id,
+  onActive = noop,
+  onDelete = noop,
+  onEdit = noop,
   title,
-  onEdit,
-  onDelete,
-  selected,
 }) => {
+  const handleCardClick = () => {
+    onActive(id);
+  };
+
   return (
     <div className={styles.wrapper}>
       <Card
@@ -25,8 +32,9 @@ const DeckListItemCard: FC<DeckListItemCardProps> = ({
         elevation={Elevation.TWO}
         interactive
         key={id}
+        onClick={handleCardClick}
       >
-        {selected && (
+        {active && (
           <Tag intent={Intent.SUCCESS} className={styles.tag}>
             Selected
           </Tag>

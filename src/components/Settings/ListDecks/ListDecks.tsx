@@ -6,6 +6,7 @@ import { DeckCatalogItem } from 'utils/FlashcardsAPI';
 import {
   fetchCatalog,
   selectDeckCatalogItems,
+  setActiveCatalog,
 } from 'features/deckCatalog/deckCatalogSlice';
 import DeckListItemCard from './DeckListItemCard';
 import styles from './ListDecks.module.css';
@@ -43,6 +44,11 @@ const ListDecks: FC<ListDecksProps> = ({ onEdit, onDelete, onCreate }) => {
     }
   };
 
+  const handleActive = async (id: string) => {
+    await dispatch(setActiveCatalog(id));
+    dispatch(fetchCatalog());
+  };
+
   const handleAddNew = () => {
     onCreate();
   };
@@ -57,9 +63,10 @@ const ListDecks: FC<ListDecksProps> = ({ onEdit, onDelete, onCreate }) => {
         <DeckListItemCard
           id={id}
           title={title}
+          onActive={handleActive}
           onEdit={handleEdit}
           onDelete={handleDelete}
-          selected={active === 1}
+          active={active === 1}
         />
       ))}
       <Card className={styles.addNew} elevation={Elevation.TWO}>

@@ -59,9 +59,11 @@ class FlashcardsAPI {
           keyPath: 'id',
         });
 
-        db.createObjectStore('deckCatalog', {
+        const deckCatalogStore = db.createObjectStore('deckCatalog', {
           keyPath: 'id',
-        }).createIndex('active', 'active');
+        })
+        
+        deckCatalogStore.createIndex('active', 'active');
       },
     });
 
@@ -132,6 +134,31 @@ class FlashcardsAPI {
   public async deleteDeckCatalogItem(id: string) {
     const db = this.getDB();
     const data = await (await db).delete('deckCatalog', id);
+
+    return {
+      data,
+    };
+  }
+
+  public async setActiveDeckCatalog(id: string) {
+    const db = this.getDB();
+    const prevActive = await (
+      await db
+    ).getFromIndex('deckCatalog', 'active', 1);
+
+    if (prevActive) {
+      await (await db).put('deckCatalog', { ...prevActive, active: 0 });
+    }
+
+    const nextActiveItem = await (await db).get('deckCatalog', id);
+
+    let data;
+
+    if (nextActiveItem) {
+      data = await (
+        await db
+      ).put('deckCatalog', { ...nextActiveItem, active: 1 });
+    }
 
     return {
       data,

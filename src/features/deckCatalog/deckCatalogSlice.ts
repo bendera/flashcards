@@ -65,6 +65,16 @@ export const deleteCatalogItem = createAsyncThunk(
   }
 );
 
+export const setActiveCatalog = createAsyncThunk(
+  'deckCatalog/setActive',
+  async (id: string) => {
+    const api = new FlashcardsAPI();
+    const res = await api.setActiveDeckCatalog(id);
+
+    return res.data;
+  }
+)
+
 export const deckCatalogSlice = createSlice({
   name: 'deckCatalog',
   initialState,
