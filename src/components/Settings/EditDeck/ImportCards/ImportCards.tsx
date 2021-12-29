@@ -9,13 +9,14 @@ import {
 } from '@blueprintjs/core';
 import { IconNames } from '@blueprintjs/icons';
 import { useDebounce } from 'rooks';
+import { nanoid } from 'nanoid';
+
+import { FlashCard } from 'types';
 import { parseCsv } from 'utils/csv';
 import noop from 'utils/noop';
-import { CardDO } from 'features/deck/deckSlice';
-import styles from './ImportCards.module.css';
+
 import ImportedDataPreview from './ImportedDataPreview';
-import { FlashCard } from 'types';
-import { nanoid } from 'nanoid';
+import styles from './ImportCards.module.css';
 
 interface ImportCardsProps {
   onImport?: (cards: FlashCard[]) => void;
@@ -25,7 +26,6 @@ const ImportCards: FC<ImportCardsProps> = ({ onImport: onSave = noop }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [csvData, setCsvData] = useState('');
   const [csvDataDelayed, setCsvDataDelayed] = useState('');
-  const [cards, setCards] = useState<FlashCard[]>([]);
   const [importedCards, setImportedCards] = useState<FlashCard[]>([]);
   const setCsvDataDebounced = useDebounce(setCsvDataDelayed, 500);
   const [columnSeparator, setColumnSeparator] = useState('\t');
@@ -40,7 +40,6 @@ const ImportCards: FC<ImportCardsProps> = ({ onImport: onSave = noop }) => {
   };
 
   const handleColumnSeparatorChange = (event: FormEvent<HTMLInputElement>) => {
-    console.log(event);
     setColumnSeparator((event.target as HTMLInputElement).value);
   };
 
@@ -55,6 +54,9 @@ const ImportCards: FC<ImportCardsProps> = ({ onImport: onSave = noop }) => {
   const handleUseItemsClick = () => {
     if (importedCards.length > 0) {
       onSave(importedCards);
+      setCsvData('');
+      setCsvDataDelayed('');
+      setIsOpen(false);
     }
   };
 
