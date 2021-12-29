@@ -1,6 +1,5 @@
-import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { RootState } from '../../app/store';
-import * as deckAPI from './deckAPI';
+import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+import FlashcardsAPI, { DeckItem } from 'utils/FlashcardsAPI';
 
 type AsyncStatus = 'idle' | 'loading' | 'failed';
 
@@ -14,108 +13,51 @@ export interface Card extends CardDO {
 }
 
 export interface DeckState {
-  cards: {
-    byId: {
-      [key: string]: Card;
-    };
-    allIds: string[];
-  };
-  lastId: string;
+  data: DeckItem;
   saveStatus: AsyncStatus;
   loadStatus: AsyncStatus;
 }
 
 const initialState: DeckState = {
-  cards: {
-    byId: {},
-    allIds: [],
+  data: {
+    cards: [],
+    cardsByBoxes: {},
+    drawCounter: 0,
+    id: '',
+    sessionCounter: 0,
+    title: '',
   },
-  lastId: '0',
   saveStatus: 'idle',
   loadStatus: 'idle',
 };
 
-export const saveDeck = createAsyncThunk(
-  'deck/save',
-  async (_, { getState }) => {
-    const state = getState() as RootState;
-    const { cards, lastId } = state.deck;
-    const data: deckAPI.DeckDO = {
-      cards: cards.byId,
-      lastId,
-    };
+export const fetchActiveDeck = createAsyncThunk('deck/load', async () => {
+  const api = new FlashcardsAPI();
+  const res = await api.getActiveDeck();
 
-    const res = await deckAPI.save(data);
-    return res;
-  }
-);
-
-export const loadDeck = createAsyncThunk(
-  'deck/load',
-  async (_, { dispatch }) => {
-    const res = await deckAPI.load();
-
-    dispatch(replaceCards(res.data));
-
-    return res;
-  }
-);
+  return res.data;
+});
 
 export const deckSlice = createSlice({
   name: 'deck',
   initialState,
-  reducers: {
-    addCards(state, action: PayloadAction<CardDO[]>) {
-      const lastId = parseInt(state.lastId, 26);
-
-      action.payload.forEach(({ frontSide, backSide }, i) => {
-        const newId = Number(lastId + i + 1).toString(26);
-
-        state.cards.byId[newId] = {
-          id: newId,
-          frontSide,
-          backSide,
-        };
-        state.cards.allIds.push(newId);
-      });
-
-      state.lastId = Number(lastId + action.payload.length).toString(26);
-    },
-    replaceCards(state, action: PayloadAction<deckAPI.DeckDO>) {
-      const { lastId, cards } = action.payload;
-      const keys = Object.keys(cards);
-
-      state.lastId = lastId;
-      state.cards.allIds = keys;
-
-      keys.forEach((k) => {
-        state.cards.byId[k] = cards[k];
-      });
-    },
-  },
+  reducers: {},
   extraReducers(builder) {
     builder
-      .addCase(saveDeck.pending, (state) => {
-        state.saveStatus = 'loading';
-      })
-      .addCase(saveDeck.fulfilled, (state) => {
-        state.saveStatus = 'idle';
-      })
-      .addCase(saveDeck.rejected, (state) => {
-        state.saveStatus = 'failed';
-      })
-      .addCase(loadDeck.pending, (state) => {
+      .addCase(fetchActiveDeck.pending, (state) => {
         state.loadStatus = 'loading';
       })
-      .addCase(loadDeck.fulfilled, (state) => {
+      .addCase(fetchActiveDeck.fulfilled, (state, action) => {
         state.loadStatus = 'idle';
+
+        if (action.payload) {
+          state.data = action.payload;
+        }
       })
-      .addCase(loadDeck.rejected, (state) => {
+      .addCase(fetchActiveDeck.rejected, (state) => {
         state.loadStatus = 'failed';
       });
   },
 });
-
-export const { addCards, replaceCards } = deckSlice.actions;
 
 export default deckSlice.reducer;

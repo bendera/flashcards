@@ -10,6 +10,7 @@ import {
 } from 'features/deckCatalog/deckCatalogSlice';
 import DeckListItemCard from './DeckListItemCard';
 import styles from './ListDecks.module.css';
+import { fetchActiveDeck } from 'features/deck/deckSlice';
 
 interface DeckListItem {
   id: string;
@@ -46,7 +47,8 @@ const ListDecks: FC<ListDecksProps> = ({ onEdit, onDelete, onCreate }) => {
 
   const handleActive = async (id: string) => {
     await dispatch(setActiveCatalog(id));
-    dispatch(fetchCatalog());
+    await dispatch(fetchCatalog());
+    await dispatch(fetchActiveDeck())
   };
 
   const handleAddNew = () => {

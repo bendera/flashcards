@@ -61,8 +61,8 @@ class FlashcardsAPI {
 
         const deckCatalogStore = db.createObjectStore('deckCatalog', {
           keyPath: 'id',
-        })
-        
+        });
+
         deckCatalogStore.createIndex('active', 'active');
       },
     });
@@ -186,6 +186,23 @@ class FlashcardsAPI {
   public async getDeck(id: string) {
     const db = this.getDB();
     const data = await (await db).get('decks', id);
+
+    return {
+      data,
+    };
+  }
+
+  public async getActiveDeck() {
+    const db = this.getDB();
+    const activeDeckInfo = await (
+      await db
+    ).getFromIndex('deckCatalog', 'active', 1);
+
+    let data;
+
+    if (activeDeckInfo) {
+      data = await (await db).get('decks', activeDeckInfo.id);
+    }
 
     return {
       data,

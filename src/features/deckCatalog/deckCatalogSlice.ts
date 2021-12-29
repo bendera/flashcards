@@ -27,17 +27,17 @@ const initialState: DeckCatalogState = {
 
 export const fetchCatalog = createAsyncThunk(
   'deckCatalog/load',
-  async (_, { dispatch }) => {
+  async () => {
     const api = new FlashcardsAPI();
     const res = await api.getDeckCatalog();
 
-    dispatch(addCatalogItems(res.data));
+    return res.data;
   }
 );
 
 export const createCatalogItem = createAsyncThunk(
   'deckCatalog/create',
-  async (item: DeckCatalogItem, { dispatch, getState }) => {
+  async (item: DeckCatalogItem) => {
     const api = new FlashcardsAPI();
     const res = await api.addDeckCatalogItem(item);
 
@@ -47,7 +47,7 @@ export const createCatalogItem = createAsyncThunk(
 
 export const updateCatalogItem = createAsyncThunk(
   'deckCatalog/update',
-  async (item: DeckCatalogItem, { dispatch, getState }) => {
+  async (item: DeckCatalogItem) => {
     const api = new FlashcardsAPI();
     const res = await api.updateDeckCatalogItem(item);
 
@@ -57,7 +57,7 @@ export const updateCatalogItem = createAsyncThunk(
 
 export const deleteCatalogItem = createAsyncThunk(
   'deckCatalog/delete',
-  async (id: string, { dispatch }) => {
+  async (id: string) => {
     const api = new FlashcardsAPI();
     const res = await api.deleteDeckCatalogItem(id);
 
@@ -73,39 +73,35 @@ export const setActiveCatalog = createAsyncThunk(
 
     return res.data;
   }
-)
+);
 
 export const deckCatalogSlice = createSlice({
   name: 'deckCatalog',
   initialState,
-  reducers: {
-    addCatalogItems(state, action: PayloadAction<DeckCatalogItem[]>) {
-      state.entities.byId = {};
-      state.entities.allIds = [];
-
-      action.payload.forEach((d) => {
-        const { id } = d;
-
-        state.entities.byId[id] = d;
-        state.entities.allIds.push(id);
-      });
-    },
-  },
+  reducers: {},
   extraReducers(builder) {
     builder
       .addCase(fetchCatalog.pending, (state) => {
         state.status = 'loading';
       })
-      .addCase(fetchCatalog.fulfilled, (state) => {
+      .addCase(fetchCatalog.fulfilled, (state, action) => {
         state.status = 'idle';
+
+        state.entities.byId = {};
+        state.entities.allIds = [];
+
+        action.payload.forEach((d) => {
+          const { id } = d;
+
+          state.entities.byId[id] = d;
+          state.entities.allIds.push(id);
+        });
       })
       .addCase(fetchCatalog.rejected, (state) => {
         state.status = 'failed';
       });
   },
 });
-
-export const { addCatalogItems } = deckCatalogSlice.actions;
 
 export const selectDeckCatalogItems = (state: RootState) => {
   const { entities } = state.deckCatalog;
