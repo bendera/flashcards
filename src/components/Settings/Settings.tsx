@@ -8,7 +8,7 @@ import {
   fetchCatalog,
 } from 'features/deckCatalog/deckCatalogSlice';
 import EditCards from './EditCards/EditCards';
-import EditDecks from './EditDecks/EditDecks';
+import EditDeck from './EditDeck/EditDeck';
 import ListDecks from './ListDecks/ListDecks';
 import styles from './Settings.module.css';
 
@@ -67,7 +67,7 @@ const Settings: FC = () => {
           />
         )}
         {view === 'ui settings' && <EditCards />}
-        {view === 'edit deck' && <EditDecks deckToEdit={deckToEdit} />}
+        {view === 'edit deck' && <EditDeck deckToEdit={deckToEdit} />}
       </div>
     </div>
   );

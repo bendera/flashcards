@@ -17,7 +17,15 @@ interface CsvParserOptions {
   rowSeparator?: string;
 }
 
-export const parseCsv = (csv: string, options?: CsvParserOptions): CardDO[] => {
+interface ParsedCsvRow {
+  frontSide: string;
+  backSide: string;
+}
+
+export const parseCsv = (
+  csv: string,
+  options?: CsvParserOptions
+): ParsedCsvRow[] => {
   if (csv.length === 0) {
     return [];
   }

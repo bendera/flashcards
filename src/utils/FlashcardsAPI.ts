@@ -13,6 +13,17 @@ export interface DeckCatalogItem {
   active: 0 | 1;
 }
 
+export interface DeckItem {
+  id: string;
+  title: string;
+  cards: FlashCard[];
+  cardsByBoxes: {
+    [cardId: string]: number;
+  };
+  sessionCounter: number;
+  drawCounter: number;
+}
+
 interface FlashcardsDB extends DBSchema {
   cards: {
     value: {
@@ -26,16 +37,7 @@ interface FlashcardsDB extends DBSchema {
     };
   };
   decks: {
-    value: {
-      id: string;
-      title: string;
-      cards: FlashCard[];
-      cardsByBoxes: {
-        [cardId: string]: number;
-      };
-      sessionCounter: number;
-      drawCounter: number;
-    };
+    value: DeckItem;
     key: string;
   };
   deckCatalog: {
@@ -132,8 +134,35 @@ class FlashcardsAPI {
     const data = await (await db).delete('deckCatalog', id);
 
     return {
-      data
-    }
+      data,
+    };
+  }
+
+  public async createDeck(item: DeckItem) {
+    const db = this.getDB();
+    const data = await (await db).add('decks', item);
+
+    return {
+      data,
+    };
+  }
+
+  public async createOrUpdateDeck(item: DeckItem) {
+    const db = this.getDB();
+    const data = await (await db).put('decks', item);
+
+    return {
+      data,
+    };
+  }
+
+  public async getDeck(id: string) {
+    const db = this.getDB();
+    const data = await (await db).get('decks', id);
+
+    return {
+      data,
+    };
   }
 }
 

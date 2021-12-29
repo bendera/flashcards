@@ -10,24 +10,32 @@ import {
 import { IconNames } from '@blueprintjs/icons';
 import { useDebounce } from 'rooks';
 import { parseCsv } from 'utils/csv';
+import noop from 'utils/noop';
 import { CardDO } from 'features/deck/deckSlice';
 import styles from './ImportCards.module.css';
 import ImportedDataPreview from './ImportedDataPreview';
+import { FlashCard } from 'types';
+import { nanoid } from 'nanoid';
 
 interface ImportCardsProps {
-  onSave?: () => void;
+  onImport?: (cards: FlashCard[]) => void;
 }
 
-const ImportCards: FC<ImportCardsProps> = ({ onSave }) => {
+const ImportCards: FC<ImportCardsProps> = ({ onImport: onSave = noop }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [csvData, setCsvData] = useState('');
-  const setCsvDataDebounced = useDebounce(setCsvData, 500);
+  const [csvDataDelayed, setCsvDataDelayed] = useState('');
+  const [cards, setCards] = useState<FlashCard[]>([]);
+  const [importedCards, setImportedCards] = useState<FlashCard[]>([]);
+  const setCsvDataDebounced = useDebounce(setCsvDataDelayed, 500);
   const [columnSeparator, setColumnSeparator] = useState('\t');
   const [rowSeparator, setRowSeparator] = useState('\n');
-  const [importedData, setImportedData] = useState<CardDO[]>([]);
+  const [previewData, setPreviewData] = useState<FlashCard[]>([]);
 
   const handleCsvDataChange = (event: FormEvent<HTMLTextAreaElement>) => {
     const val = (event.target as HTMLTextAreaElement).value;
+
+    setCsvData(val);
     setCsvDataDebounced(val);
   };
 
@@ -44,12 +52,23 @@ const ImportCards: FC<ImportCardsProps> = ({ onSave }) => {
     setIsOpen(!isOpen);
   };
 
-  const handleSaveClick = () => {};
+  const handleUseItemsClick = () => {
+    if (importedCards.length > 0) {
+      onSave(importedCards);
+    }
+  };
 
   useEffect(() => {
-    console.log(csvData);
-    setImportedData(parseCsv(csvData));
-  }, [csvData]);
+    const imported = parseCsv(csvDataDelayed);
+    const cardsToAdd = imported.map(({ frontSide, backSide }) => ({
+      id: nanoid(),
+      frontSide,
+      backSide,
+    }));
+
+    setPreviewData(cardsToAdd.slice(0, 5));
+    setImportedCards(cardsToAdd);
+  }, [csvDataDelayed]);
 
   return (
     <div>
@@ -68,6 +87,7 @@ const ImportCards: FC<ImportCardsProps> = ({ onSave }) => {
               id="import-data"
               onChange={handleCsvDataChange}
               rows={10}
+              value={csvData}
             />
           </FormGroup>
           <div className={styles.separatorOptions}>
@@ -94,8 +114,13 @@ const ImportCards: FC<ImportCardsProps> = ({ onSave }) => {
               <Radio label="Semicolon" value=";" />
             </RadioGroup>
           </div>
-          <ImportedDataPreview data={importedData} />
-          <Button onClick={handleSaveClick}>Use items</Button>
+          <ImportedDataPreview data={previewData} />
+          <Button
+            onClick={handleUseItemsClick}
+            disabled={importedCards.length < 1}
+          >
+            Use items
+          </Button>
         </div>
       </Collapse>
     </div>

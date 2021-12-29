@@ -1,11 +1,11 @@
 import { FC } from 'react';
 import cn from 'classnames';
-import { CardDO } from 'features/deck/deckSlice';
-import styles from './ImportedDataPreview.module.css';
 import { NonIdealState } from '@blueprintjs/core';
+import { FlashCard } from 'types';
+import styles from './ImportedDataPreview.module.css';
 
 interface ImportedDataPreviewProps {
-  data: CardDO[];
+  data: FlashCard[];
 }
 
 const ImportedDataPreview: FC<ImportedDataPreviewProps> = ({ data }) => {
@@ -17,8 +17,6 @@ const ImportedDataPreview: FC<ImportedDataPreviewProps> = ({ data }) => {
     styles.table,
   ]);
   const empty = filtered.length < 1;
-
-  console.log(filtered);
 
   return (
     <div className={styles.wrapper}>
