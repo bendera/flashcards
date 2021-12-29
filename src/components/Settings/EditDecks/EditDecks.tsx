@@ -2,6 +2,7 @@ import { FC, SyntheticEvent, useState } from 'react';
 import { Button } from '@blueprintjs/core';
 import { nanoid } from 'nanoid';
 import { FlashCard } from 'types';
+import { DeckCatalogItem } from 'utils/FlashcardsAPI';
 import ImportCards from './ImportCards/ImportCards';
 import CardItem from './CardItem.tsx/CardItem';
 import styles from './EditDecks.module.css';
@@ -25,7 +26,11 @@ interface DeckInfo {
 
 const DeckSelect = Select.ofType<DeckInfo>();
 
-const EditDecks: FC = () => {
+interface EditDecksProps {
+  deckToEdit?: DeckCatalogItem;
+}
+
+const EditDecks: FC<EditDecksProps> = ({ deckToEdit }) => {
   const [cards, setCards] = useState<FlashCard[]>([createAnEmptyCard()]);
   const [deckTitles, setDeckTitles] = useState<DeckInfo[]>([]);
   const [selectOptions, setSelectOptions] = useState<SimpleSelectOption[]>([
@@ -50,10 +55,7 @@ const EditDecks: FC = () => {
 
   return (
     <div>
-      <SimpleSelect
-        options={selectOptions}
-        onChange={handleSelectChange}
-      ></SimpleSelect>
+      <h1 className="bp3-heading">Irregular verbs</h1>
       <ImportCards />
       <div className={styles.cards}>
         {cards.map((c) => (

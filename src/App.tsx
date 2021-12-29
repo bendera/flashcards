@@ -6,7 +6,7 @@ import { addCards, loadDeck, saveDeck } from './features/deck/deckSlice';
 import Settings from './components/Settings/Settings';
 import styles from './App.module.css';
 
-import FlashcardsAPI from 'utils/api';
+import FlashcardsAPI from 'utils/FlashcardsAPI';
 import { nanoid } from 'nanoid';
 
 function App() {

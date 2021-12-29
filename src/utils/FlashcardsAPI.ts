@@ -1,9 +1,16 @@
 import { openDB, DBSchema } from 'idb/with-async-ittr';
+import { FlashCard } from 'types';
 
 interface CardDTO {
   id: string;
   frontSide: string;
   backSide: string;
+}
+
+export interface DeckCatalogItem {
+  id: string;
+  title: string;
+  active: 0 | 1;
 }
 
 interface FlashcardsDB extends DBSchema {
@@ -14,21 +21,27 @@ interface FlashcardsDB extends DBSchema {
       backSide: string;
     };
     key: string;
+    indexes: {
+      frontSide: string;
+    };
   };
   decks: {
     value: {
       id: string;
       title: string;
-      cards: number[];
-      boxes: {
-        box1: string[];
-        box2: string[];
-        box3: string[];
+      cards: FlashCard[];
+      cardsByBoxes: {
+        [cardId: string]: number;
       };
       sessionCounter: number;
       drawCounter: number;
     };
     key: string;
+  };
+  deckCatalog: {
+    value: DeckCatalogItem;
+    key: string;
+    indexes: { active: 0 | 1 };
   };
 }
 
@@ -43,6 +56,10 @@ class FlashcardsAPI {
         db.createObjectStore('decks', {
           keyPath: 'id',
         });
+
+        db.createObjectStore('deckCatalog', {
+          keyPath: 'id',
+        }).createIndex('active', 'active');
       },
     });
 
@@ -81,6 +98,33 @@ class FlashcardsAPI {
     const db = this.getDB();
 
     return (await db).put('cards', newVal);
+  }
+
+  public async getDeckCatalog() {
+    const db = this.getDB();
+    const data = await (await db).getAll('deckCatalog');
+
+    return {
+      data,
+    };
+  }
+
+  public async addDeckCatalogItem(item: DeckCatalogItem) {
+    const db = this.getDB();
+    const data = await (await db).add('deckCatalog', item);
+
+    return {
+      data,
+    };
+  }
+
+  public async updateDeckCatalogItem(item: DeckCatalogItem) {
+    const db = this.getDB();
+    const data = await (await db).put('deckCatalog', item);
+
+    return {
+      data,
+    };
   }
 }
 

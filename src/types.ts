@@ -3,3 +3,5 @@ export interface FlashCard {
   frontSide: string;
   backSide: string;
 }
+
+export type AsyncStatus = 'idle' | 'loading' | 'failed';

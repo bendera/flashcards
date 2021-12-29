@@ -1,0 +1,28 @@
+.wrapper {
+  flex-basis: 300px;
+  margin-bottom: 50px;
+  overflow: visible;
+  user-select: none;
+}
+
+.card {
+  align-items: center;
+  display: flex;
+  height: 100px;
+  justify-content: center;
+  position: relative;
+  text-align: center;
+  width: 100%;
+}
+
+.tag {
+  position: absolute;
+  right: 5px;
+  top: 5px;
+}
+
+.actions {
+  display: flex;
+  justify-content: center;
+  margin-top: 5px;
+}
