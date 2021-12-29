@@ -8,29 +8,32 @@ import styles from './CardItem.module.css';
 interface CardItemProps {
   card: FlashCard;
   onChange?: (card: FlashCard) => void;
+  onDelete?: (id: string) => void;
+  onSwap?: (card: FlashCard) => void;
 }
 
-const CardItem: FC<CardItemProps> = ({ card, onChange = noop }) => {
+const CardItem: FC<CardItemProps> = ({
+  card,
+  onChange = noop,
+  onDelete = noop,
+  onSwap = noop,
+}) => {
   const { id, frontSide, backSide } = card;
-  const [frontSideVal, setFrontSideVal] = useState(frontSide);
-  const [backSideVal, setBackSideVal] = useState(backSide);
 
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
     const el = event.currentTarget as HTMLInputElement;
     const val = el.value;
     const payload: FlashCard = {
       id,
-      frontSide: frontSideVal,
-      backSide: backSideVal,
+      frontSide,
+      backSide,
     };
 
     switch (el.id) {
       case `f_${id}`:
-        setFrontSideVal(val);
         payload.frontSide = val;
         break;
       case `b_${id}`:
-        setBackSideVal(val);
         payload.backSide = val;
         break;
     }
@@ -38,35 +41,45 @@ const CardItem: FC<CardItemProps> = ({ card, onChange = noop }) => {
     onChange(payload);
   };
 
+  const handleDelete = () => {
+    onDelete(id);
+  };
+
+  const handleSwap = () => {
+    onSwap(card);
+  };
+
   return (
     <div className={styles.wrapper}>
       <FormGroup
-        labelFor={`f_${id}`}
-        label="Front side"
         className={styles.formGroup}
+        label="Front side"
+        labelFor={`f_${id}`}
       >
         <InputGroup
           id={`f_${id}`}
           onInput={handleChange}
-          value={frontSideVal}
+          value={frontSide}
         />
       </FormGroup>
       <Button
+        className={styles.swapButton}
         icon={IconNames.SWAP_HORIZONTAL}
         minimal
-        className={styles.swapButton}
+        onClick={handleSwap}
       ></Button>
       <FormGroup
-        labelFor={`b_${id}`}
-        label="Back side"
         className={styles.formGroup}
+        label="Back side"
+        labelFor={`b_${id}`}
       >
-        <InputGroup id={`b_${id}`} onInput={handleChange} value={backSideVal} />
+        <InputGroup id={`b_${id}`} onInput={handleChange} value={backSide} />
       </FormGroup>
       <Button
+        className={styles.deleteButton}
         icon={IconNames.TRASH}
         minimal
-        className={styles.deleteButton}
+        onClick={handleDelete}
       ></Button>
     </div>
   );

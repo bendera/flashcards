@@ -27,7 +27,7 @@ const useEditDeck = (deckToEdit: DeckCatalogItem) => {
   const emptyCard = createAnEmptyCard();
   const dispatch = useAppDispatch();
   const [deckTitle, setDeckTitle] = useState(title);
-  const [cards, setCards] = useState<FlashCard[]>([emptyCard]);
+  const [cards, setCards] = useState<FlashCard[]>([]);
   const deckMetaDataRef = useRef<DeckMetaData>({
     cardsByBoxes: {
       [emptyCard.id]: 1,
@@ -116,14 +116,40 @@ const useEditDeck = (deckToEdit: DeckCatalogItem) => {
     setDeckTitle(value);
   };
 
+  const handleSwap = (card: FlashCard) => {
+    const newCards = cards.map((c) => {
+      if (c.id !== card.id) {
+        return c;
+      }
+
+      const { id, frontSide, backSide } = card;
+
+      return {
+        id,
+        frontSide: backSide,
+        backSide: frontSide,
+      };
+    });
+
+    setCards(newCards);
+  };
+
+  const handleDelete = (id: string) => {
+    const newCards = cards.filter((c) => c.id !== id);
+
+    setCards(newCards);
+  };
+
   return {
     cards,
     deckTitle,
     fetchDeck,
     handleAddCardClick,
     handleCardItemChange,
+    handleDelete,
     handleImport,
     handleSave,
+    handleSwap,
     handleTitleChange,
   };
 };

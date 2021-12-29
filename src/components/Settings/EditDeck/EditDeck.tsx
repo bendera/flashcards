@@ -21,8 +21,10 @@ const EditDeck: FC<EditDecksProps> = ({
     fetchDeck,
     handleAddCardClick,
     handleCardItemChange,
+    handleDelete,
     handleImport,
     handleSave,
+    handleSwap,
     handleTitleChange,
   } = useEditDeck(deckToEdit);
 
@@ -43,7 +45,13 @@ const EditDeck: FC<EditDecksProps> = ({
       <ImportCards onImport={handleImport} />
       <div className={styles.cards}>
         {cards.map((c) => (
-          <CardItem card={c} key={c.id} onChange={handleCardItemChange} />
+          <CardItem
+            card={c}
+            key={c.id}
+            onChange={handleCardItemChange}
+            onDelete={handleDelete}
+            onSwap={handleSwap}
+          />
         ))}
       </div>
       <Button onClick={handleAddCardClick}>Add card</Button>
