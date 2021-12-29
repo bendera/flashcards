@@ -38,6 +38,16 @@ export const fetchActiveDeck = createAsyncThunk('deck/load', async () => {
   return res.data;
 });
 
+export const saveDeck = createAsyncThunk(
+  'deck/save',
+  async (item: DeckItem) => {
+    const api = new FlashcardsAPI();
+    const res = await api.createOrUpdateDeck(item);
+
+    return res.data;
+  }
+);
+
 export const deckSlice = createSlice({
   name: 'deck',
   initialState,
