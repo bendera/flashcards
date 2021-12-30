@@ -1,5 +1,6 @@
-import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import FlashcardsAPI, { DeckItem } from 'utils/FlashcardsAPI';
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { DeckItem } from 'utils/FlashcardsAPI';
+import { fetchActiveDeck, saveDeck } from './thunks';
 
 type AsyncStatus = 'idle' | 'loading' | 'failed';
 
@@ -16,33 +17,77 @@ const initialState: DeckState = {
     drawCounter: 0,
     id: '',
     sessionCounter: 0,
+    sessionFinished: false,
     title: '',
+    lastCard: '',
   },
   saveStatus: 'idle',
   loadStatus: 'idle',
 };
 
-export const fetchActiveDeck = createAsyncThunk('deck/load', async () => {
-  const api = new FlashcardsAPI();
-  const res = await api.getActiveDeck();
-
-  return res.data;
-});
-
-export const saveDeck = createAsyncThunk(
-  'deck/save',
-  async (item: DeckItem) => {
-    const api = new FlashcardsAPI();
-    const res = await api.createOrUpdateDeck(item);
-
-    return res.data;
-  }
-);
-
 export const deckSlice = createSlice({
   name: 'deck',
   initialState,
-  reducers: {},
+  reducers: {
+    startSession(state) {
+      state.data.sessionCounter += 1;
+    },
+    draw(state) {
+      const { sessionCounter, lastCard, cardsByBoxes } = state.data;
+
+      if (sessionCounter === 0) {
+        return;
+      }
+
+      let usedBoxes = [1];
+
+      if (sessionCounter % 2 === 0) {
+        usedBoxes.push(2);
+      }
+
+      if (sessionCounter % 4 === 0) {
+        usedBoxes.push(3);
+      }
+
+      if (sessionCounter % 9 === 0) {
+        usedBoxes.push(4);
+      }
+
+      if (sessionCounter % 14 === 0) {
+        usedBoxes.push(5);
+      }
+
+      const ids = Object.keys(cardsByBoxes);
+      const fromIndex = ids.findIndex((id) => id === lastCard);
+      const nextCardIndex = ids.findIndex(
+        (id, i) => usedBoxes.includes(cardsByBoxes[id]) && i > fromIndex
+      );
+
+      if (nextCardIndex !== -1) {
+        state.data.lastCard = ids[nextCardIndex];
+        state.data.drawCounter += 1;
+      } else {
+        state.data.lastCard = '';
+        state.data.sessionFinished = true;
+      }
+    },
+    promote(state) {
+      const cardId = state.data.lastCard;
+      const currentBox = state.data.cardsByBoxes[cardId];
+
+      if (currentBox < 5) {
+        state.data.cardsByBoxes[cardId] += 1;
+      }
+    },
+    demote(state) {
+      const cardId = state.data.lastCard;
+      const currentBox = state.data.cardsByBoxes[cardId];
+
+      if (currentBox > 1) {
+        state.data.cardsByBoxes[cardId] -= 1;
+      }
+    },
+  },
   extraReducers(builder) {
     builder
       .addCase(fetchActiveDeck.pending, (state) => {
@@ -52,7 +97,7 @@ export const deckSlice = createSlice({
         state.loadStatus = 'idle';
 
         if (action.payload) {
-          state.data = action.payload;
+          state.data = { ...initialState.data, ...action.payload };
         }
       })
       .addCase(fetchActiveDeck.rejected, (state) => {
@@ -60,5 +105,9 @@ export const deckSlice = createSlice({
       });
   },
 });
+
+export const { draw, promote, demote } = deckSlice.actions;
+
+export { fetchActiveDeck, saveDeck };
 
 export default deckSlice.reducer;

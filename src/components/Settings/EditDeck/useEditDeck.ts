@@ -2,7 +2,7 @@ import { useRef, useState } from 'react';
 import { nanoid } from 'nanoid';
 import { FlashCard } from 'types';
 import { useAppDispatch } from 'app/hooks';
-import FlashcardsAPI, { DeckCatalogItem } from 'utils/FlashcardsAPI';
+import FlashcardsAPI, { DeckCatalogItem, DeckItem } from 'utils/FlashcardsAPI';
 import { updateCatalogItem } from 'features/deckCatalog/deckCatalogSlice';
 import { saveDeck } from 'features/deck/deckSlice';
 
@@ -14,13 +14,7 @@ const createAnEmptyCard = (): FlashCard => {
   };
 };
 
-interface DeckMetaData {
-  cardsByBoxes: {
-    [key: string]: number;
-  };
-  drawCounter: number;
-  sessionCounter: number;
-}
+type DeckMetaData = Omit<DeckItem, 'id' | 'title' | 'cards'>;
 
 const useEditDeck = (deckToEdit: DeckCatalogItem) => {
   const { active, id, title } = deckToEdit;
@@ -34,6 +28,8 @@ const useEditDeck = (deckToEdit: DeckCatalogItem) => {
     },
     drawCounter: 0,
     sessionCounter: 0,
+    sessionFinished: false,
+    lastCard: '',
   });
 
   const fetchDeck = async () => {
@@ -41,13 +37,22 @@ const useEditDeck = (deckToEdit: DeckCatalogItem) => {
     const res = await api.getDeck(deckToEdit.id);
 
     if (res.data) {
-      const { cards, cardsByBoxes, drawCounter, sessionCounter, title } =
-        res.data;
+      const {
+        cards,
+        cardsByBoxes,
+        drawCounter,
+        sessionCounter,
+        title,
+        lastCard,
+        sessionFinished,
+      } = res.data;
 
       deckMetaDataRef.current = {
         cardsByBoxes,
         drawCounter,
         sessionCounter,
+        sessionFinished,
+        lastCard,
       };
       setDeckTitle(title);
       setCards(cards);
@@ -90,8 +95,13 @@ const useEditDeck = (deckToEdit: DeckCatalogItem) => {
   };
 
   const handleSave = async () => {
-    const { cardsByBoxes, drawCounter, sessionCounter } =
-      deckMetaDataRef.current;
+    const {
+      cardsByBoxes,
+      drawCounter,
+      sessionCounter,
+      sessionFinished,
+      lastCard,
+    } = deckMetaDataRef.current;
 
     await dispatch(
       updateCatalogItem({
@@ -107,7 +117,9 @@ const useEditDeck = (deckToEdit: DeckCatalogItem) => {
         cardsByBoxes,
         drawCounter,
         sessionCounter,
+        sessionFinished,
         title: deckTitle,
+        lastCard,
       })
     );
   };
@@ -136,6 +148,8 @@ const useEditDeck = (deckToEdit: DeckCatalogItem) => {
 
   const handleDelete = (id: string) => {
     const newCards = cards.filter((c) => c.id !== id);
+
+    delete deckMetaDataRef.current.cardsByBoxes[id];
 
     setCards(newCards);
   };

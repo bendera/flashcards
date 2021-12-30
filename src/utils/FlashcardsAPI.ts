@@ -1,4 +1,4 @@
-import { openDB, DBSchema } from 'idb/with-async-ittr';
+import { openDB, DBSchema } from 'idb/with-async-ittr-cjs';
 import { FlashCard } from 'types';
 
 const STORAGE_DECKS = 'decks';
@@ -18,7 +18,9 @@ export interface DeckItem {
     [cardId: string]: number;
   };
   sessionCounter: number;
+  sessionFinished: boolean;
   drawCounter: number;
+  lastCard: string;
 }
 
 interface FlashcardsDB extends DBSchema {
@@ -151,6 +153,15 @@ class FlashcardsAPI {
     if (activeDeckInfo) {
       data = await (await db).get(STORAGE_DECKS, activeDeckInfo.id);
     }
+
+    return {
+      data,
+    };
+  }
+
+  public async deleteDeck(id: string) {
+    const db = this.getDB();
+    const data = await (await db).delete(STORAGE_DECKS, id);
 
     return {
       data,
