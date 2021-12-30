@@ -1,5 +1,6 @@
 import { FC, useState } from 'react';
 import { Button, ButtonGroup, Classes } from '@blueprintjs/core';
+import { IconNames } from '@blueprintjs/icons';
 import { nanoid } from 'nanoid';
 import { useAppDispatch } from 'app/hooks';
 import { DeckCatalogItem } from 'utils/FlashcardsAPI';
@@ -46,6 +47,7 @@ const Settings: FC = () => {
         <ButtonGroup large minimal className={styles.nav}>
           <Button
             active={view === 'decks' || view === 'edit deck'}
+            icon={IconNames.INBOX}
             onClick={() => {
               setView('decks');
             }}
@@ -53,6 +55,7 @@ const Settings: FC = () => {
           />
           <Button
             active={view === 'ui settings'}
+            icon={IconNames.SETTINGS}
             onClick={() => {
               setView('ui settings');
             }}
