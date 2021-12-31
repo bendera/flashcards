@@ -1,9 +1,10 @@
-import { FC } from 'react';
-import cn from 'classnames';
+import { FC, useState } from 'react';
 import { useAppDispatch } from 'app/hooks';
 import { draw } from 'features/deck/deckSlice';
-import Flashcard from './Flashcard/Flashcard';
+import PaperCard from './CardSwitcher/PaperCard/PaperCard';
 import styles from './StudySession.module.css';
+import CardSwitcher from './CardSwitcher/CardSwitcher';
+import { FlashCard } from 'types';
 
 interface StudySessionProps {
   props1?: string;
@@ -12,20 +13,38 @@ interface StudySessionProps {
 
 const StudySession: FC<StudySessionProps> = ({ props1, props2 }) => {
   const dispatch = useAppDispatch();
+  const [demoCards, setDemoCards] = useState<FlashCard[]>([
+    {
+      backSide: 'puddle',
+      frontSide: 'pocsolya',
+      id: 'demo1',
+    },
+    {
+      backSide: 'obsessive',
+      frontSide: 'megszállott',
+      id: 'demo2',
+    },
+    {
+      backSide: 'sturdy',
+      frontSide: 'erős',
+      id: 'demo3',
+    },
+  ]);
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [nextIndex, setNextIndex] = useState(1);
+  const [direction, setDirection] = useState<'left' | 'right'>('left');
 
   const handleDrawClick = () => {
     dispatch(draw());
   };
 
-  const handlePromoteClick = () => {};
+  const handlePromoteClick = () => {
+    setDirection('right');
+    setCurrentIndex(currentIndex < demoCards.length - 1 ? currentIndex + 1 : 0);
+    setNextIndex(nextIndex < demoCards.length - 1 ? nextIndex + 1 : 0);
+  };
 
   const handleDemoteClick = () => {};
-
-  const cardWrapperClasses = cn([
-    styles.cardWrapper,
-    styles.swipeLeft,
-    styles.swipeRight,
-  ]);
 
   return (
     <div className={styles.wrapper}>
@@ -55,11 +74,10 @@ const StudySession: FC<StudySessionProps> = ({ props1, props2 }) => {
           demote
         </button>
       </div>
-      <div className={styles.perspectiveWrapper}>
-        <div className={cardWrapperClasses}>
-          <Flashcard frontSide="Lorem" backSide="Ipsum" />
-        </div>
-      </div>
+      <CardSwitcher
+        direction={direction}
+        currentCard={demoCards[currentIndex]}
+      />
     </div>
   );
 };

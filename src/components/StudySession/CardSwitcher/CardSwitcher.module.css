@@ -1,0 +1,14 @@
+.root {
+  height: 100%;
+  overflow: hidden;
+  position: relative;
+  width: 100%;
+}
+
+.card {
+  left: 50%;
+  margin-left: -250px;
+  margin-top: -150px;
+  position: absolute;
+  top: 50%;
+}

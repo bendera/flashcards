@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import classNames from 'classnames';
+import cn from 'classnames';
 import './Flashcard.css';
 
 interface FlashcardProps {
@@ -21,7 +21,7 @@ const Flashcard: React.FC<FlashcardProps> = ({
     setFlipped(!flipped);
   };
 
-  const classes = classNames('Flashcard', { isFlipped: flipped });
+  const classes = cn('Flashcard', { isFlipped: flipped });
 
   return (
     <div

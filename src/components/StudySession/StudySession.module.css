@@ -11,25 +11,3 @@
   left: 0;
   top: 0;
 }
-
-.perspectiveWrapper {
-  perspective: 1250px;
-}
-
-.cardWrapper {
-  opacity: 1;
-  transform-origin: 50% 50% -300px;
-  transition: transform 300ms, opacity 200ms;
-}
-
-.cardWrapper.swipeLeft {
-  opacity: 0;
-  pointer-events: none;
-  transform: rotateY(-70deg);
-}
-
-.cardWrapper.swipeRight {
-  opacity: 0;
-  pointer-events: none;
-  transform: rotateY(70deg);
-}

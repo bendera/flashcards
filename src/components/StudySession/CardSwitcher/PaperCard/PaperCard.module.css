@@ -1,0 +1,94 @@
+.root {
+  position: absolute;
+}
+
+/* Animation source: https://codepen.io/colebemis/pen/IlgFx */
+
+.card {
+  height: 300px;
+  perspective: 800px;
+  position: relative;
+  width: 500px;
+}
+
+.card:focus {
+  outline: 0;
+}
+
+.sides {
+  border-radius: 6px;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+  cursor: pointer;
+  height: 100%;
+  position: absolute;
+  transform-style: preserve-3d;
+  transition: transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  user-select: none;
+  width: 100%;
+}
+
+.card.isFlipped .sides {
+  transform: rotateY(180deg);
+}
+
+.side {
+  align-items: center;
+  background-color: #fff;
+  backface-visibility: hidden;
+  border-radius: 6px;
+  display: flex;
+  height: 100%;
+  justify-content: center;
+  position: absolute;
+  width: 100%;
+}
+
+.back {
+  transform: rotateY(180deg);
+}
+
+.animation {
+  opacity: 0;
+  transform-origin: 50% 50% -300px;
+}
+
+.root.fadeIn {
+  perspective: 500px;
+}
+
+.animation.fadeInEnterActive {
+  opacity: 0;
+  transform: rotateX(-40deg);
+  transform-origin: 50% 50% -500px;
+}
+
+.animation.fadeInEnterDone {
+  opacity: 1;
+  transition: transform 300ms, opacity 300ms;
+}
+
+.root.swipeLeft {
+  perspective: 190px;
+}
+
+.animation.swipeLeftEnter {
+  opacity: 1;
+}
+
+.animation.swipeLeftEnterActive {
+  opacity: 1;
+  pointer-events: none;
+}
+
+.animation.swipeLeftEnterDone {
+  opacity: 0;
+  pointer-events: none;
+  transform: rotateY(9deg);
+  transform-origin: 50% 50% 250px;
+  transition: transform 300ms, opacity 300ms;
+}
+
+.animation.swipeRight {
+  opacity: 1;
+  pointer-events: none;
+}
