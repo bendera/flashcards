@@ -30,9 +30,10 @@ const StudySession: FC<StudySessionProps> = ({ props1, props2 }) => {
       id: 'demo3',
     },
   ]);
-  const [currentIndex, setCurrentIndex] = useState(0);
+  const [currentIndex, setCurrentIndex] = useState(-1);
   const [nextIndex, setNextIndex] = useState(1);
   const [direction, setDirection] = useState<'left' | 'right'>('left');
+  const currentCard = currentIndex > -1 ? demoCards[currentIndex] : undefined;
 
   const handleDrawClick = () => {
     dispatch(draw());
@@ -78,7 +79,7 @@ const StudySession: FC<StudySessionProps> = ({ props1, props2 }) => {
       </div>
       <CardSwitcher
         direction={direction}
-        currentCard={demoCards[currentIndex]}
+        currentCard={currentCard}
       />
     </div>
   );

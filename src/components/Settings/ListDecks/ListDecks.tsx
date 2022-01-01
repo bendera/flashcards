@@ -30,6 +30,8 @@ const ListDecks: FC<ListDecksProps> = ({ onEdit, onDelete, onCreate }) => {
   const deckById = (id: string) => decks.find((d) => d.id === id);
 
   const handleEdit = (id: string) => {
+    // TODO: If the deck is an active deck, the progress statistics should be restored
+
     const deckToEdit = deckById(id);
 
     if (deckToEdit) {

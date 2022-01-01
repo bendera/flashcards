@@ -5,14 +5,19 @@ import PaperCard from './PaperCard/PaperCard';
 import styles from './CardSwitcher.module.css';
 
 interface CardSwitcherProps {
-  currentCard: FlashCard;
+  currentCard?: FlashCard;
   direction: 'left' | 'right';
 }
 
 const CardSwitcher: FC<CardSwitcherProps> = ({ currentCard, direction }) => {
-  const [animate, setAnimate] = useState(false);
-  const [incomingCard, setIncomingCard] = useState<FlashCard>();
-  const [leavingCard, setLeavingCard] = useState<FlashCard>();
+  const [firstRound, setFirstRound] = useState(true);
+  const [animate, setAnimate] = useState(true);
+  const [incomingCard, setIncomingCard] = useState<FlashCard | undefined>(
+    undefined
+  );
+  const [leavingCard, setLeavingCard] = useState<FlashCard | undefined>(
+    undefined
+  );
 
   const cardWrapperClasses = cn([styles.cardWrapper]);
 
@@ -27,17 +32,6 @@ const CardSwitcher: FC<CardSwitcherProps> = ({ currentCard, direction }) => {
 
   return (
     <div className={styles.root}>
-      <button
-        type="button"
-        onClick={() => {
-          setAnimate(!animate);
-        }}
-      >
-        switch
-      </button>
-
-      
-
       {leavingCard && (
         <PaperCard
           frontSide={leavingCard.frontSide}
@@ -47,8 +41,7 @@ const CardSwitcher: FC<CardSwitcherProps> = ({ currentCard, direction }) => {
           className={styles.card}
         />
       )}
-
-{incomingCard && (
+      {incomingCard && (
         <PaperCard
           frontSide={incomingCard.frontSide}
           backSide={incomingCard.backSide}

@@ -1,5 +1,5 @@
 import { ChangeEvent, FC, useState } from 'react';
-import { Button, FormGroup, InputGroup } from '@blueprintjs/core';
+import { Button, FormGroup, InputGroup, TextArea } from '@blueprintjs/core';
 import { IconNames } from '@blueprintjs/icons';
 import { FlashCard } from 'types';
 import noop from 'utils/noop';
@@ -20,7 +20,7 @@ const CardItem: FC<CardItemProps> = ({
 }) => {
   const { id, frontSide, backSide } = card;
 
-  const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (event: any) => {
     const el = event.currentTarget as HTMLInputElement;
     const val = el.value;
     const payload: FlashCard = {
@@ -56,10 +56,18 @@ const CardItem: FC<CardItemProps> = ({
         label="Front side"
         labelFor={`f_${id}`}
       >
-        <InputGroup
+        {/* <InputGroup
           id={`f_${id}`}
           onInput={handleChange}
           value={frontSide}
+        /> */}
+        <TextArea
+          id={`f_${id}`}
+          onChange={handleChange}
+          value={frontSide}
+          fill
+          growVertically
+          className={styles.textarea}
         />
       </FormGroup>
       <Button

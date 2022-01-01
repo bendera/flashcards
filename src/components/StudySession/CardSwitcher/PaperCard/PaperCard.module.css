@@ -48,7 +48,6 @@
 }
 
 .animation {
-  opacity: 0;
   transform-origin: 50% 50% -300px;
 }
 

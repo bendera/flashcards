@@ -17,3 +17,9 @@
 .deleteButton {
   margin-left: 4px;
 }
+
+.textarea {
+  height: 30px;
+  resize: none;
+  width: 100%;
+}
