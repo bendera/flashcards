@@ -54,28 +54,41 @@
 
 .root.fadeIn {
   perspective: 500px;
+  transform: rotateX(0);
+  transform-origin: 50% 50% -500px;
+}
+
+.animation.fadeInEnter {
+  opacity: 0;
+  transform: rotateX(-60deg);
+  transform-origin: 50% 50% -500px;
 }
 
 .animation.fadeInEnterActive {
   opacity: 0;
-  transform: rotateX(-40deg);
+  transform: rotateX(-60deg);
   transform-origin: 50% 50% -500px;
 }
 
 .animation.fadeInEnterDone {
   opacity: 1;
-  transition: transform 300ms, opacity 300ms;
+  transition: transform 400ms 100ms, opacity 300ms 100ms;
+  transform: rotateX(0);
+  transform-origin: 50% 50% -500px;
 }
 
-.root.swipeLeft {
-  perspective: 190px;
+.root.swipeLeft,
+.root.swipeRight {
+  perspective: 1000px;
 }
 
-.animation.swipeLeftEnter {
+.animation.swipeLeftEnter,
+.animation.swipeRightEnter {
   opacity: 1;
 }
 
-.animation.swipeLeftEnterActive {
+.animation.swipeLeftEnterActive,
+.animation.swipeRightEnterActive {
   opacity: 1;
   pointer-events: none;
 }
@@ -83,12 +96,15 @@
 .animation.swipeLeftEnterDone {
   opacity: 0;
   pointer-events: none;
-  transform: rotateY(9deg);
-  transform-origin: 50% 50% 250px;
-  transition: transform 300ms, opacity 300ms;
+  transform: rotateY(40deg);
+  transform-origin: 50% 50% 1000px;
+  transition: transform 400ms, opacity 400ms;
 }
 
-.animation.swipeRight {
-  opacity: 1;
+.animation.swipeRightEnterDone {
+  opacity: 0;
   pointer-events: none;
+  transform: rotateY(-40deg);
+  transform-origin: 50% 50% 1000px;
+  transition: transform 400ms, opacity 400ms;
 }

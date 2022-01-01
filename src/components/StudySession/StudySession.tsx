@@ -41,10 +41,12 @@ const StudySession: FC<StudySessionProps> = ({ props1, props2 }) => {
   const handlePromoteClick = () => {
     setDirection('right');
     setCurrentIndex(currentIndex < demoCards.length - 1 ? currentIndex + 1 : 0);
-    setNextIndex(nextIndex < demoCards.length - 1 ? nextIndex + 1 : 0);
   };
 
-  const handleDemoteClick = () => {};
+  const handleDemoteClick = () => {
+    setDirection('left');
+    setCurrentIndex(currentIndex < demoCards.length - 1 ? currentIndex + 1 : 0);
+  };
 
   return (
     <div className={styles.wrapper}>

@@ -12,3 +12,19 @@
   position: absolute;
   top: 50%;
 }
+
+.shadow {
+  --shadow-color: 240, 240, 240;
+
+  background: radial-gradient(
+    rgba(var(--shadow-color), 0) 50%,
+    rgba(var(--shadow-color), 1) 60%
+  );
+  height: 100%;
+  left: 0;
+  position: absolute;
+  pointer-events: none;
+  top: 0;
+  width: 100%;
+  z-index: 100;
+}
