@@ -6,8 +6,8 @@ import styles from './PaperCard.module.css';
 interface PaperCardProps {
   frontSide: string;
   backSide: string;
-  exitAnimationType?: 'fadeIn' | 'swipeLeft' | 'swipeRight';
-  enter?: boolean;
+  exitAnimationType: 'swipeLeft' | 'swipeRight';
+  show: boolean;
   className?: string;
 }
 
@@ -15,7 +15,7 @@ const PaperCard: FC<PaperCardProps> = ({
   frontSide,
   backSide,
   exitAnimationType = 'swipeLeft',
-  enter = false,
+  show = false,
   className = '',
 }) => {
   const [flipped, setFlipped] = useState(false);
@@ -30,37 +30,15 @@ const PaperCard: FC<PaperCardProps> = ({
 
   return (
     <CSSTransition
-      appear
-      in={enter}
+      in={show}
       timeout={0}
       classNames={{
-        appear: styles.appear,
-        appearActive: styles.appearActive,
-        appearDone: styles.appearDone,
         enter: styles.fadeInEnter,
         enterActive: styles.fadeInEnterActive,
         enterDone: styles.fadeInEnterDone,
         exit: styles[`${exitAnimationType}Enter`],
         exitActive: styles[`${exitAnimationType}EnterActive`],
         exitDone: styles[`${exitAnimationType}EnterDone`],
-      }}
-      onEnter={(el: HTMLElement) => {
-        console.log(el.className);
-      }}
-      onEntering={(el: HTMLElement) => {
-        console.log(el.className);
-      }}
-      onEntered={(el: HTMLElement) => {
-        console.log(el.className);
-      }}
-      onExit={(el: HTMLElement) => {
-        console.log(el.className);
-      }}
-      onExiting={(el: HTMLElement) => {
-        console.log(el.className);
-      }}
-      onExited={(el: HTMLElement) => {
-        console.log(el.className);
       }}
     >
       <div

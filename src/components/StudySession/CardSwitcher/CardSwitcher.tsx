@@ -1,19 +1,20 @@
 import { FC, useEffect, useState } from 'react';
-import cn from 'classnames';
 import { FlashCard } from 'types';
 import PaperCard from './PaperCard/PaperCard';
 import styles from './CardSwitcher.module.css';
+
+const EMPTY_CARD_ID = '<empty>';
+
+const emptyCard: FlashCard = {
+  id: EMPTY_CARD_ID,
+  frontSide: '',
+  backSide: '',
+};
 
 interface CardSwitcherProps {
   currentCard: FlashCard;
   direction: 'left' | 'right';
 }
-
-const emptyCard: FlashCard = {
-  id: '<empty>',
-  frontSide: '',
-  backSide: '',
-};
 
 const CardSwitcher: FC<CardSwitcherProps> = ({
   currentCard,
@@ -30,13 +31,11 @@ const CardSwitcher: FC<CardSwitcherProps> = ({
       return;
     }
 
-    console.log('currentCard:', currentCard);
-
     if (activeCardNum === 1) {
       setCard1(currentCard);
       setCard1Visible(true);
       
-      if (card2.id !== '<empty>') {
+      if (card2.id !== EMPTY_CARD_ID) {
         setCard2Visible(false);
       }
 
@@ -45,12 +44,13 @@ const CardSwitcher: FC<CardSwitcherProps> = ({
       setCard2(currentCard);
       setCard2Visible(true);
       
-      if (card1.id !== '<empty>') {
+      if (card1.id !== EMPTY_CARD_ID) {
         setCard1Visible(false);
       }
       
       setActiveCardNum(1);
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentCard]);
 
   return (
@@ -58,14 +58,14 @@ const CardSwitcher: FC<CardSwitcherProps> = ({
       <PaperCard
         frontSide={card1.frontSide}
         backSide={card1.backSide}
-        enter={card1Visible}
+        show={card1Visible}
         exitAnimationType={direction === 'left' ? 'swipeLeft' : 'swipeRight'}
         className={styles.card}
       />
       <PaperCard
         frontSide={card2.frontSide}
         backSide={card2.backSide}
-        enter={card2Visible}
+        show={card2Visible}
         exitAnimationType={direction === 'left' ? 'swipeLeft' : 'swipeRight'}
         className={styles.card}
       />

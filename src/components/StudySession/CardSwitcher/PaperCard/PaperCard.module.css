@@ -1,8 +1,8 @@
+/* Flip animation source: https://codepen.io/colebemis/pen/IlgFx */
+
 .root {
   position: absolute;
 }
-
-/* Animation source: https://codepen.io/colebemis/pen/IlgFx */
 
 .card {
   height: 300px;
@@ -51,18 +51,13 @@
   opacity: 0;
 }
 
-.appear,
 .fadeInEnter,
-.appearActive,
 .fadeInEnterActive,
-.appearDone,
 .fadeInEnterDone {
   perspective: 500px;
-  /* transform: rotateX(0); */
-  /* transform-origin: 50% 50% -500px; */
+  z-index: 1;
 }
 
-.appear .animation,
 .fadeInEnter .animation {
   opacity: 0;
   transform: rotateX(-60deg) rotateY(0);
@@ -70,14 +65,12 @@
   transition: none;
 }
 
-.appearActive .animation,
 .fadeInEnter.fadeInEnterActive .animation {
   opacity: 0;
   transform: rotateX(-60deg) rotateY(0);
   transform-origin: 50% 50% -500px;
 }
 
-.appearDone .animation,
 .fadeInEnterDone .animation {
   opacity: 1;
   transition: transform 400ms 100ms, opacity 300ms 100ms;
@@ -106,18 +99,19 @@
   pointer-events: none;
 }
 
-.swipeLeftEnterDone .animation {
+.swipeLeftEnterDone .animation,
+.swipeRightEnterDone .animation {
   opacity: 0;
   pointer-events: none;
-  transform: rotateX(0) rotateY(40deg);
   transform-origin: 50% 50% 1000px;
   transition: transform 400ms, opacity 400ms;
 }
 
+
+.swipeLeftEnterDone .animation {
+  transform: rotateX(0) rotateY(40deg);
+}
+
 .swipeRightEnterDone .animation {
-  opacity: 0;
-  pointer-events: none;
   transform: rotateX(0) rotateY(-40deg);
-  transform-origin: 50% 50% 1000px;
-  transition: transform 400ms, opacity 400ms;
 }
