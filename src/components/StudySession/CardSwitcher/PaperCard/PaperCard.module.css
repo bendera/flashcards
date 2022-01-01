@@ -48,62 +48,76 @@
 }
 
 .animation {
-  transform-origin: 50% 50% -300px;
+  opacity: 0;
 }
 
-.root.fadeIn {
+.appear,
+.fadeInEnter,
+.appearActive,
+.fadeInEnterActive,
+.appearDone,
+.fadeInEnterDone {
   perspective: 500px;
-  transform: rotateX(0);
-  transform-origin: 50% 50% -500px;
+  /* transform: rotateX(0); */
+  /* transform-origin: 50% 50% -500px; */
 }
 
-.animation.fadeInEnter {
+.appear .animation,
+.fadeInEnter .animation {
   opacity: 0;
-  transform: rotateX(-60deg);
+  transform: rotateX(-60deg) rotateY(0);
   transform-origin: 50% 50% -500px;
+  transition: none;
 }
 
-.animation.fadeInEnterActive {
+.appearActive .animation,
+.fadeInEnter.fadeInEnterActive .animation {
   opacity: 0;
-  transform: rotateX(-60deg);
+  transform: rotateX(-60deg) rotateY(0);
   transform-origin: 50% 50% -500px;
 }
 
-.animation.fadeInEnterDone {
+.appearDone .animation,
+.fadeInEnterDone .animation {
   opacity: 1;
   transition: transform 400ms 100ms, opacity 300ms 100ms;
-  transform: rotateX(0);
+  transform: rotateX(0) rotateY(0);
   transform-origin: 50% 50% -500px;
 }
 
-.root.swipeLeft,
-.root.swipeRight {
+.swipeLeftEnter,
+.swipeRightEnter,
+.swipeLeftEnterActive,
+.swipeRightEnterActive,
+.swipeLeftEnterDone,
+.swipeRightEnterDone {
   perspective: 1000px;
 }
 
-.animation.swipeLeftEnter,
-.animation.swipeRightEnter {
+.swipeLeftEnter .animation,
+.swipeRightEnter .animation {
   opacity: 1;
+  transition: none;
 }
 
-.animation.swipeLeftEnterActive,
-.animation.swipeRightEnterActive {
+.swipeLeftEnterActive .animation,
+.swipeRightEnterActive .animation {
   opacity: 1;
   pointer-events: none;
 }
 
-.animation.swipeLeftEnterDone {
+.swipeLeftEnterDone .animation {
   opacity: 0;
   pointer-events: none;
-  transform: rotateY(40deg);
+  transform: rotateX(0) rotateY(40deg);
   transform-origin: 50% 50% 1000px;
   transition: transform 400ms, opacity 400ms;
 }
 
-.animation.swipeRightEnterDone {
+.swipeRightEnterDone .animation {
   opacity: 0;
   pointer-events: none;
-  transform: rotateY(-40deg);
+  transform: rotateX(0) rotateY(-40deg);
   transform-origin: 50% 50% 1000px;
   transition: transform 400ms, opacity 400ms;
 }
