@@ -25,15 +25,12 @@ const initialState: DeckCatalogState = {
   loaded: false,
 };
 
-export const fetchCatalog = createAsyncThunk(
-  'deckCatalog/load',
-  async () => {
-    const api = new FlashcardsAPI();
-    const res = await api.getDeckCatalog();
+export const fetchCatalog = createAsyncThunk('deckCatalog/load', async () => {
+  const api = new FlashcardsAPI();
+  const res = await api.getDeckCatalog();
 
-    return res.data;
-  }
-);
+  return res.data;
+});
 
 export const createCatalogItem = createAsyncThunk(
   'deckCatalog/create',
@@ -107,6 +104,12 @@ export const selectDeckCatalogItems = (state: RootState) => {
   const { entities } = state.deckCatalog;
 
   return entities.allIds.map((id) => entities.byId[id]);
+};
+
+export const selectActiveDeckId = (state: RootState) => {
+  const { allIds, byId } = state.deckCatalog.entities;
+
+  return allIds.find((id) => byId[id].active === 1);
 };
 
 export default deckCatalogSlice.reducer;

@@ -1,4 +1,4 @@
-import { openDB, DBSchema } from 'idb/with-async-ittr-cjs';
+import { openDB, DBSchema } from 'idb/with-async-ittr';
 import { FlashCard } from 'types';
 
 const STORAGE_DECKS = 'decks';

@@ -1,30 +1,11 @@
 .root {
-  height: 100%;
-  overflow: hidden;
+  height: 300px;
   position: relative;
-  width: 100%;
+  width: 500px;
 }
 
 .card {
-  left: 50%;
-  margin-left: -250px;
-  margin-top: -150px;
-  position: absolute;
-  top: 50%;
-}
-
-.shadow {
-  --shadow-color: 240, 240, 240;
-
-  background: radial-gradient(
-    rgba(var(--shadow-color), 0) 50%,
-    rgba(var(--shadow-color), 1) 60%
-  );
-  height: 100%;
   left: 0;
   position: absolute;
-  pointer-events: none;
   top: 0;
-  width: 100%;
-  z-index: 100;
 }

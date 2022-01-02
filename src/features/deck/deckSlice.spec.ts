@@ -1,5 +1,7 @@
 import deckReducer, { DeckState, demote, draw, promote } from './deckSlice';
 
+jest.mock('idb/with-async-ittr');
+
 const createExampleState = (): DeckState => ({
   data: {
     cards: [

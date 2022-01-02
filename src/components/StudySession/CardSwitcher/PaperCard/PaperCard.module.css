@@ -60,14 +60,14 @@
 
 .fadeInEnter .animation {
   opacity: 0;
-  transform: rotateX(-60deg) rotateY(0);
+  transform: rotateX(60deg) rotateY(0);
   transform-origin: 50% 50% -500px;
   transition: none;
 }
 
 .fadeInEnter.fadeInEnterActive .animation {
   opacity: 0;
-  transform: rotateX(-60deg) rotateY(0);
+  transform: rotateX(60deg) rotateY(0);
   transform-origin: 50% 50% -500px;
 }
 

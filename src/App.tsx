@@ -3,11 +3,9 @@ import { Button, Drawer, DrawerSize } from '@blueprintjs/core';
 import cn from 'classnames';
 import { useAppDispatch } from './app/hooks';
 import { fetchActiveDeck } from './features/deck/deckSlice';
-import Settings from './components/Settings/Settings';
+import Settings from 'components/Settings/Settings';
+import StudySession from 'components/StudySession/StudySession';
 import styles from './App.module.css';
-
-import FlashcardsAPI from 'utils/FlashcardsAPI';
-import { nanoid } from 'nanoid';
 
 function App() {
   const dispatch = useAppDispatch();
@@ -23,28 +21,27 @@ function App() {
 
   const classes = cn(styles.App);
 
-  useEffect(() => {
+  /* useEffect(() => {
     dispatch(fetchActiveDeck());
-  }, [dispatch]);
+  }, [dispatch]); */
 
   return (
     <div className={classes}>
-      <header className="App-header">
-        <Button
-          icon="menu"
-          onClick={onOpenOverlayClick}
-          minimal
-          className={styles.menuButton}
-        />
-        <Drawer
-          isOpen={showSettings}
-          onClose={onModalClose}
-          size={DrawerSize.LARGE}
-          title="Settings"
-        >
-          <Settings />
-        </Drawer>
-      </header>
+      <Button
+        icon="menu"
+        onClick={onOpenOverlayClick}
+        minimal
+        className={styles.menuButton}
+      />
+      <StudySession />
+      <Drawer
+        isOpen={showSettings}
+        onClose={onModalClose}
+        size={DrawerSize.LARGE}
+        title="Settings"
+      >
+        <Settings />
+      </Drawer>
     </div>
   );
 }

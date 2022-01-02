@@ -1,14 +1,28 @@
-.wrapper {
+.root {
   align-items: center;
   display: flex;
   height: 100vh;
   justify-content: center;
+  overflow: hidden;
+  position: relative;
   width: 100%;
 }
 
-.temp {
+.content {
   position: absolute;
-  left: 0;
-  top: 0;
-  z-index: 10;
+  height: 300px;
+  width: 500px;
+}
+
+.buttons {
+  bottom: -80px;
+  display: flex;
+  justify-content: center;
+  position: absolute;
+  width: 500px;
+}
+
+.button {
+  margin: 0 10px;
+  width: 140px;
 }

@@ -8,6 +8,7 @@ import {
   deleteCatalogItem,
   fetchCatalog,
 } from 'features/deckCatalog/deckCatalogSlice';
+import { deleteDeck } from 'features/deck/thunks';
 import EditCards from './EditCards/EditCards';
 import EditDeck from './EditDeck/EditDeck';
 import ListDecks from './ListDecks/ListDecks';
@@ -27,6 +28,7 @@ const Settings: FC = () => {
 
   const handleDelete = async (item: DeckCatalogItem) => {
     await dispatch(deleteCatalogItem(item.id));
+    await dispatch(deleteDeck(item.id));
     dispatch(fetchCatalog());
   };
 

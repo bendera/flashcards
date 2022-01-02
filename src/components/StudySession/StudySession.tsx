@@ -1,84 +1,88 @@
-import { FC, useState } from 'react';
+import { FC, useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
 import { useAppDispatch } from 'app/hooks';
-import { draw } from 'features/deck/deckSlice';
-import PaperCard from './CardSwitcher/PaperCard/PaperCard';
-import styles from './StudySession.module.css';
+import {
+  demote,
+  draw,
+  fetchActiveDeck,
+  promote,
+  startSession,
+} from 'features/deck/deckSlice';
+import { selectLastCard, selectSessionCounter } from 'features/deck/selectors';
 import CardSwitcher from './CardSwitcher/CardSwitcher';
-import { FlashCard } from 'types';
+import styles from './StudySession.module.css';
+import { Button, Intent } from '@blueprintjs/core';
+import { IconNames } from '@blueprintjs/icons';
 
-interface StudySessionProps {
-  props1?: string;
-  props2?: string;
-}
-
-const StudySession: FC<StudySessionProps> = ({ props1, props2 }) => {
+const StudySession: FC = () => {
   const dispatch = useAppDispatch();
-  const [demoCards, setDemoCards] = useState<FlashCard[]>([
-    {
-      backSide: 'puddle',
-      frontSide: 'pocsolya',
-      id: 'demo1',
-    },
-    {
-      backSide: 'obsessive',
-      frontSide: 'megszállott',
-      id: 'demo2',
-    },
-    {
-      backSide: 'sturdy',
-      frontSide: 'erős',
-      id: 'demo3',
-    },
-  ]);
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const [nextIndex, setNextIndex] = useState(1);
+  const lastCard = useSelector(selectLastCard);
+  const sessionCounter = useSelector(selectSessionCounter);
   const [direction, setDirection] = useState<'left' | 'right'>('left');
-  const currentCard =
-    currentIndex > -1 ? demoCards[currentIndex] : demoCards[0];
-
-  const handleDrawClick = () => {
-    dispatch(draw());
-  };
 
   const handlePromoteClick = () => {
     setDirection('right');
-    setCurrentIndex(currentIndex < demoCards.length - 1 ? currentIndex + 1 : 0);
+    dispatch(promote());
+    dispatch(draw());
   };
 
   const handleDemoteClick = () => {
     setDirection('left');
-    setCurrentIndex(currentIndex < demoCards.length - 1 ? currentIndex + 1 : 0);
+    dispatch(demote());
+    dispatch(draw());
   };
 
+  useEffect(() => {
+    const init = async () => {
+      await dispatch(fetchActiveDeck());
+
+      if (sessionCounter > 0) {
+        dispatch(draw());
+      } else {
+        dispatch(startSession());
+        dispatch(draw());
+      }
+    };
+
+    init();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [dispatch]);
+
   return (
-    <div className={styles.wrapper}>
-      <div className={styles.temp}>
-        <button
-          type="button"
-          onClick={() => {
-            handleDrawClick();
-          }}
-        >
-          draw
-        </button>
-        <button
-          type="button"
-          onClick={() => {
-            handlePromoteClick();
-          }}
-        >
-          promote
-        </button>
-        <button
-          type="button"
-          onClick={() => {
-            handleDemoteClick();
-          }}
-        >
-          demote
-        </button>
+    <div className={styles.root}>
+      <div className={styles.content}>
+        <div className={styles.cards}>
+          {lastCard ? (
+            <CardSwitcher direction={direction} currentCard={lastCard} />
+          ) : null}
+        </div>
+        <div className={styles.buttons}>
+          <Button
+            className={styles.button}
+            icon={IconNames.CROSS}
+            intent={Intent.DANGER}
+            large
+            minimal
+            onClick={() => {
+              handleDemoteClick();
+            }}
+          >
+            Don't know
+          </Button>
+          <Button
+            className={styles.button}
+            icon={IconNames.TICK}
+            intent={Intent.SUCCESS}
+            large
+            minimal
+            onClick={() => {
+              handlePromoteClick();
+            }}
+          >
+            Know
+          </Button>
+        </div>
       </div>
-      <CardSwitcher direction={direction} currentCard={currentCard} />
     </div>
   );
 };
