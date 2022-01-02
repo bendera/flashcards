@@ -4,7 +4,7 @@
 @import "~@blueprintjs/popover2/lib/css/blueprint-popover2.css";
 
 body {
-  background: linear-gradient(#e7e7e7, #fcfcfc);
+  background: radial-gradient(#fcfcfc, #e7e7e7);
   height: 100%;
   margin: 0;
 }
