@@ -24,5 +24,6 @@
 
 .button {
   margin: 0 10px;
+  user-select: none;
   width: 140px;
 }

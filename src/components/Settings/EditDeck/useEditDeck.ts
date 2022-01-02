@@ -16,7 +16,10 @@ const createAnEmptyCard = (): FlashCard => {
 
 type DeckMetaData = Omit<DeckItem, 'id' | 'title' | 'cards'>;
 
-const useEditDeck = (deckToEdit: DeckCatalogItem) => {
+const useEditDeck = (
+  deckToEdit: DeckCatalogItem,
+  onEditFinished: () => void
+) => {
   const { active, id, title } = deckToEdit;
   const emptyCard = createAnEmptyCard();
   const dispatch = useAppDispatch();
@@ -122,6 +125,7 @@ const useEditDeck = (deckToEdit: DeckCatalogItem) => {
         lastCard,
       })
     );
+    onEditFinished();
   };
 
   const handleTitleChange = (value: string) => {

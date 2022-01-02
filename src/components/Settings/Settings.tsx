@@ -14,11 +14,15 @@ import EditDeck from './EditDeck/EditDeck';
 import ListDecks from './ListDecks/ListDecks';
 import styles from './Settings.module.css';
 
-type VisibleView = 'decks' | 'ui settings' | 'edit deck';
+export type SettingsView = 'decks' | 'ui settings' | 'edit deck';
 
-const Settings: FC = () => {
+interface SettingsProps {
+  activeView?: SettingsView;
+}
+
+const Settings: FC<SettingsProps> = ({ activeView = 'decks' }) => {
   const dispatch = useAppDispatch();
-  const [view, setView] = useState<VisibleView>('decks');
+  const [view, setView] = useState<SettingsView>(activeView);
   const [deckToEdit, setDeckToEdit] = useState<DeckCatalogItem>();
 
   const handleEdit = (item: DeckCatalogItem) => {
@@ -41,6 +45,10 @@ const Settings: FC = () => {
 
     setDeckToEdit(item);
     setView('edit deck');
+  };
+
+  const handleEditFinished = () => {
+    setView('decks');
   };
 
   return (
@@ -72,7 +80,12 @@ const Settings: FC = () => {
           />
         )}
         {view === 'ui settings' && <EditCards />}
-        {view === 'edit deck' && <EditDeck deckToEdit={deckToEdit} />}
+        {view === 'edit deck' && (
+          <EditDeck
+            deckToEdit={deckToEdit}
+            onEditFinished={handleEditFinished}
+          />
+        )}
       </div>
     </div>
   );

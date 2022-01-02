@@ -10,10 +10,12 @@ import styles from './EditDeck.module.css';
 
 interface EditDecksProps {
   deckToEdit?: DeckCatalogItem;
+  onEditFinished: () => void;
 }
 
 const EditDeck: FC<EditDecksProps> = ({
   deckToEdit = { id: '', title: '', active: 0 },
+  onEditFinished,
 }) => {
   const {
     cards,
@@ -26,7 +28,7 @@ const EditDeck: FC<EditDecksProps> = ({
     handleSave,
     handleSwap,
     handleTitleChange,
-  } = useEditDeck(deckToEdit);
+  } = useEditDeck(deckToEdit, onEditFinished);
 
   useEffect(() => {
     fetchDeck();
