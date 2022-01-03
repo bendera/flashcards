@@ -1,6 +1,5 @@
-import { FC, useState } from 'react';
+import { FC, useRef, useState } from 'react';
 import { Button, ButtonGroup, Classes } from '@blueprintjs/core';
-import { IconNames } from '@blueprintjs/icons';
 import { nanoid } from 'nanoid';
 import { useAppDispatch } from 'app/hooks';
 import { DeckCatalogItem } from 'utils/FlashcardsAPI';
@@ -21,6 +20,7 @@ interface SettingsProps {
 }
 
 const Settings: FC<SettingsProps> = ({ activeView = 'decks' }) => {
+  const drawerBodyRef = useRef<HTMLDivElement>(null);
   const dispatch = useAppDispatch();
   const [view, setView] = useState<SettingsView>(activeView);
   const [deckToEdit, setDeckToEdit] = useState<DeckCatalogItem>();
@@ -52,42 +52,45 @@ const Settings: FC<SettingsProps> = ({ activeView = 'decks' }) => {
   };
 
   return (
-    <div className={Classes.DRAWER_BODY}>
-      <div className={Classes.DIALOG_BODY}>
-        <ButtonGroup large minimal className={styles.nav}>
-          <Button
-            active={view === 'decks' || view === 'edit deck'}
-            icon={IconNames.INBOX}
-            onClick={() => {
-              setView('decks');
-            }}
-            text="Decks"
-          />
-          <Button
-            active={view === 'ui settings'}
-            icon={IconNames.SETTINGS}
-            onClick={() => {
-              setView('ui settings');
-            }}
-            text="UI settings"
-          />
-        </ButtonGroup>
-        {view === 'decks' && (
-          <ListDecks
-            onCreate={handleCreate}
-            onDelete={handleDelete}
-            onEdit={handleEdit}
-          />
-        )}
-        {view === 'ui settings' && <EditCards />}
-        {view === 'edit deck' && (
-          <EditDeck
-            deckToEdit={deckToEdit}
-            onEditFinished={handleEditFinished}
-          />
-        )}
+    <>
+      <div className={Classes.DRAWER_BODY} ref={drawerBodyRef}>
+        <div className={Classes.DIALOG_BODY}>
+          <ButtonGroup large minimal className={styles.nav}>
+            <Button
+              active={view === 'decks' || view === 'edit deck'}
+              className={styles.button}
+              onClick={() => {
+                setView('decks');
+              }}
+              text="Decks"
+            />
+            <Button
+              active={view === 'ui settings'}
+              className={styles.button}
+              onClick={() => {
+                setView('ui settings');
+              }}
+              text="UI settings"
+            />
+          </ButtonGroup>
+          {view === 'decks' && (
+            <ListDecks
+              onCreate={handleCreate}
+              onDelete={handleDelete}
+              onEdit={handleEdit}
+            />
+          )}
+          {view === 'ui settings' && <EditCards />}
+          {view === 'edit deck' && (
+            <EditDeck
+              deckToEdit={deckToEdit}
+              onEditFinished={handleEditFinished}
+              ancestorElementRef={drawerBodyRef}
+            />
+          )}
+        </div>
       </div>
-    </div>
+    </>
   );
 };
 

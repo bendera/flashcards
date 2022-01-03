@@ -5,12 +5,13 @@ import { useAppDispatch, useAppSelector } from 'app/hooks';
 import { DeckCatalogItem } from 'utils/FlashcardsAPI';
 import {
   fetchCatalog,
+  selectActiveDeckId,
   selectDeckCatalogItems,
   setActiveCatalog,
 } from 'features/deckCatalog/deckCatalogSlice';
 import DeckListItemCard from './DeckListItemCard';
 import styles from './ListDecks.module.css';
-import { fetchActiveDeck } from 'features/deck/deckSlice';
+import { draw, fetchActiveDeck, startSession } from 'features/deck/deckSlice';
 
 interface DeckListItem {
   id: string;
@@ -26,6 +27,7 @@ interface ListDecksProps {
 const ListDecks: FC<ListDecksProps> = ({ onEdit, onDelete, onCreate }) => {
   const dispatch = useAppDispatch();
   const decks = useAppSelector(selectDeckCatalogItems);
+  const activeDeckId = useAppSelector(selectActiveDeckId);
 
   const deckById = (id: string) => decks.find((d) => d.id === id);
 
@@ -48,9 +50,13 @@ const ListDecks: FC<ListDecksProps> = ({ onEdit, onDelete, onCreate }) => {
   };
 
   const handleActive = async (id: string) => {
-    await dispatch(setActiveCatalog(id));
-    await dispatch(fetchCatalog());
-    await dispatch(fetchActiveDeck())
+    if (id !== activeDeckId) {
+      await dispatch(setActiveCatalog(id));
+      await dispatch(fetchCatalog());
+      await dispatch(fetchActiveDeck());
+      dispatch(startSession());
+      dispatch(draw());
+    }
   };
 
   const handleAddNew = () => {
@@ -73,16 +79,15 @@ const ListDecks: FC<ListDecksProps> = ({ onEdit, onDelete, onCreate }) => {
           active={active === 1}
         />
       ))}
-      <Card className={styles.addNew} elevation={Elevation.TWO}>
+      <div className={styles.addNew}>
         <Button
-          icon={IconNames.ADD}
           intent={Intent.PRIMARY}
           large
           onClick={handleAddNew}
         >
           Add new
         </Button>
-      </Card>
+      </div>
     </div>
   );
 };

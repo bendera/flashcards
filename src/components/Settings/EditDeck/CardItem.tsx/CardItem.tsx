@@ -56,18 +56,13 @@ const CardItem: FC<CardItemProps> = ({
         label="Front side"
         labelFor={`f_${id}`}
       >
-        {/* <InputGroup
-          id={`f_${id}`}
-          onInput={handleChange}
-          value={frontSide}
-        /> */}
         <TextArea
+          className={styles.textarea}
+          fill
+          growVertically
           id={`f_${id}`}
           onChange={handleChange}
           value={frontSide}
-          fill
-          growVertically
-          className={styles.textarea}
         />
       </FormGroup>
       <Button
@@ -81,7 +76,14 @@ const CardItem: FC<CardItemProps> = ({
         label="Back side"
         labelFor={`b_${id}`}
       >
-        <InputGroup id={`b_${id}`} onInput={handleChange} value={backSide} />
+        <TextArea
+          id={`b_${id}`}
+          growVertically
+          fill
+          onChange={handleChange}
+          value={backSide}
+          className={styles.textarea}
+        />
       </FormGroup>
       <Button
         className={styles.deleteButton}

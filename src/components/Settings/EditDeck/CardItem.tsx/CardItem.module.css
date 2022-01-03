@@ -1,5 +1,5 @@
 .wrapper {
-  align-items: flex-end;
+  align-items: flex-start;
   display: flex;
   margin-bottom: 10px;
   width: 100%;
@@ -10,8 +10,14 @@
   width: 100%;
 }
 
+.swapButton,
+.deleteButton {
+  margin-top: 22px;
+}
+
 .swapButton {
-  margin: 0 4px;
+  margin-left: 4px;
+  margin-right: 4px;
 }
 
 .deleteButton {
@@ -19,7 +25,5 @@
 }
 
 .textarea {
-  height: 30px;
   resize: none;
-  width: 100%;
 }

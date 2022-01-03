@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react';
+import { RefObject, useLayoutEffect, useRef, useState } from 'react';
 import { nanoid } from 'nanoid';
 import { FlashCard } from 'types';
 import { useAppDispatch } from 'app/hooks';
@@ -18,7 +18,8 @@ type DeckMetaData = Omit<DeckItem, 'id' | 'title' | 'cards'>;
 
 const useEditDeck = (
   deckToEdit: DeckCatalogItem,
-  onEditFinished: () => void
+  onEditFinished: () => void,
+  ancestorElementRef?: RefObject<HTMLElement> | null
 ) => {
   const { active, id, title } = deckToEdit;
   const emptyCard = createAnEmptyCard();
@@ -34,6 +35,13 @@ const useEditDeck = (
     sessionFinished: false,
     lastCard: '',
   });
+
+  useLayoutEffect(() => {
+    if (ancestorElementRef && ancestorElementRef.current) {
+      ancestorElementRef.current.scrollTop =
+        ancestorElementRef.current.scrollHeight;
+    }
+  }, [cards, ancestorElementRef]);
 
   const fetchDeck = async () => {
     const api = new FlashcardsAPI();
@@ -128,6 +136,10 @@ const useEditDeck = (
     onEditFinished();
   };
 
+  const handleCancel = () => {
+    onEditFinished();
+  };
+
   const handleTitleChange = (value: string) => {
     setDeckTitle(value);
   };
@@ -163,6 +175,7 @@ const useEditDeck = (
     deckTitle,
     fetchDeck,
     handleAddCardClick,
+    handleCancel,
     handleCardItemChange,
     handleDelete,
     handleImport,

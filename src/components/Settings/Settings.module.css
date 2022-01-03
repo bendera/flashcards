@@ -8,3 +8,12 @@
 .nav {
   margin-bottom: 40px;
 }
+
+.button {
+  margin-right: 5px;
+}
+
+.cancel {
+  display: flex;
+  margin-left: auto;
+}

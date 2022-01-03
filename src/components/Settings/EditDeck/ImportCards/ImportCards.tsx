@@ -79,7 +79,7 @@ const ImportCards: FC<ImportCardsProps> = ({ onImport: onSave = noop }) => {
         icon={isOpen ? IconNames.DELETE : IconNames.IMPORT}
         onClick={handleToggleClick}
       >
-        {isOpen ? 'Cancel import' : 'Import'}
+        {isOpen ? 'Cancel import' : 'Import flashcards'}
       </Button>
       <Collapse isOpen={isOpen}>
         <div className={styles.form}>

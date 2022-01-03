@@ -1,3 +1,11 @@
+.heading {
+  margin-bottom: 40px;
+}
+
 .cards {
-  margin: 20px 0;
+  margin: 40px 0;
+}
+
+.buttonGroup .button:not(:last-child) {
+  margin-right: 5px;
 }

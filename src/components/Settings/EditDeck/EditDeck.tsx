@@ -1,5 +1,6 @@
-import { FC, useEffect } from 'react';
-import { Button, EditableText } from '@blueprintjs/core';
+import { FC, RefObject, useEffect, useRef } from 'react';
+import { Button, EditableText, Intent } from '@blueprintjs/core';
+import cn from 'classnames';
 
 import { DeckCatalogItem } from 'utils/FlashcardsAPI';
 
@@ -7,15 +8,21 @@ import ImportCards from './ImportCards/ImportCards';
 import CardItem from './CardItem.tsx/CardItem';
 import useEditDeck from './useEditDeck';
 import styles from './EditDeck.module.css';
+import { IconNames } from '@blueprintjs/icons';
 
 interface EditDecksProps {
   deckToEdit?: DeckCatalogItem;
   onEditFinished: () => void;
+  /**
+   * Reference to ancestor element to scroll
+   */
+  ancestorElementRef?: RefObject<HTMLElement>;
 }
 
 const EditDeck: FC<EditDecksProps> = ({
   deckToEdit = { id: '', title: '', active: 0 },
   onEditFinished,
+  ancestorElementRef = null,
 }) => {
   const {
     cards,
@@ -28,7 +35,7 @@ const EditDeck: FC<EditDecksProps> = ({
     handleSave,
     handleSwap,
     handleTitleChange,
-  } = useEditDeck(deckToEdit, onEditFinished);
+  } = useEditDeck(deckToEdit, onEditFinished, ancestorElementRef);
 
   useEffect(() => {
     fetchDeck();
@@ -37,7 +44,7 @@ const EditDeck: FC<EditDecksProps> = ({
 
   return (
     <div>
-      <h1 className="bp3-heading">
+      <h1 className={cn('bp3-heading', styles.heading)}>
         <EditableText
           onChange={handleTitleChange}
           placeholder="Edit title..."
@@ -55,9 +62,23 @@ const EditDeck: FC<EditDecksProps> = ({
             onSwap={handleSwap}
           />
         ))}
+        <Button icon={IconNames.ADD} onClick={handleAddCardClick}>
+          Add card
+        </Button>
       </div>
-      <Button onClick={handleAddCardClick}>Add card</Button>
-      <Button onClick={handleSave}>Save</Button>
+      <div className={styles.buttonGroup}>
+        <Button
+          className={styles.button}
+          intent={Intent.PRIMARY}
+          large
+          onClick={handleSave}
+        >
+          Save deck
+        </Button>
+        <Button className={styles.button} large minimal onClick={handleSave}>
+          Cancel
+        </Button>
+      </div>
     </div>
   );
 };
