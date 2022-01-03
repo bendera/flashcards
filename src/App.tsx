@@ -11,7 +11,7 @@ function App() {
   const dispatch = useAppDispatch();
   const [showSettings, setShowSettings] = useState(false);
   const [activeSettingsView, setActiveSettingsView] =
-    useState<SettingsView>('ui settings');
+    useState<SettingsView>('options');
 
   const onOpenOverlayClick = () => {
     setShowSettings(true);

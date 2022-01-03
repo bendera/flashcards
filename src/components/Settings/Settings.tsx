@@ -8,12 +8,12 @@ import {
   fetchCatalog,
 } from 'features/deckCatalog/deckCatalogSlice';
 import { deleteDeck } from 'features/deck/thunks';
-import EditCards from './EditCards/EditCards';
+import Options from './Options/Options';
 import EditDeck from './EditDeck/EditDeck';
 import ListDecks from './ListDecks/ListDecks';
 import styles from './Settings.module.css';
 
-export type SettingsView = 'decks' | 'ui settings' | 'edit deck';
+export type SettingsView = 'decks' | 'options' | 'edit deck';
 
 interface SettingsProps {
   activeView?: SettingsView;
@@ -65,12 +65,12 @@ const Settings: FC<SettingsProps> = ({ activeView = 'decks' }) => {
               text="Decks"
             />
             <Button
-              active={view === 'ui settings'}
+              active={view === 'options'}
               className={styles.button}
               onClick={() => {
-                setView('ui settings');
+                setView('options');
               }}
-              text="UI settings"
+              text="Options"
             />
           </ButtonGroup>
           {view === 'decks' && (
@@ -80,7 +80,7 @@ const Settings: FC<SettingsProps> = ({ activeView = 'decks' }) => {
               onEdit={handleEdit}
             />
           )}
-          {view === 'ui settings' && <EditCards />}
+          {view === 'options' && <Options />}
           {view === 'edit deck' && (
             <EditDeck
               deckToEdit={deckToEdit}
