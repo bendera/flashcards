@@ -29,8 +29,8 @@ export const deckSlice = createSlice({
   name: 'deck',
   initialState,
   reducers: {
-    startSession(state) {
-      state.data.sessionCounter = 1;
+    startNextSession(state) {
+      state.data.sessionCounter += 1;
       state.data.sessionFinished = false;
     },
     draw(state) {
@@ -107,7 +107,7 @@ export const deckSlice = createSlice({
   },
 });
 
-export const { startSession, draw, promote, demote } = deckSlice.actions;
+export const { startNextSession, draw, promote, demote } = deckSlice.actions;
 
 export { fetchActiveDeck, saveDeck };
 

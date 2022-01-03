@@ -1,6 +1,5 @@
-import { FC, useEffect, useState } from 'react';
-import { Button, Card, Elevation, Intent } from '@blueprintjs/core';
-import { IconNames } from '@blueprintjs/icons';
+import { FC, useEffect } from 'react';
+import { Button, Intent } from '@blueprintjs/core';
 import { useAppDispatch, useAppSelector } from 'app/hooks';
 import { DeckCatalogItem } from 'utils/FlashcardsAPI';
 import {
@@ -9,14 +8,13 @@ import {
   selectDeckCatalogItems,
   setActiveCatalog,
 } from 'features/deckCatalog/deckCatalogSlice';
+import {
+  draw,
+  fetchActiveDeck,
+  startNextSession,
+} from 'features/deck/deckSlice';
 import DeckListItemCard from './DeckListItemCard';
 import styles from './ListDecks.module.css';
-import { draw, fetchActiveDeck, startSession } from 'features/deck/deckSlice';
-
-interface DeckListItem {
-  id: string;
-  title: string;
-}
 
 interface ListDecksProps {
   onEdit: (item: DeckCatalogItem) => void;
@@ -54,7 +52,7 @@ const ListDecks: FC<ListDecksProps> = ({ onEdit, onDelete, onCreate }) => {
       await dispatch(setActiveCatalog(id));
       await dispatch(fetchCatalog());
       await dispatch(fetchActiveDeck());
-      dispatch(startSession());
+      dispatch(startNextSession());
       dispatch(draw());
     }
   };
@@ -80,11 +78,7 @@ const ListDecks: FC<ListDecksProps> = ({ onEdit, onDelete, onCreate }) => {
         />
       ))}
       <div className={styles.addNew}>
-        <Button
-          intent={Intent.PRIMARY}
-          large
-          onClick={handleAddNew}
-        >
+        <Button intent={Intent.PRIMARY} large onClick={handleAddNew}>
           Add new
         </Button>
       </div>

@@ -1,5 +1,4 @@
 import { FC, useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
 import { useAppDispatch, useAppSelector } from 'app/hooks';
 import {
   demote,
@@ -7,7 +6,7 @@ import {
   fetchActiveDeck,
   promote,
   saveDeck,
-  startSession,
+  startNextSession,
 } from 'features/deck/deckSlice';
 import { selectLastCard, selectSessionCounter } from 'features/deck/selectors';
 import CardSwitcher from './CardSwitcher/CardSwitcher';
@@ -19,6 +18,7 @@ import {
   selectActiveDeckId,
   selectDeckCatalogItems,
 } from 'features/deckCatalog/deckCatalogSlice';
+import ActionButtons from './ActionButtons/ActionButtons';
 
 interface StudySessionProps {
   onCreateDeck: () => void;
@@ -30,29 +30,37 @@ const StudySession: FC<StudySessionProps> = ({
   onSelectActiveDeck,
 }) => {
   const dispatch = useAppDispatch();
-  const lastCard = useSelector(selectLastCard);
-  const sessionCounter = useSelector(selectSessionCounter);
-  const activeDeck = useSelector(selectActiveDeckId);
+  const lastCard = useAppSelector(selectLastCard);
+  const sessionCounter = useAppSelector(selectSessionCounter);
+  const activeDeck = useAppSelector(selectActiveDeckId);
+  const sessionFinished = useAppSelector(
+    (state) => state.deck.data.sessionFinished
+  );
+  const deckCatalogItems = useAppSelector(selectDeckCatalogItems);
   const [dataLoaded, setDataLoaded] = useState(false);
-  const deckCatalogItems = useSelector(selectDeckCatalogItems);
   const [direction, setDirection] = useState<'left' | 'right'>('left');
 
   const thereAreNoDecks = deckCatalogItems.length < 1 && dataLoaded;
   const thereIsNoActiveDeck = !activeDeck && !thereAreNoDecks && dataLoaded;
   const readyToUse = activeDeck && deckCatalogItems.length > 0 && dataLoaded;
 
-  const handlePromoteClick = () => {
+  const handlePromote = () => {
     setDirection('right');
     dispatch(promote());
     dispatch(draw());
     dispatch(saveDeck());
   };
 
-  const handleDemoteClick = () => {
+  const handleDemote = () => {
     setDirection('left');
     dispatch(demote());
     dispatch(draw());
     dispatch(saveDeck());
+  };
+
+  const startNewSession = () => {
+    dispatch(startNextSession());
+    dispatch(draw());
   };
 
   useEffect(() => {
@@ -70,7 +78,7 @@ const StudySession: FC<StudySessionProps> = ({
       if (sessionCounter > 0) {
         dispatch(draw());
       } else {
-        dispatch(startSession());
+        dispatch(startNextSession());
         dispatch(draw());
       }
     };
@@ -115,32 +123,27 @@ const StudySession: FC<StudySessionProps> = ({
                 <CardSwitcher direction={direction} currentCard={lastCard} />
               ) : null}
             </div>
-            <div className={styles.buttons}>
-              <Button
-                className={styles.button}
-                icon={IconNames.CROSS}
-                intent={Intent.DANGER}
-                large
-                minimal
-                onClick={() => {
-                  handleDemoteClick();
-                }}
-              >
-                Don't know
-              </Button>
-              <Button
-                className={styles.button}
-                icon={IconNames.TICK}
-                intent={Intent.SUCCESS}
-                large
-                minimal
-                onClick={() => {
-                  handlePromoteClick();
-                }}
-              >
-                Know
-              </Button>
-            </div>
+            {!sessionFinished ? (
+              <ActionButtons
+                onPromote={handlePromote}
+                onDemote={handleDemote}
+              />
+            ) : (
+              <NonIdealState
+                title="The cards are out"
+                action={
+                  <Button
+                    intent={Intent.PRIMARY}
+                    large
+                    onClick={() => {
+                      startNewSession();
+                    }}
+                  >
+                    Start a new session
+                  </Button>
+                }
+              />
+            )}
           </>
         )}
       </div>

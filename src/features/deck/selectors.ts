@@ -14,3 +14,6 @@ export const selectLastCard = (state: RootState) => {
 
   return cards.find((c) => c.id === lastCard);
 };
+
+export const selectSessionFinished = (state: RootState) =>
+  state.deck.data.sessionFinished;

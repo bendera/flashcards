@@ -13,17 +13,3 @@
   height: 300px;
   width: 500px;
 }
-
-.buttons {
-  bottom: -80px;
-  display: flex;
-  justify-content: center;
-  position: absolute;
-  width: 500px;
-}
-
-.button {
-  margin: 0 10px;
-  user-select: none;
-  width: 140px;
-}
