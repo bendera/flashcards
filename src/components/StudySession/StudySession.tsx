@@ -75,9 +75,7 @@ const StudySession: FC<StudySessionProps> = ({
 
   useEffect(() => {
     const init = () => {
-      if (sessionCounter > 0) {
-        dispatch(draw());
-      } else {
+      if (sessionCounter < 1) {
         dispatch(startNextSession());
         dispatch(draw());
       }
