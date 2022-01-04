@@ -1,10 +1,18 @@
-import { RefObject, useLayoutEffect, useRef, useState } from 'react';
+import {
+  FormEvent,
+  RefObject,
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState,
+} from 'react';
 import { nanoid } from 'nanoid';
 import { FlashCard } from 'types';
 import { useAppDispatch } from 'app/hooks';
 import FlashcardsAPI, { DeckCatalogItem, DeckItem } from 'utils/FlashcardsAPI';
 import { updateCatalogItem } from 'features/deckCatalog/deckCatalogSlice';
 import { saveDeck } from 'features/deck/deckSlice';
+import { Command } from './BatchEditToolbar/BatchEditToolbar';
 
 const createAnEmptyCard = (): FlashCard => {
   return {
@@ -35,13 +43,29 @@ const useEditDeck = (
     sessionFinished: false,
     lastCard: '',
   });
+  const [scrollToBottom, setScrollToBottom] = useState(false);
+  const [checkboxStates, setCheckboxStates] = useState<boolean[]>([]);
+
+  useEffect(() => {
+    const newCheckboxStates = cards.map((_, i) => {
+      if (checkboxStates[i]) {
+        return checkboxStates[i];
+      }
+
+      return false;
+    });
+
+    setCheckboxStates(newCheckboxStates);
+  }, [cards]);
 
   useLayoutEffect(() => {
-    if (ancestorElementRef && ancestorElementRef.current) {
-      ancestorElementRef.current.scrollTop =
-        ancestorElementRef.current.scrollHeight;
+    const scrollEl = ancestorElementRef?.current;
+
+    if (scrollToBottom && scrollEl) {
+      scrollEl.scrollTop = scrollEl.scrollHeight;
+      setScrollToBottom(false);
     }
-  }, [cards, ancestorElementRef]);
+  }, [ancestorElementRef, scrollToBottom]);
 
   const fetchDeck = async () => {
     const api = new FlashcardsAPI();
@@ -83,6 +107,7 @@ const useEditDeck = (
 
     setCards([...cards, newCard]);
     deckMetaDataRef.current.cardsByBoxes[newCard.id] = 1;
+    setScrollToBottom(true);
   };
 
   const handleImport = (imported: FlashCard[]) => {
@@ -170,13 +195,64 @@ const useEditDeck = (
     setCards(newCards);
   };
 
+  const handleCardItemCheckboxChange = (event: FormEvent<HTMLInputElement>) => {
+    const target = event.target as HTMLInputElement;
+
+    if (target.type === 'checkbox') {
+      const index = cards.findIndex(({ id }) => id === target.value);
+      const newCheckboxStates = [...checkboxStates];
+      newCheckboxStates[index] = target.checked;
+
+      setCheckboxStates(newCheckboxStates);
+    }
+  };
+
+  const handleBatchEditChange = (command: Command) => {
+    switch (command) {
+      case 'selectAll':
+        setCheckboxStates(checkboxStates.map((_) => true));
+        break;
+      case 'selectNone':
+        setCheckboxStates(checkboxStates.map((_) => false));
+        break;
+      case 'swapSelected':
+        {
+          const newCards = cards.map((c, i) => {
+            if (checkboxStates[i] === true) {
+              const { id, frontSide, backSide } = c;
+
+              return {
+                id,
+                frontSide: backSide,
+                backSide: frontSide,
+              };
+            }
+
+            return c;
+          });
+          setCards(newCards);
+        }
+        break;
+      case 'deleteSelected':
+        {
+          const newCards = cards.filter((_, i) => checkboxStates[i] !== true);
+          setCards(newCards);
+          setCheckboxStates(newCards.map((_) => false));
+        }
+        break;
+    }
+  };
+
   return {
     cards,
+    checkboxStates,
     deckTitle,
     fetchDeck,
     handleAddCardClick,
+    handleBatchEditChange,
     handleCancel,
     handleCardItemChange,
+    handleCardItemCheckboxChange,
     handleDelete,
     handleImport,
     handleSave,

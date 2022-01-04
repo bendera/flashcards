@@ -1,14 +1,15 @@
-import { FC, RefObject, useEffect, useRef } from 'react';
-import { Button, EditableText, Intent } from '@blueprintjs/core';
+import { FC, RefObject, useEffect } from 'react';
+import { Button, Divider, EditableText, Intent } from '@blueprintjs/core';
+import { IconNames } from '@blueprintjs/icons';
 import cn from 'classnames';
 
 import { DeckCatalogItem } from 'utils/FlashcardsAPI';
 
 import ImportCards from './ImportCards/ImportCards';
 import CardItem from './CardItem.tsx/CardItem';
+import BatchEditToolbar from './BatchEditToolbar/BatchEditToolbar';
 import useEditDeck from './useEditDeck';
 import styles from './EditDeck.module.css';
-import { IconNames } from '@blueprintjs/icons';
 
 interface EditDecksProps {
   deckToEdit?: DeckCatalogItem;
@@ -26,10 +27,13 @@ const EditDeck: FC<EditDecksProps> = ({
 }) => {
   const {
     cards,
+    checkboxStates,
     deckTitle,
     fetchDeck,
     handleAddCardClick,
+    handleBatchEditChange,
     handleCardItemChange,
+    handleCardItemCheckboxChange,
     handleDelete,
     handleImport,
     handleSave,
@@ -53,15 +57,28 @@ const EditDeck: FC<EditDecksProps> = ({
       </h1>
       <ImportCards onImport={handleImport} />
       <div className={styles.cards}>
-        {cards.map((c) => (
+        {cards.length > 0 && (
+          <>
+            <BatchEditToolbar
+              onChange={handleBatchEditChange}
+              cards={cards}
+              checkboxStates={checkboxStates}
+            />
+            <Divider />
+          </>
+        )}
+        {cards.map((c, i) => (
           <CardItem
             card={c}
             key={c.id}
             onChange={handleCardItemChange}
+            onCheckboxChange={handleCardItemCheckboxChange}
             onDelete={handleDelete}
             onSwap={handleSwap}
+            selected={checkboxStates[i]}
           />
         ))}
+        <Divider />
         <Button icon={IconNames.ADD} onClick={handleAddCardClick}>
           Add card
         </Button>

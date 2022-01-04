@@ -1,5 +1,11 @@
-import { ChangeEvent, FC, useState } from 'react';
-import { Button, FormGroup, InputGroup, TextArea } from '@blueprintjs/core';
+import { ChangeEvent, FC, FormEvent, useState } from 'react';
+import {
+  Button,
+  Checkbox,
+  FormGroup,
+  InputGroup,
+  TextArea,
+} from '@blueprintjs/core';
 import { IconNames } from '@blueprintjs/icons';
 import { FlashCard } from 'types';
 import noop from 'utils/noop';
@@ -7,7 +13,9 @@ import styles from './CardItem.module.css';
 
 interface CardItemProps {
   card: FlashCard;
+  selected?: boolean;
   onChange?: (card: FlashCard) => void;
+  onCheckboxChange?: (event: FormEvent<HTMLInputElement>) => void;
   onDelete?: (id: string) => void;
   onSwap?: (card: FlashCard) => void;
 }
@@ -15,8 +23,10 @@ interface CardItemProps {
 const CardItem: FC<CardItemProps> = ({
   card,
   onChange = noop,
+  onCheckboxChange = noop,
   onDelete = noop,
   onSwap = noop,
+  selected = false,
 }) => {
   const { id, frontSide, backSide } = card;
 
@@ -51,6 +61,12 @@ const CardItem: FC<CardItemProps> = ({
 
   return (
     <div className={styles.wrapper}>
+      <Checkbox
+        checked={selected}
+        className={styles.checkbox}
+        onChange={onCheckboxChange}
+        value={id}
+      />
       <FormGroup
         className={styles.formGroup}
         label="Front side"

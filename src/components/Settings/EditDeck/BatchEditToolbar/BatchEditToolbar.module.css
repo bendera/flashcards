@@ -1,0 +1,10 @@
+.root {
+  align-items: center;
+  display: flex;
+  height: 40px;
+  margin-bottom: 20px;
+}
+
+.checkbox {
+  margin-bottom: 0;
+}
