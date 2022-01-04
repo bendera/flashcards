@@ -78,7 +78,7 @@ const EditDeck: FC<EditDecksProps> = ({
             selected={checkboxStates[i]}
           />
         ))}
-        <Divider />
+        <Divider className={styles.bottomDivider} />
         <Button icon={IconNames.ADD} onClick={handleAddCardClick}>
           Add card
         </Button>

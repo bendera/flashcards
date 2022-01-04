@@ -9,3 +9,7 @@
 .buttonGroup .button:not(:last-child) {
   margin-right: 5px;
 }
+
+.bottomDivider {
+  margin-bottom: 20px;
+}
