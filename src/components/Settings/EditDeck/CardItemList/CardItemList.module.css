@@ -1,0 +1,11 @@
+.root {
+  margin: 40px 0;
+}
+
+.cards {
+  margin-bottom: 31px;
+}
+
+.cardItem:not(:last-child) {
+  margin-bottom: 10px;
+}

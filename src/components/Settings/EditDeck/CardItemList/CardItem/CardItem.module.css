@@ -1,11 +1,10 @@
-.wrapper {
+.root {
   align-items: flex-start;
   display: flex;
-  margin-bottom: 10px;
   width: 100%;
 }
 
-.wrapper .formGroup {
+.root .formGroup {
   margin-bottom: 0;
   width: 100%;
 }

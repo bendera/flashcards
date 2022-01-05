@@ -1,42 +1,47 @@
-import { ChangeEvent, FC, FormEvent, useState } from 'react';
-import {
-  Button,
-  Checkbox,
-  FormGroup,
-  InputGroup,
-  TextArea,
-} from '@blueprintjs/core';
+import { ChangeEvent, FC, FormEvent } from 'react';
+import { Button, Checkbox, FormGroup, TextArea } from '@blueprintjs/core';
 import { IconNames } from '@blueprintjs/icons';
-import { FlashCard } from 'types';
+import cn from 'classnames';
 import noop from 'utils/noop';
+import { CardListItemData } from '../CardItemList';
 import styles from './CardItem.module.css';
 
 interface CardItemProps {
-  card: FlashCard;
-  selected?: boolean;
-  onChange?: (card: FlashCard) => void;
-  onCheckboxChange?: (event: FormEvent<HTMLInputElement>) => void;
-  onDelete?: (id: string) => void;
-  onSwap?: (card: FlashCard) => void;
+  card: CardListItemData;
+  className?: string;
+  onChange?: (item: CardListItemData) => void;
+  onDelete?: (card: CardListItemData) => void;
 }
 
 const CardItem: FC<CardItemProps> = ({
   card,
+  className,
   onChange = noop,
-  onCheckboxChange = noop,
   onDelete = noop,
-  onSwap = noop,
-  selected = false,
 }) => {
-  const { id, frontSide, backSide } = card;
+  const { id, frontSide, backSide, selected } = card;
 
-  const handleChange = (event: any) => {
-    const el = event.currentTarget as HTMLInputElement;
+  const handleCheckboxChange = (event: FormEvent<HTMLInputElement>) => {
+    const target = event.target as HTMLInputElement;
+
+    if (target.type === 'checkbox') {
+      onChange({
+        id,
+        frontSide,
+        backSide,
+        selected: target.checked,
+      });
+    }
+  };
+
+  const handleChange = (event: ChangeEvent<HTMLTextAreaElement>) => {
+    const el = event.currentTarget as HTMLTextAreaElement;
     const val = el.value;
-    const payload: FlashCard = {
+    const payload: CardListItemData = {
       id,
       frontSide,
       backSide,
+      selected,
     };
 
     switch (el.id) {
@@ -52,19 +57,25 @@ const CardItem: FC<CardItemProps> = ({
   };
 
   const handleDelete = () => {
-    onDelete(id);
+    onDelete(card);
   };
 
   const handleSwap = () => {
-    onSwap(card);
+    onChange({
+      id,
+      frontSide: backSide,
+      backSide: frontSide,
+      selected,
+    });
   };
 
   return (
-    <div className={styles.wrapper}>
+    <div className={cn(styles.root, className)}>
       <Checkbox
         checked={selected}
         className={styles.checkbox}
-        onChange={onCheckboxChange}
+        data-testid="CardItem__checkbox"
+        onChange={handleCheckboxChange}
         value={id}
       />
       <FormGroup
@@ -86,6 +97,7 @@ const CardItem: FC<CardItemProps> = ({
         icon={IconNames.SWAP_HORIZONTAL}
         minimal
         onClick={handleSwap}
+        title="Swap sides"
       ></Button>
       <FormGroup
         className={styles.formGroup}
@@ -106,6 +118,7 @@ const CardItem: FC<CardItemProps> = ({
         icon={IconNames.TRASH}
         minimal
         onClick={handleDelete}
+        title="Delete card"
       ></Button>
     </div>
   );

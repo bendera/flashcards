@@ -1,38 +1,53 @@
-import { Button, Checkbox, Intent } from '@blueprintjs/core';
+import { Button, Checkbox } from '@blueprintjs/core';
 import { IconNames } from '@blueprintjs/icons';
-import { FC, useEffect, useState } from 'react';
-import { FlashCard } from 'types';
+import { FC } from 'react';
+import { CardListItemData } from '../CardItemList/CardItemList';
 import styles from './BatchEditToolbar.module.css';
 
-export type Command =
-  | 'selectAll'
-  | 'selectNone'
-  | 'swapSelected'
-  | 'deleteSelected';
+const selectNone = (cards: CardListItemData[]) =>
+  cards.map((c) => ({ ...c, selected: false }));
+
+const selectAll = (cards: CardListItemData[]) =>
+  cards.map((c) => ({ ...c, selected: true }));
+
+const swapSelected = (cards: CardListItemData[]) =>
+  cards.map((c) => {
+    const { id, frontSide, backSide, selected } = c;
+
+    if (!selected) {
+      return c;
+    }
+
+    return {
+      id,
+      frontSide: backSide,
+      backSide: frontSide,
+      selected,
+    };
+  });
+
+const deleteSelected = (cards: CardListItemData[]) =>
+  cards.filter((c) => !c.selected);
 
 interface BatchEditToolbarProps {
-  onChange: (command: Command) => void;
-  cards: FlashCard[];
-  checkboxStates: boolean[];
+  onChange: (cards: CardListItemData[]) => void;
+  cards: CardListItemData[];
 }
 
-const BatchEditToolbar: FC<BatchEditToolbarProps> = ({
-  cards,
-  checkboxStates,
-  onChange,
-}) => {
-  const numChecked = checkboxStates.filter((val) => val === true).length;
-  const indeterminate = numChecked !== checkboxStates.length && numChecked > 0;
-  const checked = numChecked === checkboxStates.length && numChecked > 0;
-  const buttonsDisabled = !(indeterminate || checked);
+const BatchEditToolbar: FC<BatchEditToolbarProps> = ({ cards, onChange }) => {
+  const allSelected = cards.every((c) => c.selected);
+  const noneSelected = cards.every((c) => !c.selected);
+  const mixed = !allSelected && !noneSelected;
+  const checked = mixed || allSelected;
+  const buttonsDisabled = !(mixed || allSelected);
 
   const handleCheckboxChange = () => {
-    if (indeterminate) {
-      onChange('selectNone');
-    } else if (checked) {
-      onChange('selectNone');
+    if (mixed) {
+      onChange(selectNone(cards));
+    } else if (allSelected) {
+      onChange(selectNone(cards));
     } else {
-      onChange('selectAll');
+      onChange(selectAll(cards));
     }
   };
 
@@ -41,7 +56,7 @@ const BatchEditToolbar: FC<BatchEditToolbarProps> = ({
       <Checkbox
         checked={checked}
         className={styles.checkbox}
-        indeterminate={indeterminate}
+        indeterminate={mixed}
         onChange={handleCheckboxChange}
       />
       <Button
@@ -49,7 +64,7 @@ const BatchEditToolbar: FC<BatchEditToolbarProps> = ({
         icon={IconNames.SWAP_HORIZONTAL}
         minimal
         onClick={() => {
-          onChange('swapSelected');
+          onChange(swapSelected(cards));
         }}
       >
         Swap selected
@@ -58,7 +73,9 @@ const BatchEditToolbar: FC<BatchEditToolbarProps> = ({
         disabled={buttonsDisabled}
         icon={IconNames.TRASH}
         minimal
-        onClick={() => onChange('deleteSelected')}
+        onClick={() => {
+          onChange(deleteSelected(cards));
+        }}
       >
         Delete selected
       </Button>

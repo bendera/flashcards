@@ -1,15 +1,32 @@
-import { FC, RefObject, useEffect } from 'react';
-import { Button, Divider, EditableText, Intent } from '@blueprintjs/core';
-import { IconNames } from '@blueprintjs/icons';
+import {
+  FC,
+  RefObject,
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState,
+} from 'react';
+import { Button, EditableText, Intent } from '@blueprintjs/core';
 import cn from 'classnames';
 
-import { DeckCatalogItem } from 'utils/FlashcardsAPI';
+import FlashcardsAPI, { DeckCatalogItem, DeckItem } from 'utils/FlashcardsAPI';
 
 import ImportCards from './ImportCards/ImportCards';
-import CardItem from './CardItem.tsx/CardItem';
-import BatchEditToolbar from './BatchEditToolbar/BatchEditToolbar';
-import useEditDeck from './useEditDeck';
 import styles from './EditDeck.module.css';
+import CardItemList, {
+  CardItemListOperation,
+  CardListItemData,
+} from './CardItemList/CardItemList';
+import { FlashCard } from 'types';
+import { useAppDispatch } from 'app/hooks';
+import { updateCatalogItem } from 'features/deckCatalog/deckCatalogSlice';
+import {
+  fetchActiveDeck,
+  saveDeck,
+  startNextSession,
+} from 'features/deck/deckSlice';
+
+type DeckMetaData = Omit<DeckItem, 'id' | 'title' | 'cards'>;
 
 interface EditDecksProps {
   deckToEdit?: DeckCatalogItem;
@@ -25,26 +42,148 @@ const EditDeck: FC<EditDecksProps> = ({
   onEditFinished,
   ancestorElementRef = null,
 }) => {
-  const {
-    cards,
-    checkboxStates,
-    deckTitle,
-    fetchDeck,
-    handleAddCardClick,
-    handleBatchEditChange,
-    handleCardItemChange,
-    handleCardItemCheckboxChange,
-    handleDelete,
-    handleImport,
-    handleSave,
-    handleSwap,
-    handleTitleChange,
-  } = useEditDeck(deckToEdit, onEditFinished, ancestorElementRef);
+  const { active, id, title } = deckToEdit;
+
+  const dispatch = useAppDispatch();
+  const [cards, setCards] = useState<CardListItemData[]>([]);
+  const [shouldScroll, setShouldScroll] = useState(false);
+  const [deckTitle, setDeckTitle] = useState(title);
+  const deckMetaDataRef = useRef<DeckMetaData>({
+    cardsByBoxes: {},
+    drawCounter: 0,
+    sessionCounter: 0,
+    sessionFinished: false,
+    lastCard: '',
+  });
+
+  const handleTitleChange = (value: string) => {
+    setDeckTitle(value);
+  };
+
+  const handleSave = async () => {
+    if (active === 1) {
+      const ids = cards.map((c) => c.id);
+      deckMetaDataRef.current.drawCounter = 1;
+      deckMetaDataRef.current.sessionCounter = 0;
+      deckMetaDataRef.current.sessionFinished = false;
+      deckMetaDataRef.current.lastCard = ids[0];
+      deckMetaDataRef.current.cardsByBoxes = {};
+
+      ids.forEach((id) => {
+        deckMetaDataRef.current.cardsByBoxes[id] = 1;
+      });
+    }
+
+    const {
+      cardsByBoxes,
+      drawCounter,
+      sessionCounter,
+      sessionFinished,
+      lastCard,
+    } = deckMetaDataRef.current;
+
+    await dispatch(
+      updateCatalogItem({
+        id,
+        title: deckTitle,
+        active,
+      })
+    );
+    await dispatch(
+      saveDeck({
+        id,
+        cards: cards.map(({ id, frontSide, backSide }) => ({
+          id,
+          frontSide,
+          backSide,
+        })),
+        cardsByBoxes,
+        drawCounter,
+        sessionCounter,
+        sessionFinished,
+        title: deckTitle,
+        lastCard,
+      })
+    );
+    await dispatch(fetchActiveDeck());
+    dispatch(startNextSession());
+    onEditFinished();
+  };
+
+  const handleCancel = () => {
+    onEditFinished();
+  };
+
+  const fetchDeck = async () => {
+    const api = new FlashcardsAPI();
+    const res = await api.getDeck(deckToEdit.id);
+
+    if (res.data) {
+      const {
+        cards,
+        cardsByBoxes,
+        drawCounter,
+        sessionCounter,
+        title,
+        lastCard,
+        sessionFinished,
+      } = res.data;
+
+      deckMetaDataRef.current = {
+        cardsByBoxes,
+        drawCounter,
+        sessionCounter,
+        sessionFinished,
+        lastCard,
+      };
+      setDeckTitle(title);
+      setCards(cards.map((c) => ({ ...c, selected: false })));
+    } else {
+      const cardsByBoxes: { [key: string]: number } = {};
+
+      cards.forEach(({ id }) => {
+        cardsByBoxes[id] = 1;
+      });
+
+      deckMetaDataRef.current.cardsByBoxes = cardsByBoxes;
+    }
+  };
 
   useEffect(() => {
     fetchDeck();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [deckToEdit]);
+
+  useLayoutEffect(() => {
+    if (shouldScroll && ancestorElementRef?.current) {
+      ancestorElementRef.current.scrollTop =
+        ancestorElementRef.current.scrollHeight;
+      setShouldScroll(false);
+    }
+  }, [ancestorElementRef, shouldScroll]);
+
+  const handleCardItemListChange = (
+    cards: CardListItemData[],
+    operation?: CardItemListOperation
+  ) => {
+    setCards(cards);
+
+    if (operation === 'add') {
+      setShouldScroll(true);
+    }
+  };
+
+  const handleImport = (imported: FlashCard[]) => {
+    const importedWithSelectedFlag = imported.map((c) => ({
+      ...c,
+      selected: false,
+    }));
+    setCards([...cards, ...importedWithSelectedFlag]);
+
+    imported.forEach((c) => {
+      deckMetaDataRef.current.cardsByBoxes[c.id] = 1;
+    });
+  };
 
   return (
     <div>
@@ -56,33 +195,7 @@ const EditDeck: FC<EditDecksProps> = ({
         />
       </h1>
       <ImportCards onImport={handleImport} />
-      <div className={styles.cards}>
-        {cards.length > 0 && (
-          <>
-            <BatchEditToolbar
-              onChange={handleBatchEditChange}
-              cards={cards}
-              checkboxStates={checkboxStates}
-            />
-            <Divider />
-          </>
-        )}
-        {cards.map((c, i) => (
-          <CardItem
-            card={c}
-            key={c.id}
-            onChange={handleCardItemChange}
-            onCheckboxChange={handleCardItemCheckboxChange}
-            onDelete={handleDelete}
-            onSwap={handleSwap}
-            selected={checkboxStates[i]}
-          />
-        ))}
-        <Divider className={styles.bottomDivider} />
-        <Button icon={IconNames.ADD} onClick={handleAddCardClick}>
-          Add card
-        </Button>
-      </div>
+      <CardItemList cards={cards} onChange={handleCardItemListChange} />
       <div className={styles.buttonGroup}>
         <Button
           className={styles.button}
@@ -92,7 +205,7 @@ const EditDeck: FC<EditDecksProps> = ({
         >
           Save deck
         </Button>
-        <Button className={styles.button} large minimal onClick={handleSave}>
+        <Button className={styles.button} large minimal onClick={handleCancel}>
           Cancel
         </Button>
       </div>

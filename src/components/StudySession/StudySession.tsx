@@ -31,6 +31,7 @@ const StudySession: FC<StudySessionProps> = ({
 }) => {
   const dispatch = useAppDispatch();
   const lastCard = useAppSelector(selectLastCard);
+  console.log(lastCard);
   const sessionCounter = useAppSelector(selectSessionCounter);
   const activeDeck = useAppSelector(selectActiveDeckId);
   const sessionFinished = useAppSelector(
