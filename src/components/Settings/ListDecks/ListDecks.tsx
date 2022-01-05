@@ -92,15 +92,6 @@ const ListDecks: FC<ListDecksProps> = ({
         >
           Add new deck
         </Button>
-        <Button
-          className={styles.buttonClose}
-          large
-          onClick={() => {
-            onComplete();
-          }}
-        >
-          Done
-        </Button>
       </div>
     </div>
   );

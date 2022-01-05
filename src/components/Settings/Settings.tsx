@@ -1,6 +1,7 @@
 import { FC, useRef, useState } from 'react';
-import { Button, ButtonGroup, Classes } from '@blueprintjs/core';
+import { Button, ButtonGroup, Classes, Intent } from '@blueprintjs/core';
 import { nanoid } from 'nanoid';
+import cn from 'classnames';
 import noop from 'utils/noop';
 import { DeckCatalogItem } from 'utils/FlashcardsAPI';
 import { useAppDispatch } from 'app/hooks';
@@ -60,7 +61,7 @@ const Settings: FC<SettingsProps> = ({
     <>
       <div className={Classes.DRAWER_BODY} ref={drawerBodyRef}>
         <div className={Classes.DIALOG_BODY}>
-          <ButtonGroup large minimal className={styles.nav}>
+          <ButtonGroup minimal className={styles.nav}>
             <Button
               active={view === 'decks' || view === 'edit deck'}
               className={styles.button}
@@ -95,6 +96,15 @@ const Settings: FC<SettingsProps> = ({
             />
           )}
         </div>
+      </div>
+      <div className={cn(Classes.DRAWER_FOOTER, styles.footer)}>
+        <Button
+          onClick={() => {
+            onComplete();
+          }}
+        >
+          Done
+        </Button>
       </div>
     </>
   );

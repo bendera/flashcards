@@ -17,3 +17,8 @@
   display: flex;
   margin-left: auto;
 }
+
+.footer {
+  justify-content: flex-end;
+  text-align: right;
+}
