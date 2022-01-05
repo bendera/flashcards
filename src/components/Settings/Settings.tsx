@@ -1,8 +1,9 @@
 import { FC, useRef, useState } from 'react';
 import { Button, ButtonGroup, Classes } from '@blueprintjs/core';
 import { nanoid } from 'nanoid';
-import { useAppDispatch } from 'app/hooks';
+import noop from 'utils/noop';
 import { DeckCatalogItem } from 'utils/FlashcardsAPI';
+import { useAppDispatch } from 'app/hooks';
 import {
   deleteCatalogItem,
   fetchCatalog,
@@ -17,9 +18,13 @@ export type SettingsView = 'decks' | 'options' | 'edit deck';
 
 interface SettingsProps {
   activeView?: SettingsView;
+  onComplete?: () => void;
 }
 
-const Settings: FC<SettingsProps> = ({ activeView = 'decks' }) => {
+const Settings: FC<SettingsProps> = ({
+  activeView = 'decks',
+  onComplete = noop,
+}) => {
   const drawerBodyRef = useRef<HTMLDivElement>(null);
   const dispatch = useAppDispatch();
   const [view, setView] = useState<SettingsView>(activeView);
@@ -76,6 +81,7 @@ const Settings: FC<SettingsProps> = ({ activeView = 'decks' }) => {
           {view === 'decks' && (
             <ListDecks
               onCreate={handleCreate}
+              onComplete={() => onComplete()}
               onDelete={handleDelete}
               onEdit={handleEdit}
             />

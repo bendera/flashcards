@@ -52,7 +52,12 @@ function App() {
         size={DrawerSize.LARGE}
         title="Settings"
       >
-        <Settings activeView={activeSettingsView} />
+        <Settings
+          activeView={activeSettingsView}
+          onComplete={() => {
+            setShowSettings(false);
+          }}
+        />
       </Drawer>
     </div>
   );

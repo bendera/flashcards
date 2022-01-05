@@ -4,9 +4,13 @@
   justify-content: space-around;
 }
 
-.addNew {
+.buttons {
   align-items: center;
   display: flex;
   justify-content: center;
   width: 100%;
+}
+
+.buttonAdd {
+  margin-right: 5px;
 }

@@ -36,7 +36,7 @@ const DeckListItemCard: FC<DeckListItemCardProps> = ({
       >
         {active && (
           <Tag intent={Intent.SUCCESS} className={styles.tag}>
-            Selected
+            Active
           </Tag>
         )}
         {title}

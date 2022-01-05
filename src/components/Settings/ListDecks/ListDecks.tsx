@@ -20,9 +20,15 @@ interface ListDecksProps {
   onEdit: (item: DeckCatalogItem) => void;
   onDelete: (item: DeckCatalogItem) => void;
   onCreate: () => void;
+  onComplete: () => void;
 }
 
-const ListDecks: FC<ListDecksProps> = ({ onEdit, onDelete, onCreate }) => {
+const ListDecks: FC<ListDecksProps> = ({
+  onEdit,
+  onDelete,
+  onCreate,
+  onComplete,
+}) => {
   const dispatch = useAppDispatch();
   const decks = useAppSelector(selectDeckCatalogItems);
   const activeDeckId = useAppSelector(selectActiveDeckId);
@@ -77,9 +83,23 @@ const ListDecks: FC<ListDecksProps> = ({ onEdit, onDelete, onCreate }) => {
           active={active === 1}
         />
       ))}
-      <div className={styles.addNew}>
-        <Button intent={Intent.PRIMARY} large onClick={handleAddNew}>
-          Add new
+      <div className={styles.buttons}>
+        <Button
+          className={styles.buttonAdd}
+          intent={Intent.PRIMARY}
+          large
+          onClick={handleAddNew}
+        >
+          Add new deck
+        </Button>
+        <Button
+          className={styles.buttonClose}
+          large
+          onClick={() => {
+            onComplete();
+          }}
+        >
+          Done
         </Button>
       </div>
     </div>
