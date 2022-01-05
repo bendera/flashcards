@@ -125,7 +125,6 @@ class FlashcardsAPI {
   }
 
   public async createOrUpdateDeck(item: DeckItem) {
-    console.log(item);
     const db = this.getDB();
     const data = await (await db).put(STORAGE_DECKS, item);
 
