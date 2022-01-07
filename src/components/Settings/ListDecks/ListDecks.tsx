@@ -23,12 +23,7 @@ interface ListDecksProps {
   onComplete: () => void;
 }
 
-const ListDecks: FC<ListDecksProps> = ({
-  onEdit,
-  onDelete,
-  onCreate,
-  onComplete,
-}) => {
+const ListDecks: FC<ListDecksProps> = ({ onEdit, onDelete, onCreate }) => {
   const dispatch = useAppDispatch();
   const decks = useAppSelector(selectDeckCatalogItems);
   const activeDeckId = useAppSelector(selectActiveDeckId);

@@ -1,10 +1,11 @@
 import { FC, useRef, useState } from 'react';
-import { Button, ButtonGroup, Classes, Intent } from '@blueprintjs/core';
+import { Button, ButtonGroup, Classes } from '@blueprintjs/core';
 import { nanoid } from 'nanoid';
 import cn from 'classnames';
 import noop from 'utils/noop';
 import { DeckCatalogItem } from 'utils/FlashcardsAPI';
-import { useAppDispatch } from 'app/hooks';
+import { useAppDispatch, useAppSelector } from 'app/hooks';
+import { changeView } from 'features/navigation/navigationSlice';
 import {
   deleteCatalogItem,
   fetchCatalog,
@@ -18,22 +19,18 @@ import styles from './Settings.module.css';
 export type SettingsView = 'decks' | 'options' | 'edit deck';
 
 interface SettingsProps {
-  activeView?: SettingsView;
   onComplete?: () => void;
 }
 
-const Settings: FC<SettingsProps> = ({
-  activeView = 'decks',
-  onComplete = noop,
-}) => {
+const Settings: FC<SettingsProps> = ({ onComplete = noop }) => {
+  const view = useAppSelector((state) => state.navigation.currentView);
   const drawerBodyRef = useRef<HTMLDivElement>(null);
   const dispatch = useAppDispatch();
-  const [view, setView] = useState<SettingsView>(activeView);
   const [deckToEdit, setDeckToEdit] = useState<DeckCatalogItem>();
 
   const handleEdit = (item: DeckCatalogItem) => {
     setDeckToEdit(item);
-    setView('edit deck');
+    dispatch(changeView('settings/deck/edit'));
   };
 
   const handleDelete = async (item: DeckCatalogItem) => {
@@ -50,11 +47,11 @@ const Settings: FC<SettingsProps> = ({
     };
 
     setDeckToEdit(item);
-    setView('edit deck');
+    dispatch(changeView('settings/deck/edit'));
   };
 
   const handleEditFinished = () => {
-    setView('decks');
+    dispatch(changeView('settings/deck/list'));
   };
 
   return (
@@ -63,23 +60,25 @@ const Settings: FC<SettingsProps> = ({
         <div className={Classes.DIALOG_BODY}>
           <ButtonGroup minimal className={styles.nav}>
             <Button
-              active={view === 'decks' || view === 'edit deck'}
+              active={
+                view === 'settings/deck/edit' || view === 'settings/deck/list'
+              }
               className={styles.button}
               onClick={() => {
-                setView('decks');
+                dispatch(changeView('settings/deck/list'));
               }}
               text="Decks"
             />
             <Button
-              active={view === 'options'}
+              active={view === 'settings/options'}
               className={styles.button}
               onClick={() => {
-                setView('options');
+                dispatch(changeView('settings/options'));
               }}
               text="Options"
             />
           </ButtonGroup>
-          {view === 'decks' && (
+          {view === 'settings/deck/list' && (
             <ListDecks
               onCreate={handleCreate}
               onComplete={() => onComplete()}
@@ -87,8 +86,8 @@ const Settings: FC<SettingsProps> = ({
               onEdit={handleEdit}
             />
           )}
-          {view === 'options' && <Options />}
-          {view === 'edit deck' && (
+          {view === 'settings/options' && <Options />}
+          {view === 'settings/deck/edit' && (
             <EditDeck
               deckToEdit={deckToEdit}
               onEditFinished={handleEditFinished}

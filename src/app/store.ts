@@ -1,11 +1,13 @@
 import { configureStore, ThunkAction, Action } from '@reduxjs/toolkit';
 import deckReducer from '../features/deck/deckSlice';
 import deckCatalogReducer from '../features/deckCatalog/deckCatalogSlice';
+import navigationReducer from '../features/navigation/navigationSlice';
 
 export const store = configureStore({
   reducer: {
     deck: deckReducer,
     deckCatalog: deckCatalogReducer,
+    navigation: navigationReducer,
   },
 });
 

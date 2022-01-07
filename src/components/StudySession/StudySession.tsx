@@ -22,13 +22,9 @@ import ActionButtons from './ActionButtons/ActionButtons';
 
 interface StudySessionProps {
   onCreateDeck: () => void;
-  onSelectActiveDeck: () => void;
 }
 
-const StudySession: FC<StudySessionProps> = ({
-  onCreateDeck,
-  onSelectActiveDeck,
-}) => {
+const StudySession: FC<StudySessionProps> = ({ onCreateDeck }) => {
   const dispatch = useAppDispatch();
   const lastCard = useAppSelector(selectLastCard);
   const sessionCounter = useAppSelector(selectSessionCounter);
