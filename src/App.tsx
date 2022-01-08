@@ -6,6 +6,7 @@ import { selectCurrentView } from 'features/navigation/selectors';
 import Settings from 'components/Settings/Settings';
 import StudySession from 'components/StudySession/StudySession';
 import styles from './App.module.css';
+import { DialogProvider } from 'utils/useDialog/DialogProvider';
 
 function App() {
   const dispatch = useAppDispatch();
@@ -26,27 +27,29 @@ function App() {
   const classes = cn(styles.App);
 
   return (
-    <div className={classes}>
-      <Button
-        icon="menu"
-        onClick={onOpenOverlayClick}
-        minimal
-        className={styles.menuButton}
-      />
-      <StudySession onCreateDeck={handleCreateDeck} />
-      <Drawer
-        isOpen={view.includes('settings')}
-        onClose={onModalClose}
-        size={DrawerSize.LARGE}
-        title="Settings"
-      >
-        <Settings
-          onComplete={() => {
-            dispatch(changeView('study_session'));
-          }}
+    <DialogProvider>
+      <div className={classes}>
+        <Button
+          icon="menu"
+          onClick={onOpenOverlayClick}
+          minimal
+          className={styles.menuButton}
         />
-      </Drawer>
-    </div>
+        <StudySession onCreateDeck={handleCreateDeck} />
+        <Drawer
+          isOpen={view.includes('settings')}
+          onClose={onModalClose}
+          size={DrawerSize.LARGE}
+          title="Settings"
+        >
+          <Settings
+            onComplete={() => {
+              dispatch(changeView('study_session'));
+            }}
+          />
+        </Drawer>
+      </div>
+    </DialogProvider>
   );
 }
 

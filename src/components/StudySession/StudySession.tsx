@@ -19,12 +19,15 @@ import {
   selectDeckCatalogItems,
 } from 'features/deckCatalog/deckCatalogSlice';
 import ActionButtons from './ActionButtons/ActionButtons';
+import { useDialog } from 'utils/useDialog/useDialog';
 
 interface StudySessionProps {
   onCreateDeck: () => void;
 }
 
 const StudySession: FC<StudySessionProps> = ({ onCreateDeck }) => {
+  const { confirm } = useDialog();
+
   const dispatch = useAppDispatch();
   const lastCard = useAppSelector(selectLastCard);
   const sessionCounter = useAppSelector(selectSessionCounter);
@@ -83,9 +86,22 @@ const StudySession: FC<StudySessionProps> = ({ onCreateDeck }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dispatch, readyToUse]);
 
+  const confirmTest = async () => {
+    const confirmed = await confirm('Hello World!');
+
+    console.log('confirmed:', confirmed);
+  };
+
   return (
     <div className={styles.root}>
       <div className={styles.content}>
+        <Button
+          onClick={() => {
+            confirmTest();
+          }}
+        >
+          Confirm test
+        </Button>
         {thereAreNoDecks && (
           <NonIdealState
             icon={IconNames.INBOX}
