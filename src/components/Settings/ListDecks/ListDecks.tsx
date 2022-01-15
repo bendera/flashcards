@@ -15,6 +15,7 @@ import {
 } from 'features/deck/deckSlice';
 import DeckListItemCard from './DeckListItemCard';
 import styles from './ListDecks.module.css';
+import { useConfirm } from 'utils/dialogs';
 
 interface ListDecksProps {
   onEdit: (item: DeckCatalogItem) => void;
@@ -24,6 +25,7 @@ interface ListDecksProps {
 }
 
 const ListDecks: FC<ListDecksProps> = ({ onEdit, onDelete, onCreate }) => {
+  const confirm = useConfirm();
   const dispatch = useAppDispatch();
   const decks = useAppSelector(selectDeckCatalogItems);
   const activeDeckId = useAppSelector(selectActiveDeckId);
@@ -40,7 +42,13 @@ const ListDecks: FC<ListDecksProps> = ({ onEdit, onDelete, onCreate }) => {
     }
   };
 
-  const handleDelete = (id: string) => {
+  const handleDelete = async (id: string) => {
+    const confirmed = await confirm('Are you sure want to delete this deck?');
+
+    if (!confirmed) {
+      return;
+    }
+
     const deckToEdit = deckById(id);
 
     if (deckToEdit) {

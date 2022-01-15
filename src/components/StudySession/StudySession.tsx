@@ -19,14 +19,16 @@ import {
   selectDeckCatalogItems,
 } from 'features/deckCatalog/deckCatalogSlice';
 import ActionButtons from './ActionButtons/ActionButtons';
-import { useDialog } from 'utils/useDialog/useDialog';
+import { useAlert, useConfirm, usePrompt } from 'utils/dialogs';
 
 interface StudySessionProps {
   onCreateDeck: () => void;
 }
 
 const StudySession: FC<StudySessionProps> = ({ onCreateDeck }) => {
-  const { confirm } = useDialog();
+  const confirm = useConfirm({ title: 'Confirmation' });
+  const alert = useAlert();
+  const prompt = usePrompt();
 
   const dispatch = useAppDispatch();
   const lastCard = useAppSelector(selectLastCard);
@@ -87,9 +89,15 @@ const StudySession: FC<StudySessionProps> = ({ onCreateDeck }) => {
   }, [dispatch, readyToUse]);
 
   const confirmTest = async () => {
+    const text = await prompt('Type something', 'example');
+
+    if (text) {
+      await alert(text);
+    }
+
     const confirmed = await confirm('Hello World!');
 
-    console.log('confirmed:', confirmed);
+    await alert(`Confirmed: ${confirmed}`);
   };
 
   return (

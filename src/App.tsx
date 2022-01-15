@@ -6,7 +6,7 @@ import { selectCurrentView } from 'features/navigation/selectors';
 import Settings from 'components/Settings/Settings';
 import StudySession from 'components/StudySession/StudySession';
 import styles from './App.module.css';
-import { DialogProvider } from 'utils/useDialog/DialogProvider';
+import { DialogProvider } from 'utils/dialogs/DialogProvider';
 
 function App() {
   const dispatch = useAppDispatch();
