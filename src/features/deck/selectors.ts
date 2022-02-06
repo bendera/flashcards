@@ -6,6 +6,9 @@ export const selectSessionCounter = (state: RootState) =>
 export const selectDrawCounter = (state: RootState) =>
   state.deck.data.drawCounter;
 
+export const selectCurrentDeckTitle = (state: RootState) =>
+  state.deck.data.title || '';
+
 export const selectCards = (state: RootState) => state.deck.data.cards;
 
 export const selectLastCard = (state: RootState) => {

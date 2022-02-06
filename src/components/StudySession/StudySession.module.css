@@ -8,6 +8,11 @@
   width: 100%;
 }
 
+.title {
+  position: absolute;
+  top: 0;
+}
+
 .content {
   position: absolute;
   height: 300px;

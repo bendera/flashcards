@@ -1,0 +1,7 @@
+.root {
+  box-sizing: border-box;
+  margin-top: 40px;
+  padding: 0 20px;
+  text-align: center;
+  width: 100%;
+}

@@ -19,6 +19,7 @@ import {
   selectDeckCatalogItems,
 } from 'features/deckCatalog/deckCatalogSlice';
 import ActionButtons from './ActionButtons/ActionButtons';
+import CurrentDeckTitle from './CurrentDeckTitle/CurrentDeckTitle';
 
 interface StudySessionProps {
   onCreateDeck: () => void;
@@ -85,6 +86,7 @@ const StudySession: FC<StudySessionProps> = ({ onCreateDeck }) => {
 
   return (
     <div className={styles.root}>
+      <CurrentDeckTitle props1={''} props2={''} className={styles.title} />
       <div className={styles.content}>
         {thereAreNoDecks && (
           <NonIdealState
