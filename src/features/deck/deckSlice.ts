@@ -1,4 +1,4 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { createSlice } from '@reduxjs/toolkit';
 import { DeckItem } from 'utils/FlashcardsAPI';
 import { fetchActiveDeck, saveDeck } from './thunks';
 
@@ -10,6 +10,32 @@ export interface DeckState {
   loadStatus: AsyncStatus;
 }
 
+const getUsedBoxes = (sessionCounter: number) => {
+  let usedBoxes = [];
+
+  if (sessionCounter % 1 === 0 && sessionCounter !== 0) {
+    usedBoxes.push(1);
+  }
+
+  if (sessionCounter % 2 === 0) {
+    usedBoxes.push(2);
+  }
+
+  if (sessionCounter % 4 === 0) {
+    usedBoxes.push(3);
+  }
+
+  if (sessionCounter % 9 === 0) {
+    usedBoxes.push(4);
+  }
+
+  if (sessionCounter % 14 === 0) {
+    usedBoxes.push(5);
+  }
+
+  return usedBoxes;
+};
+
 const initialState: DeckState = {
   data: {
     cards: [],
@@ -18,6 +44,7 @@ const initialState: DeckState = {
     id: '',
     sessionCounter: 0,
     sessionFinished: false,
+    numberOfSessionCards: 0,
     title: '',
     lastCard: '',
   },
@@ -31,33 +58,24 @@ export const deckSlice = createSlice({
   reducers: {
     startNextSession(state) {
       state.data.sessionCounter += 1;
+      state.data.drawCounter = 0;
       state.data.sessionFinished = false;
+
+      const usedBoxes = getUsedBoxes(state.data.sessionCounter);
+
+      state.data.numberOfSessionCards = Object.values(
+        state.data.cardsByBoxes
+      ).filter((val) => usedBoxes.includes(val)).length;
     },
     draw(state) {
-      const { sessionCounter, sessionFinished, lastCard, cardsByBoxes } = state.data;
+      const { sessionCounter, sessionFinished, lastCard, cardsByBoxes } =
+        state.data;
 
       if (sessionCounter === 0 || sessionFinished) {
         return;
       }
 
-      let usedBoxes = [1];
-
-      if (sessionCounter % 2 === 0) {
-        usedBoxes.push(2);
-      }
-
-      if (sessionCounter % 4 === 0) {
-        usedBoxes.push(3);
-      }
-
-      if (sessionCounter % 9 === 0) {
-        usedBoxes.push(4);
-      }
-
-      if (sessionCounter % 14 === 0) {
-        usedBoxes.push(5);
-      }
-
+      const usedBoxes = getUsedBoxes(sessionCounter);
       const ids = Object.keys(cardsByBoxes);
       const fromIndex = ids.findIndex((id) => id === lastCard);
       const nextCardIndex = ids.findIndex(

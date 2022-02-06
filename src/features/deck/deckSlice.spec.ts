@@ -23,6 +23,7 @@ const createExampleState = (): DeckState => ({
     lastCard: '',
     sessionCounter: 0,
     sessionFinished: false,
+    numberOfSessionCards: 0,
     title: 'Test deck',
   },
   loadStatus: 'idle',

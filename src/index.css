@@ -10,11 +10,14 @@ body {
 }
 
 :root {
+  --color-intent-primary: #137cbd;
   --color-text-default: #182026;
+  --color-progress-bar-background: rgba(92,112,128,.2);
 }
 
 .bp3-dark {
   --color-text-default: #f5f8fa;
+  --color-progress-bar-background: rgba(16,22,26,.5);
 }
 
 .bp3-select-popover .bp3-popover-content {

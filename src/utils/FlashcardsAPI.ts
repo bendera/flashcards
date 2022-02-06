@@ -17,6 +17,7 @@ export interface DeckItem {
   cardsByBoxes: {
     [cardId: string]: number;
   };
+  numberOfSessionCards: number;
   sessionCounter: number;
   sessionFinished: boolean;
   drawCounter: number;

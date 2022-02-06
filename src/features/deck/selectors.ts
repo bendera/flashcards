@@ -9,6 +9,18 @@ export const selectDrawCounter = (state: RootState) =>
 export const selectCurrentDeckTitle = (state: RootState) =>
   state.deck.data.title || '';
 
+export const selectCardsByBoxes = (state: RootState) =>
+  state.deck.data.cardsByBoxes;
+
+export const selectNumberOfTotalCards = (state: RootState) =>
+  state.deck.data.numberOfSessionCards;
+
+export const selectNumberOfCurrentCard = (state: RootState) => {
+  const counter = state.deck.data.drawCounter;
+
+  return counter > 0 ? counter : 0;
+};
+
 export const selectCards = (state: RootState) => state.deck.data.cards;
 
 export const selectLastCard = (state: RootState) => {

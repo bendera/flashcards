@@ -13,6 +13,12 @@
   top: 0;
 }
 
+.progress {
+  left: 20px;
+  position: absolute;
+  top: 20px;
+}
+
 .content {
   position: absolute;
   height: 300px;

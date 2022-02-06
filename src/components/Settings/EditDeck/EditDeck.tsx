@@ -53,6 +53,7 @@ const EditDeck: FC<EditDecksProps> = ({
     drawCounter: 0,
     sessionCounter: 0,
     sessionFinished: false,
+    numberOfSessionCards: 0,
     lastCard: '',
   });
 
@@ -80,6 +81,7 @@ const EditDeck: FC<EditDecksProps> = ({
       sessionCounter,
       sessionFinished,
       lastCard,
+      numberOfSessionCards,
     } = deckMetaDataRef.current;
 
     await dispatch(
@@ -101,6 +103,7 @@ const EditDeck: FC<EditDecksProps> = ({
         drawCounter,
         sessionCounter,
         sessionFinished,
+        numberOfSessionCards,
         title: deckTitle,
         lastCard,
       })
@@ -127,6 +130,7 @@ const EditDeck: FC<EditDecksProps> = ({
         title,
         lastCard,
         sessionFinished,
+        numberOfSessionCards,
       } = res.data;
 
       deckMetaDataRef.current = {
@@ -135,6 +139,7 @@ const EditDeck: FC<EditDecksProps> = ({
         sessionCounter,
         sessionFinished,
         lastCard,
+        numberOfSessionCards,
       };
       setDeckTitle(title);
       setCards(cards.map((c) => ({ ...c, selected: false })));
