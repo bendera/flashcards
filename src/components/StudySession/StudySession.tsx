@@ -21,6 +21,7 @@ import {
 import ActionButtons from './ActionButtons/ActionButtons';
 import CurrentDeckTitle from './CurrentDeckTitle/CurrentDeckTitle';
 import Progress from './Progress/Progress';
+import Boxes from './Boxes/Boxes';
 
 interface StudySessionProps {
   onCreateDeck: () => void;
@@ -89,6 +90,7 @@ const StudySession: FC<StudySessionProps> = ({ onCreateDeck }) => {
     <div className={styles.root}>
       <CurrentDeckTitle props1={''} props2={''} className={styles.title} />
       <Progress className={styles.progress} />
+      <Boxes className={styles.boxes} />
       <div className={styles.content}>
         {thereAreNoDecks && (
           <NonIdealState

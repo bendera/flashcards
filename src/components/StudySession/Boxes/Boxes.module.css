@@ -1,0 +1,23 @@
+.root {
+  display: flex;
+}
+
+.box {
+  margin: 0 20px;
+  opacity: .3;
+  position: relative;
+}
+
+.box.active {
+  opacity: 1;
+}
+
+.icon {
+  color: var(--color-box-icon);
+}
+
+.badge {
+  position: absolute;
+  top: 0;
+  right: -3px;
+}

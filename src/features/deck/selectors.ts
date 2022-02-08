@@ -1,4 +1,5 @@
 import { RootState } from 'app/store';
+import { getUsedBoxes } from './deckSlice';
 
 export const selectSessionCounter = (state: RootState) =>
   state.deck.data.sessionCounter;
@@ -11,6 +12,23 @@ export const selectCurrentDeckTitle = (state: RootState) =>
 
 export const selectCardsByBoxes = (state: RootState) =>
   state.deck.data.cardsByBoxes;
+
+export const selectNumberOfCardsByBoxes = (state: RootState) => {
+  const numBoxes = 5;
+  const numCards = [];
+  const keys = Object.keys(state.deck.data.cardsByBoxes);
+
+  for (let i = 0; i < numBoxes; i++) {
+    numCards.push(
+      keys.filter((k) => state.deck.data.cardsByBoxes[k] === i + 1).length
+    );
+  }
+
+  return numCards;
+};
+
+export const selectUsedBoxes = (state: RootState) =>
+  getUsedBoxes(state.deck.data.sessionCounter);
 
 export const selectNumberOfTotalCards = (state: RootState) =>
   state.deck.data.numberOfSessionCards;

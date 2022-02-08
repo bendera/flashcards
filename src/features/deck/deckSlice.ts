@@ -10,7 +10,7 @@ export interface DeckState {
   loadStatus: AsyncStatus;
 }
 
-const getUsedBoxes = (sessionCounter: number) => {
+export const getUsedBoxes = (sessionCounter: number) => {
   let usedBoxes = [];
 
   if (sessionCounter % 1 === 0 && sessionCounter !== 0) {
