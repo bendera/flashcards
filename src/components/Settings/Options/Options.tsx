@@ -1,12 +1,14 @@
+import { Switch } from '@blueprintjs/core';
 import { FC } from 'react';
 
-interface OptionsProps {
-  props1: string;
-  props2: string;
-}
-
 const Options: FC = () => {
-  return <div>TODO</div>;
+  return (
+    <div>
+      <Switch label="Dark theme" large />
+      <Switch label="Show progress" large />
+      <Switch label="Show boxes" large />
+    </div>
+  );
 };
 
 export default Options;
