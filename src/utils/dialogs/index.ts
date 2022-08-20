@@ -14,7 +14,10 @@ const defaultOptions: ModalOptions = {
 };
 
 export const useConfirm = (
-  defaultHookOptions: ModalOptions = defaultOptions
+  defaultHookOptions: ModalOptions = {
+    ...defaultOptions,
+    title: 'Confirmation',
+  }
 ) => {
   const { openDialog } = useContext(DialogContext);
 
@@ -31,7 +34,12 @@ export const useConfirm = (
   return confirm;
 };
 
-export const useAlert = (defaultHookOptions: ModalOptions = defaultOptions) => {
+export const useAlert = (
+  defaultHookOptions: ModalOptions = {
+    ...defaultOptions,
+    title: 'Alert',
+  }
+) => {
   const { openDialog } = useContext(DialogContext);
 
   const alert = (message: string, options: ModalOptions = {}) =>
@@ -49,7 +57,10 @@ export const useAlert = (defaultHookOptions: ModalOptions = defaultOptions) => {
 
 export const usePrompt = (
   defaultHookValue: string = '',
-  defaultHookOptions?: ModalOptions
+  defaultHookOptions: ModalOptions = {
+    ...defaultOptions,
+    title: 'Prompt',
+  }
 ) => {
   const { openDialog } = useContext(DialogContext);
 
