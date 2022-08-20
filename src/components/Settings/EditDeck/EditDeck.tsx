@@ -56,6 +56,7 @@ const EditDeck: FC<EditDecksProps> = ({
     numberOfSessionCards: 0,
     lastCard: '',
   });
+  const isSaveButtonActive = deckTitle.length > 0 && cards.length > 0;
 
   const handleTitleChange = (value: string) => {
     setDeckTitle(value);
@@ -204,6 +205,7 @@ const EditDeck: FC<EditDecksProps> = ({
       <div className={styles.buttonGroup}>
         <Button
           className={styles.button}
+          disabled={!isSaveButtonActive}
           intent={Intent.PRIMARY}
           large
           onClick={handleSave}
