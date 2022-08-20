@@ -21,12 +21,9 @@ import {
 import ActionButtons from './ActionButtons/ActionButtons';
 import CurrentDeckTitle from './CurrentDeckTitle/CurrentDeckTitle';
 import Boxes from './Boxes/Boxes';
+import { changeView } from 'features/navigation/navigationSlice';
 
-interface StudySessionProps {
-  onCreateDeck: () => void;
-}
-
-const StudySession: FC<StudySessionProps> = ({ onCreateDeck }) => {
+const StudySession: FC = () => {
   const dispatch = useAppDispatch();
   const lastCard = useAppSelector(selectLastCard);
   const sessionCounter = useAppSelector(selectSessionCounter);
@@ -54,6 +51,14 @@ const StudySession: FC<StudySessionProps> = ({ onCreateDeck }) => {
     dispatch(demote());
     dispatch(draw());
     dispatch(saveDeck());
+  };
+
+  const handleSelectDeck = () => {
+    dispatch(changeView('settings/deck/list'));
+  };
+
+  const handleCreateDeck = () => {
+    dispatch(changeView('settings/deck/edit'));
   };
 
   const startNewSession = () => {
@@ -88,7 +93,6 @@ const StudySession: FC<StudySessionProps> = ({ onCreateDeck }) => {
   return (
     <div className={styles.root}>
       <CurrentDeckTitle props1={''} props2={''} className={styles.title} />
-      <Progress className={styles.progress} />
       <Boxes className={styles.boxes} />
       <div className={styles.content}>
         {thereAreNoDecks && (
@@ -97,7 +101,7 @@ const StudySession: FC<StudySessionProps> = ({ onCreateDeck }) => {
             title="There are no decks"
             description="It seems you have not created any deck yet."
             action={
-              <Button intent={Intent.PRIMARY} large onClick={onCreateDeck}>
+              <Button intent={Intent.PRIMARY} large onClick={handleCreateDeck}>
                 Create one
               </Button>
             }
@@ -109,7 +113,7 @@ const StudySession: FC<StudySessionProps> = ({ onCreateDeck }) => {
             title="There is no active deck"
             description="You should select a deck to start practicing."
             action={
-              <Button intent={Intent.PRIMARY} large onClick={onCreateDeck}>
+              <Button intent={Intent.PRIMARY} large onClick={handleSelectDeck}>
                 Select one
               </Button>
             }

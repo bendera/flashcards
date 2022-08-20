@@ -13,12 +13,6 @@
   top: 0;
 }
 
-.progress {
-  left: 20px;
-  position: absolute;
-  top: 20px;
-}
-
 .boxes {
   position: absolute;
   bottom: 40px;

@@ -20,10 +20,6 @@ function App() {
     dispatch(changeView('study_session'));
   };
 
-  const handleCreateDeck = () => {
-    dispatch(changeView('settings/deck/edit'));
-  };
-
   const classes = cn(styles.App);
 
   return (
@@ -35,7 +31,7 @@ function App() {
           minimal
           className={styles.menuButton}
         />
-        <StudySession onCreateDeck={handleCreateDeck} />
+        <StudySession />
         <Drawer
           isOpen={view.includes('settings')}
           onClose={onModalClose}
