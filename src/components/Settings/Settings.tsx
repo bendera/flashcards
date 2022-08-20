@@ -16,6 +16,12 @@ import EditDeck from './EditDeck/EditDeck';
 import ListDecks from './ListDecks/ListDecks';
 import styles from './Settings.module.css';
 
+const createAnEmptyDeck = (): DeckCatalogItem => ({
+  id: nanoid(),
+  title: '',
+  active: 0,
+});
+
 export type SettingsView = 'decks' | 'options' | 'edit deck';
 
 interface SettingsProps {
@@ -26,7 +32,7 @@ const Settings: FC<SettingsProps> = ({ onComplete = noop }) => {
   const view = useAppSelector((state) => state.navigation.currentView);
   const drawerBodyRef = useRef<HTMLDivElement>(null);
   const dispatch = useAppDispatch();
-  const [deckToEdit, setDeckToEdit] = useState<DeckCatalogItem>();
+  const [deckToEdit, setDeckToEdit] = useState<DeckCatalogItem>(createAnEmptyDeck());
 
   const handleEdit = (item: DeckCatalogItem) => {
     setDeckToEdit(item);
@@ -40,11 +46,7 @@ const Settings: FC<SettingsProps> = ({ onComplete = noop }) => {
   };
 
   const handleCreate = () => {
-    const item: DeckCatalogItem = {
-      id: nanoid(),
-      title: '',
-      active: 0,
-    };
+    const item = createAnEmptyDeck();
 
     setDeckToEdit(item);
     dispatch(changeView('settings/deck/edit'));
