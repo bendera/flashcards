@@ -1,5 +1,8 @@
 .root {
+  align-items: center;
   display: flex;
+  justify-content: center;
+  width: 100%;
 }
 
 .box {
@@ -20,4 +23,8 @@
   position: absolute;
   top: 0;
   right: -3px;
+}
+
+.progress {
+  transform: scale(0.7);
 }

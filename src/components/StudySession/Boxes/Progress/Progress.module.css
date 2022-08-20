@@ -1,0 +1,26 @@
+.root {
+  display: flex;
+  flex-wrap: wrap;
+  position: relative;
+  width: 100px;
+}
+
+.value {
+  align-items: center;
+  display: flex;
+  font-size: 15px;
+  font-weight: bold;
+  height: 100px;
+  justify-content: center;
+  left: 0;
+  pointer-events: none;
+  position: absolute;
+  top: 0;
+  width: 100px;
+}
+
+.title {
+  display: block;
+  text-align: center;
+  width: 100%;
+}

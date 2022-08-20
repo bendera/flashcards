@@ -20,7 +20,6 @@ import {
 } from 'features/deckCatalog/deckCatalogSlice';
 import ActionButtons from './ActionButtons/ActionButtons';
 import CurrentDeckTitle from './CurrentDeckTitle/CurrentDeckTitle';
-import Progress from './Progress/Progress';
 import Boxes from './Boxes/Boxes';
 
 interface StudySessionProps {

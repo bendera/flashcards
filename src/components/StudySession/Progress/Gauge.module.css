@@ -1,7 +1,0 @@
-.total {
-  stroke: var(--color-progress-bar-background);
-}
-
-.current {
-  stroke: var(--color-intent-primary);
-}

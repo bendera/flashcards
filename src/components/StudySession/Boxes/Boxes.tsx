@@ -9,6 +9,7 @@ import React, { FC } from 'react';
 import { useSelector } from 'react-redux';
 import cn from 'classnames';
 import styles from './Boxes.module.css';
+import Progress from './Progress/Progress';
 
 interface BoxesProps {
   className?: string;
@@ -23,6 +24,7 @@ const Boxes: FC<BoxesProps> = ({ className }) => {
 
   return (
     <div className={rootClasses}>
+      <Progress className={styles.progress} />
       {cardsByBoxes.map((numCards, i) => (
         <div
           key={i}
