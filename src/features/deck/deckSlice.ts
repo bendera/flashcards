@@ -10,26 +10,29 @@ export interface DeckState {
   loadStatus: AsyncStatus;
 }
 
+/**
+ * Hardcoded 5 boxes Leitner-cards system
+ */
 export const getUsedBoxes = (sessionCounter: number) => {
   let usedBoxes = [];
 
-  if (sessionCounter % 1 === 0 && sessionCounter !== 0) {
+  if (sessionCounter % 1 === 0 && sessionCounter > 0) {
     usedBoxes.push(1);
   }
 
-  if (sessionCounter % 2 === 0) {
+  if (sessionCounter % 2 === 0 && sessionCounter > 0) {
     usedBoxes.push(2);
   }
 
-  if (sessionCounter % 4 === 0) {
+  if (sessionCounter % 4 === 0 && sessionCounter > 0) {
     usedBoxes.push(3);
   }
 
-  if (sessionCounter % 9 === 0) {
+  if (sessionCounter % 9 === 0 && sessionCounter > 0) {
     usedBoxes.push(4);
   }
 
-  if (sessionCounter % 14 === 0) {
+  if (sessionCounter % 14 === 0 && sessionCounter > 0) {
     usedBoxes.push(5);
   }
 
