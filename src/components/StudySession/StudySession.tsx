@@ -142,7 +142,7 @@ const StudySession: FC = () => {
                       startNewSession();
                     }}
                   >
-                    Start a new session
+                    Start Session {sessionCounter + 1}
                   </Button>
                 }
               />
