@@ -20,11 +20,17 @@ import { useConfirm } from 'utils/dialogs';
 interface ListDecksProps {
   onEdit: (item: DeckCatalogItem) => void;
   onDelete: (item: DeckCatalogItem) => void;
+  onReset: (deckId: string) => void;
   onCreate: () => void;
   onComplete: () => void;
 }
 
-const ListDecks: FC<ListDecksProps> = ({ onEdit, onDelete, onCreate }) => {
+const ListDecks: FC<ListDecksProps> = ({
+  onEdit,
+  onDelete,
+  onReset,
+  onCreate,
+}) => {
   const confirm = useConfirm();
   const dispatch = useAppDispatch();
   const decks = useAppSelector(selectDeckCatalogItems);
@@ -40,6 +46,10 @@ const ListDecks: FC<ListDecksProps> = ({ onEdit, onDelete, onCreate }) => {
     if (deckToEdit) {
       onEdit(deckToEdit);
     }
+  };
+
+  const handleReset = (id: string) => {
+    onReset(id);
   };
 
   const handleDelete = async (id: string) => {
@@ -82,6 +92,7 @@ const ListDecks: FC<ListDecksProps> = ({ onEdit, onDelete, onCreate }) => {
           title={title}
           onActive={handleActive}
           onEdit={handleEdit}
+          onReset={handleReset}
           onDelete={handleDelete}
           active={active === 1}
         />

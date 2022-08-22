@@ -1,6 +1,6 @@
-import { createSlice } from '@reduxjs/toolkit';
-import { DeckItem } from 'utils/FlashcardsAPI';
-import { fetchActiveDeck, saveDeck } from './thunks';
+import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+import { RootState } from 'app/store';
+import FlashcardsAPI, { DeckItem } from 'utils/FlashcardsAPI';
 
 type AsyncStatus = 'idle' | 'loading' | 'failed';
 
@@ -38,6 +38,61 @@ export const getUsedBoxes = (sessionCounter: number) => {
 
   return usedBoxes;
 };
+
+// #region thunks
+
+const fetchActiveDeck = createAsyncThunk('deck/load', async () => {
+  const api = new FlashcardsAPI();
+  const res = await api.getActiveDeck();
+
+  return res.data;
+});
+
+const saveDeck = createAsyncThunk(
+  'deck/save',
+  async (item: DeckItem | undefined, { getState }) => {
+    let itemToSave: DeckItem;
+
+    if (!item) {
+      const state = getState() as RootState;
+      itemToSave = state.deck.data;
+    } else {
+      itemToSave = item;
+    }
+
+    const api = new FlashcardsAPI();
+    const res = await api.createOrUpdateDeck(itemToSave);
+
+    return res.data;
+  }
+);
+
+const deleteDeck = createAsyncThunk('deck/delete', async (id: string) => {
+  const api = new FlashcardsAPI();
+  const res = await api.deleteDeck(id);
+
+  return res.data;
+});
+
+const resetDeckStats = createAsyncThunk(
+  'deck/resetStats',
+  async (id: string, { dispatch, getState }) => {
+    const state = getState() as RootState;
+    const api = new FlashcardsAPI();
+
+    await api.resetDeckStats(id);
+
+    if (state.deck.data.id === id) {
+      dispatch(resetStats());
+      dispatch(startNextSession());
+      dispatch(draw());
+    }
+
+    return id;
+  }
+);
+
+// #endregion
 
 const initialState: DeckState = {
   data: {
@@ -109,6 +164,20 @@ export const deckSlice = createSlice({
         state.data.cardsByBoxes[cardId] -= 1;
       }
     },
+    resetStats(state) {
+      const { data } = state;
+
+      data.sessionCounter = 0;
+      data.drawCounter = 0;
+      data.sessionFinished = false;
+      data.numberOfSessionCards = 0;
+
+      const keys = Object.keys(data.cardsByBoxes);
+
+      keys.forEach((k) => {
+        data.cardsByBoxes[k] = 1;
+      });
+    },
   },
   extraReducers(builder) {
     builder
@@ -128,8 +197,9 @@ export const deckSlice = createSlice({
   },
 });
 
-export const { startNextSession, draw, promote, demote } = deckSlice.actions;
+export const { startNextSession, draw, promote, demote, resetStats } =
+  deckSlice.actions;
 
-export { fetchActiveDeck, saveDeck };
+export { fetchActiveDeck, saveDeck, resetDeckStats, deleteDeck };
 
 export default deckSlice.reducer;

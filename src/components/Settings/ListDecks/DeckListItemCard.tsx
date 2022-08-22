@@ -8,6 +8,7 @@ interface DeckListItemCardProps {
   active?: boolean;
   id: string;
   onActive?: (id: string) => void;
+  onReset?: (id: string) => void;
   onDelete?: (id: string) => void;
   onEdit?: (id: string) => void;
   title: string;
@@ -17,6 +18,7 @@ const DeckListItemCard: FC<DeckListItemCardProps> = ({
   active,
   id,
   onActive = noop,
+  onReset = noop,
   onDelete = noop,
   onEdit = noop,
   title,
@@ -49,6 +51,14 @@ const DeckListItemCard: FC<DeckListItemCardProps> = ({
             onEdit(id);
           }}
           text="Edit"
+        />
+        <Button
+          icon={IconNames.RESET}
+          minimal
+          onClick={() => {
+            onReset(id);
+          }}
+          text="Reset"
         />
         <Button
           icon={IconNames.TRASH}

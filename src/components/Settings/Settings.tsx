@@ -10,7 +10,7 @@ import {
   deleteCatalogItem,
   fetchCatalog,
 } from 'features/deckCatalog/deckCatalogSlice';
-import { deleteDeck } from 'features/deck/thunks';
+import { deleteDeck, resetDeckStats } from 'features/deck/deckSlice';
 import Options from './Options/Options';
 import EditDeck from './EditDeck/EditDeck';
 import ListDecks from './ListDecks/ListDecks';
@@ -38,6 +38,10 @@ const Settings: FC<SettingsProps> = ({ onComplete = noop }) => {
     setDeckToEdit(item);
     dispatch(changeView('settings/deck/edit'));
   };
+
+  const handleReset = (id: string) => {
+    dispatch(resetDeckStats(id))
+  }
 
   const handleDelete = async (item: DeckCatalogItem) => {
     await dispatch(deleteCatalogItem(item.id));
@@ -84,6 +88,7 @@ const Settings: FC<SettingsProps> = ({ onComplete = noop }) => {
             <ListDecks
               onCreate={handleCreate}
               onComplete={() => onComplete()}
+              onReset={handleReset}
               onDelete={handleDelete}
               onEdit={handleEdit}
             />

@@ -134,6 +134,33 @@ class FlashcardsAPI {
     };
   }
 
+  public async resetDeckStats(id: string) {
+    const db = this.getDB();
+    const deck = await (await db).get(STORAGE_DECKS, id);
+
+    if (!deck) {
+      return;
+    }
+
+    deck.lastCard = '';
+    deck.sessionCounter = 0;
+    deck.drawCounter = 0;
+    deck.sessionFinished = false;
+    deck.numberOfSessionCards = 0;
+
+    const keys = Object.keys(deck.cardsByBoxes);
+
+    keys.forEach((k) => {
+      deck.cardsByBoxes[k] = 1;
+    });
+
+    const data = await (await db).put(STORAGE_DECKS, deck);
+
+    return {
+      data,
+    };
+  }
+
   public async getDeck(id: string) {
     const db = this.getDB();
     const data = await (await db).get(STORAGE_DECKS, id);
