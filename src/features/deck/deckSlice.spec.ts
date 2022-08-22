@@ -1,4 +1,4 @@
-import deckReducer, { DeckState, demote, draw, promote } from './deckSlice';
+import deckReducer, { DeckState, draw } from './deckSlice';
 
 jest.mock('idb/with-async-ittr');
 

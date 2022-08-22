@@ -27,6 +27,7 @@ function App() {
 
   useEffect(() => {
     dispatch(fetchAllOptions());
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {

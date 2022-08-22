@@ -1,5 +1,5 @@
 import { FC } from 'react';
-import { Button, Divider } from '@blueprintjs/core';
+import { Button } from '@blueprintjs/core';
 import { IconNames } from '@blueprintjs/icons';
 import { FlashCard } from 'types';
 import BatchEditToolbar from '../BatchEditToolbar/BatchEditToolbar';

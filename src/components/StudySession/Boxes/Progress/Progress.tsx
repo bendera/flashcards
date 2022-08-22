@@ -24,7 +24,6 @@ const Progress: FC<ProgressProps> = ({ className }) => {
         {current}/{total}
       </div>
       <Gauge percent={percent} />
-      {/* <b className={styles.title}>Progress</b> */}
     </div>
   );
 };
