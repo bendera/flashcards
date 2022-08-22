@@ -44,6 +44,11 @@
   width: 100%;
 }
 
+:global(.bp3-dark) .side {
+  background-color: rgb(46, 56, 86);
+  color: #fff;
+}
+
 .back {
   transform: rotateY(180deg);
 }
@@ -107,7 +112,6 @@
   transform-origin: 50% 50% 1000px;
   transition: transform 400ms, opacity 400ms;
 }
-
 
 .swipeLeftEnterDone .animation {
   transform: rotateX(0) rotateY(40deg);
