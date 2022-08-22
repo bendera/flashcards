@@ -1,0 +1,17 @@
+.root {
+  background-color: var(--color-intent-primary);
+  border-radius: 30px;
+  color: #fff;
+  display: inline-block;
+  font-size: 12px;
+  line-height: 22px;
+  max-width: 42px;
+  overflow: hidden;
+  padding-left: 8px;
+  padding-right: 8px;
+  position: absolute;
+  text-overflow: ellipsis;
+  top: -9px;
+  right: -9px;
+  white-space: nowrap;
+}

@@ -1,4 +1,4 @@
-import { Icon, Tag } from '@blueprintjs/core';
+import { Icon } from '@blueprintjs/core';
 import { IconNames } from '@blueprintjs/icons';
 import {
   selectNumberOfCardsByBoxes,
@@ -10,6 +10,7 @@ import cn from 'classnames';
 import styles from './Boxes.module.css';
 import Progress from './Progress/Progress';
 import { useAppSelector } from 'app/hooks';
+import CounterBadge from './CounterBadge';
 
 interface BoxesProps {
   className?: string;
@@ -34,12 +35,8 @@ const Boxes: FC<BoxesProps> = ({ className }) => {
               [styles.active]: usedBoxes.includes(i + 1),
             })}
           >
-            <Icon icon={IconNames.INBOX} size={40} className={styles.icon} />
-            {numCards > 0 ? (
-              <Tag round intent="primary" className={styles.badge}>
-                {numCards}
-              </Tag>
-            ) : null}
+            <Icon icon={IconNames.INBOX} size={30} className={styles.icon} />
+            {numCards > 0 && <CounterBadge counter={numCards} />}
           </div>
         ))}
     </div>
