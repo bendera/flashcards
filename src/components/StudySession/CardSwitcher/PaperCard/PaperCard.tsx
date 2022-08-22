@@ -1,6 +1,7 @@
 import { FC, useState, useEffect } from 'react';
 import { CSSTransition } from 'react-transition-group';
 import cn from 'classnames';
+import NewlineToBr from './NewlineToBr';
 import styles from './PaperCard.module.css';
 
 interface PaperCardProps {
@@ -41,12 +42,7 @@ const PaperCard: FC<PaperCardProps> = ({
         exitDone: styles[`${exitAnimationType}EnterDone`],
       }}
     >
-      <div
-        className={cn(
-          styles.root,
-          className
-        )}
-      >
+      <div className={cn(styles.root, className)}>
         <div className={cn([styles.animation])}>
           <div
             className={cn(styles.card, { [styles.isFlipped]: flipped })}
@@ -55,8 +51,12 @@ const PaperCard: FC<PaperCardProps> = ({
             tabIndex={0}
           >
             <div className={styles.sides}>
-              <div className={cn(styles.side, styles.front)}>{frontSide}</div>
-              <div className={cn(styles.side, styles.back)}>{backSide}</div>
+              <div className={cn(styles.side, styles.front)}>
+                <NewlineToBr text={frontSide} />
+              </div>
+              <div className={cn(styles.side, styles.back)}>
+                <NewlineToBr text={backSide} />
+              </div>
             </div>
           </div>
         </div>
