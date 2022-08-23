@@ -1,7 +1,7 @@
 import { FC, useState, useEffect } from 'react';
 import { CSSTransition } from 'react-transition-group';
 import cn from 'classnames';
-import NewlineToBr from './NewlineToBr';
+import FormattedText from './FormattedText';
 import styles from './PaperCard.module.css';
 
 interface PaperCardProps {
@@ -52,10 +52,10 @@ const PaperCard: FC<PaperCardProps> = ({
           >
             <div className={styles.sides}>
               <div className={cn(styles.side, styles.front)}>
-                <NewlineToBr text={frontSide} />
+                <FormattedText text={frontSide} />
               </div>
               <div className={cn(styles.side, styles.back)}>
-                <NewlineToBr text={backSide} />
+                <FormattedText text={backSide} />
               </div>
             </div>
           </div>
