@@ -171,6 +171,7 @@ export const deckSlice = createSlice({
       data.drawCounter = 0;
       data.sessionFinished = false;
       data.numberOfSessionCards = 0;
+      data.lastCard = '';
 
       const keys = Object.keys(data.cardsByBoxes);
 
