@@ -1,4 +1,4 @@
-import { FC } from 'react';
+import { FC, Fragment } from 'react';
 import cn from 'classnames';
 import styles from './FormattedText.module.css';
 
@@ -26,13 +26,16 @@ const FormattedText: FC<FormattedTextProps> = ({ text }) => {
     }
   });
 
+  // Using index as key is intentional here. Usually it's an anti-pattern but
+  // in this case the data won't change in the component lifecycle and an unique 
+  // id isn't available.
   return (
     <span className={cn({ [styles.smaller]: requiredChars > MAX_LARGE_CHARS })}>
-      {lines.map((line) => (
-        <>
+      {lines.map((line, i) => (
+        <Fragment key={i}>
           {line}
           <br />
-        </>
+        </Fragment>
       ))}
     </span>
   );

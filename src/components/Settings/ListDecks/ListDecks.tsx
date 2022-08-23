@@ -88,6 +88,7 @@ const ListDecks: FC<ListDecksProps> = ({
     <div className={styles.wrapper}>
       {decks.map(({ id, title, active }) => (
         <DeckListItemCard
+          key={id}
           id={id}
           title={title}
           onActive={handleActive}
