@@ -1,4 +1,7 @@
 import { FC, useEffect, useState } from 'react';
+import { Button, Intent, NonIdealState } from '@blueprintjs/core';
+import { IconNames } from '@blueprintjs/icons';
+
 import { useAppDispatch, useAppSelector } from 'app/hooks';
 import {
   demote,
@@ -7,18 +10,18 @@ import {
   startNextSession,
 } from 'features/deck/deckSlice';
 import { selectLastCard, selectSessionCounter } from 'features/deck/selectors';
-import CardSwitcher from './CardSwitcher/CardSwitcher';
-import styles from './StudySession.module.css';
-import { Button, Intent, NonIdealState } from '@blueprintjs/core';
-import { IconNames } from '@blueprintjs/icons';
+import { changeView } from 'features/navigation/navigationSlice';
 import {
   selectActiveDeckId,
   selectDeckCatalogItems,
 } from 'features/deckCatalog/deckCatalogSlice';
+
 import ActionButtons from './ActionButtons/ActionButtons';
 import CurrentDeckTitle from './CurrentDeckTitle/CurrentDeckTitle';
 import Boxes from './Boxes/Boxes';
-import { changeView } from 'features/navigation/navigationSlice';
+import CardSwitcher from './CardSwitcher/CardSwitcher';
+import styles from './StudySession.module.css';
+
 
 const StudySession: FC = () => {
   const dispatch = useAppDispatch();
