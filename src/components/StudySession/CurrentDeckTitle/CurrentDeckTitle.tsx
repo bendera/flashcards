@@ -6,21 +6,13 @@ import styles from './CurrentDeckTitle.module.css';
 
 interface CurrentDeckTitleProps {
   className?: string;
-  props1: string;
-  props2: string;
 }
 
-const CurrentDeckTitle: FC<CurrentDeckTitleProps> = ({
-  props1,
-  props2,
-  className = '',
-}) => {
+const CurrentDeckTitle: FC<CurrentDeckTitleProps> = ({ className = '' }) => {
   const title = useSelector(selectCurrentDeckTitle);
   const classes = cn('bp3-heading', styles.root, className);
 
-  return (
-    <h1 className={classes}>{title}</h1>
-  );
+  return <h1 className={classes}>{title}</h1>;
 };
 
 export default CurrentDeckTitle;

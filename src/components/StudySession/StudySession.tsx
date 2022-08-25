@@ -2,7 +2,6 @@ import { FC, useEffect, useState } from 'react';
 import { useAppDispatch, useAppSelector } from 'app/hooks';
 import {
   demote,
-  draw,
   promote,
   saveDeck,
   startNextSession,
@@ -77,7 +76,7 @@ const StudySession: FC = () => {
 
   return (
     <div className={styles.root}>
-      <CurrentDeckTitle props1={''} props2={''} className={styles.title} />
+      <CurrentDeckTitle className={styles.title} />
       <Boxes className={styles.boxes} />
       <div className={styles.content}>
         {thereAreNoDecks && (
