@@ -140,6 +140,8 @@ export const deckSlice = createSlice({
       state.data.numberOfSessionCards = Object.values(
         state.data.cardsByBoxes
       ).filter((val) => usedBoxes.includes(val)).length;
+
+      deckSlice.caseReducers.draw(state);
     },
     draw(state) {
       const { sessionCounter, sessionFinished, lastCard, cardsByBoxes } =
@@ -171,6 +173,8 @@ export const deckSlice = createSlice({
       if (currentBox < 5) {
         state.data.cardsByBoxes[cardId] += 1;
       }
+
+      deckSlice.caseReducers.draw(state);
     },
     demote(state) {
       const cardId = state.data.lastCard;
@@ -179,6 +183,8 @@ export const deckSlice = createSlice({
       if (currentBox > 1) {
         state.data.cardsByBoxes[cardId] -= 1;
       }
+
+      deckSlice.caseReducers.draw(state);
     },
     resetStats(state) {
       const { data } = state;

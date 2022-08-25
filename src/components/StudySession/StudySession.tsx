@@ -42,14 +42,12 @@ const StudySession: FC = () => {
   const handlePromote = () => {
     setDirection('right');
     dispatch(promote());
-    dispatch(draw());
     dispatch(saveDeck());
   };
 
   const handleDemote = () => {
     setDirection('left');
     dispatch(demote());
-    dispatch(draw());
     dispatch(saveDeck());
   };
 
@@ -63,14 +61,12 @@ const StudySession: FC = () => {
 
   const startNewSession = () => {
     dispatch(startNextSession());
-    dispatch(draw());
   };
 
   useEffect(() => {
     const init = () => {
       if (sessionCounter < 1) {
         dispatch(startNextSession());
-        dispatch(draw());
       }
     };
 
