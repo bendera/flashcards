@@ -1,5 +1,6 @@
 import { openDB, DBSchema } from 'idb/with-async-ittr';
 import { FlashCard } from 'types';
+import demoDeck from './demoDeck';
 
 const STORAGE_DECKS = 'decks';
 const STORAGE_DECK_CATALOG = 'deck_catalog';
@@ -53,6 +54,15 @@ class FlashcardsAPI {
     });
 
     return db;
+  }
+
+  public async populate() {
+    await this.createOrUpdateDeck(demoDeck);
+    await this.addDeckCatalogItem({
+      id: demoDeck.id,
+      title: demoDeck.title,
+      active: 1,
+    });
   }
 
   public async getDeckCatalog() {
