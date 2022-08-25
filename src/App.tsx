@@ -13,7 +13,7 @@ import styles from './App.module.css';
 function App() {
   const dispatch = useAppDispatch();
   const view = useAppSelector(selectCurrentView);
-  const darkMode = useAppSelector((state) => state.options.darkMode);
+  const darkMode = useAppSelector((state) => state.options.data.darkMode);
 
   const onOpenOverlayClick = () => {
     dispatch(changeView('settings/deck/list'));

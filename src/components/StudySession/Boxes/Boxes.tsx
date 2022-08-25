@@ -17,8 +17,8 @@ interface BoxesProps {
 }
 
 const Boxes: FC<BoxesProps> = ({ className }) => {
-  const showBoxes = useAppSelector((state) => state.options.boxes);
-  const showProgress = useAppSelector((state) => state.options.progress);
+  const showBoxes = useAppSelector((state) => state.options.data.boxes);
+  const showProgress = useAppSelector((state) => state.options.data.progress);
   const rootClasses = cn(styles.root, className);
   const cardsByBoxes = useSelector(selectNumberOfCardsByBoxes);
   const usedBoxes = useSelector(selectUsedBoxes);

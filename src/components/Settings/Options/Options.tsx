@@ -8,7 +8,7 @@ import { OptionKey } from 'utils/OptionsAPI';
 const Options: FC = () => {
   const dispatch = useDispatch();
   const { boxes, darkMode, progress } = useAppSelector(
-    (state) => state.options
+    (state) => state.options.data
   );
 
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
