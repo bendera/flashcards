@@ -1,7 +1,7 @@
 {
   "name": "SimpleCards",
   "description": "Yet another flashcard application",
-  "version": "0.9.2",
+  "version": "0.10.0",
   "manifest_version": 3,
   "chrome_url_overrides" : {
     "newtab": "index.html"
