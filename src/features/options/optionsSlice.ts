@@ -2,15 +2,23 @@ import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import OptionsAPI, { OptionKey } from 'utils/OptionsAPI';
 
 interface OptionsState {
-  darkMode: boolean;
-  boxes: boolean;
-  progress: boolean;
+  data: {
+    darkMode: boolean;
+    boxes: boolean;
+    progress: boolean;
+    firstRun: boolean;
+  };
+  loaded: boolean;
 }
 
 const initialState: OptionsState = {
-  boxes: false,
-  darkMode: false,
-  progress: false,
+  data: {
+    boxes: false,
+    darkMode: false,
+    progress: false,
+    firstRun: true,
+  },
+  loaded: false,
 };
 
 export const fetchAllOptions = createAsyncThunk('options/get', async () => {
@@ -35,21 +43,25 @@ export const optionsSlice = createSlice({
   initialState,
   reducers: {
     toggleBoxes: (state, action: PayloadAction<boolean>) => {
-      state.boxes = action.payload;
+      state.data.boxes = action.payload;
     },
     toggleDarkMode: (state, action: PayloadAction<boolean>) => {
-      state.darkMode = action.payload;
+      state.data.darkMode = action.payload;
     },
     toggleProgress: (state, action: PayloadAction<boolean>) => {
-      state.progress = action.payload;
+      state.data.progress = action.payload;
     },
   },
   extraReducers(builder) {
-    builder.addCase(fetchAllOptions.fulfilled, (_state, action) => {
-      return { ...action.payload };
+    builder.addCase(fetchAllOptions.pending, (state) => {
+      state.loaded = false;
     });
-    builder.addCase(saveOption.fulfilled, (_state, action) => {
-      return { ...action.payload };
+    builder.addCase(fetchAllOptions.fulfilled, (state, action) => {
+      state.loaded = true;
+      state.data = action.payload;
+    });
+    builder.addCase(saveOption.fulfilled, (state, action) => {
+      state.data = action.payload;
     });
   },
 });

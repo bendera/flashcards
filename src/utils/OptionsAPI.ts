@@ -1,17 +1,19 @@
 const STORAGE_KEY = 'simplecard_options';
 
-export type OptionKey = 'boxes' | 'darkMode' | 'progress';
+export type OptionKey = 'boxes' | 'darkMode' | 'progress' | 'firstRun';
 
 interface Options {
   boxes: boolean;
   darkMode: boolean;
   progress: boolean;
+  firstRun: boolean;
 }
 
 const defaults: Options = {
   boxes: false,
   darkMode: false,
   progress: false,
+  firstRun: true,
 };
 
 class OptionsAPI {
