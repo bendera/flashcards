@@ -3,7 +3,6 @@ import { useAppDispatch, useAppSelector } from 'app/hooks';
 import {
   demote,
   draw,
-  fetchActiveDeck,
   promote,
   saveDeck,
   startNextSession,
@@ -14,7 +13,6 @@ import styles from './StudySession.module.css';
 import { Button, Intent, NonIdealState } from '@blueprintjs/core';
 import { IconNames } from '@blueprintjs/icons';
 import {
-  fetchCatalog,
   selectActiveDeckId,
   selectDeckCatalogItems,
 } from 'features/deckCatalog/deckCatalogSlice';
@@ -31,8 +29,10 @@ const StudySession: FC = () => {
   const sessionFinished = useAppSelector(
     (state) => state.deck.data.sessionFinished
   );
+  const dataLoaded = useAppSelector(
+    (state) => state.deckCatalog.loaded && state.deck.loaded
+  );
   const deckCatalogItems = useAppSelector(selectDeckCatalogItems);
-  const [dataLoaded, setDataLoaded] = useState(false);
   const [direction, setDirection] = useState<'left' | 'right'>('left');
 
   const thereAreNoDecks = deckCatalogItems.length < 1 && dataLoaded;
@@ -67,16 +67,6 @@ const StudySession: FC = () => {
   };
 
   useEffect(() => {
-    const fetchData = async () => {
-      await dispatch(fetchCatalog());
-      await dispatch(fetchActiveDeck());
-      setDataLoaded(true);
-    };
-
-    fetchData();
-  }, [dispatch]);
-
-  useEffect(() => {
     const init = () => {
       if (sessionCounter < 1) {
         dispatch(startNextSession());
@@ -84,11 +74,10 @@ const StudySession: FC = () => {
       }
     };
 
-    if (readyToUse) {
+    if (activeDeck && dataLoaded) {
       init();
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [dispatch, readyToUse]);
+  }, [dispatch, activeDeck, dataLoaded, sessionCounter]);
 
   return (
     <div className={styles.root}>

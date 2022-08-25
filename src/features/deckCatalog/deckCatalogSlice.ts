@@ -78,9 +78,11 @@ export const deckCatalogSlice = createSlice({
     builder
       .addCase(fetchCatalog.pending, (state) => {
         state.status = 'loading';
+        state.loaded = false;
       })
       .addCase(fetchCatalog.fulfilled, (state, action) => {
         state.status = 'idle';
+        state.loaded = true;
 
         state.entities.byId = {};
         state.entities.allIds = [];

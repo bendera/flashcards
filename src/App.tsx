@@ -9,11 +9,15 @@ import { fetchAllOptions } from 'features/options/optionsSlice';
 import Settings from 'components/Settings/Settings';
 import StudySession from 'components/StudySession/StudySession';
 import styles from './App.module.css';
+import { createDemoDeck, fetchActiveDeck } from 'features/deck/deckSlice';
+import { fetchCatalog } from 'features/deckCatalog/deckCatalogSlice';
 
 function App() {
   const dispatch = useAppDispatch();
   const view = useAppSelector(selectCurrentView);
   const darkMode = useAppSelector((state) => state.options.data.darkMode);
+  const firstRun = useAppSelector((state) => state.options.data.firstRun);
+  const optionsLoaded = useAppSelector((state) => state.options.loaded);
 
   const onOpenOverlayClick = () => {
     dispatch(changeView('settings/deck/list'));
@@ -25,14 +29,36 @@ function App() {
 
   const classes = cn(styles.App);
 
+  // #region useEffect hooks
+
   useEffect(() => {
-    dispatch(fetchAllOptions());
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+    const loadOptions = async () => {
+      await dispatch(fetchAllOptions());
+    };
+
+    loadOptions();
+  }, [dispatch]);
+
+  useEffect(() => {
+    const loadData = async () => {
+      if (optionsLoaded) {
+        if (firstRun) {
+          await dispatch(createDemoDeck());
+        }
+
+        await dispatch(fetchCatalog());
+        await dispatch(fetchActiveDeck());
+      }
+    };
+
+    loadData();
+  }, [optionsLoaded, firstRun, dispatch]);
 
   useEffect(() => {
     document.documentElement.classList.toggle('bp3-dark', darkMode);
   }, [darkMode]);
+
+  // #endregion
 
   return (
     <DialogProvider>

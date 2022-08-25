@@ -1,5 +1,6 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { RootState } from 'app/store';
+import { saveOption } from 'features/options/optionsSlice';
 import FlashcardsAPI, { DeckItem } from 'utils/FlashcardsAPI';
 
 type AsyncStatus = 'idle' | 'loading' | 'failed';
@@ -8,6 +9,7 @@ export interface DeckState {
   data: DeckItem;
   saveStatus: AsyncStatus;
   loadStatus: AsyncStatus;
+  loaded: boolean;
 }
 
 /**
@@ -92,6 +94,19 @@ const resetDeckStats = createAsyncThunk(
   }
 );
 
+/**
+ * Add the demo deck to the database.
+ */
+const createDemoDeck = createAsyncThunk(
+  'deck/createDemo',
+  async (_, { dispatch }) => {
+    const api = new FlashcardsAPI();
+
+    await api.populate();
+    await dispatch(saveOption({ key: 'firstRun', value: false }));
+  }
+);
+
 // #endregion
 
 const initialState: DeckState = {
@@ -108,6 +123,7 @@ const initialState: DeckState = {
   },
   saveStatus: 'idle',
   loadStatus: 'idle',
+  loaded: false,
 };
 
 export const deckSlice = createSlice({
@@ -184,9 +200,11 @@ export const deckSlice = createSlice({
     builder
       .addCase(fetchActiveDeck.pending, (state) => {
         state.loadStatus = 'loading';
+        state.loaded = false;
       })
       .addCase(fetchActiveDeck.fulfilled, (state, action) => {
         state.loadStatus = 'idle';
+        state.loaded = true;
 
         if (action.payload) {
           state.data = { ...initialState.data, ...action.payload };
@@ -201,6 +219,12 @@ export const deckSlice = createSlice({
 export const { startNextSession, draw, promote, demote, resetStats } =
   deckSlice.actions;
 
-export { fetchActiveDeck, saveDeck, resetDeckStats, deleteDeck };
+export {
+  fetchActiveDeck,
+  saveDeck,
+  resetDeckStats,
+  deleteDeck,
+  createDemoDeck,
+};
 
 export default deckSlice.reducer;

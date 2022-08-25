@@ -28,6 +28,7 @@ const createExampleState = (): DeckState => ({
   },
   loadStatus: 'idle',
   saveStatus: 'idle',
+  loaded: true,
 });
 
 describe('deckSlice reducer', () => {
