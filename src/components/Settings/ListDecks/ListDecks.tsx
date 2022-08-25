@@ -48,7 +48,13 @@ const ListDecks: FC<ListDecksProps> = ({
     }
   };
 
-  const handleReset = (id: string) => {
+  const handleReset = async (id: string) => {
+    const confirmed = await confirm('Are you sure want to reset this deck?');
+
+    if (!confirmed) {
+      return;
+    }
+
     onReset(id);
   };
 
