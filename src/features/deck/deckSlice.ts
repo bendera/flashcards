@@ -86,8 +86,6 @@ const resetDeckStats = createAsyncThunk(
 
     if (state.deck.data.id === id) {
       dispatch(resetStats());
-      dispatch(startNextSession());
-      dispatch(draw());
     }
 
     return id;

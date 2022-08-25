@@ -8,11 +8,7 @@ import {
   selectDeckCatalogItems,
   setActiveCatalog,
 } from 'features/deckCatalog/deckCatalogSlice';
-import {
-  draw,
-  fetchActiveDeck,
-  startNextSession,
-} from 'features/deck/deckSlice';
+import { fetchActiveDeck, startNextSession } from 'features/deck/deckSlice';
 import DeckListItemCard from './DeckListItemCard';
 import styles from './ListDecks.module.css';
 import { useConfirm } from 'utils/dialogs';
@@ -78,7 +74,6 @@ const ListDecks: FC<ListDecksProps> = ({
       await dispatch(fetchCatalog());
       await dispatch(fetchActiveDeck());
       dispatch(startNextSession());
-      dispatch(draw());
     }
   };
 
