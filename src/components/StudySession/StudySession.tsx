@@ -1,6 +1,4 @@
 import { FC, useEffect, useState } from 'react';
-import { Button, Intent, NonIdealState } from '@blueprintjs/core';
-import { IconNames } from '@blueprintjs/icons';
 
 import { useAppDispatch, useAppSelector } from 'app/hooks';
 import {
@@ -10,7 +8,6 @@ import {
   startNextSession,
 } from 'features/deck/deckSlice';
 import { selectLastCard, selectSessionCounter } from 'features/deck/selectors';
-import { changeView } from 'features/navigation/navigationSlice';
 import {
   selectActiveDeckId,
   selectDeckCatalogItems,
@@ -20,8 +17,10 @@ import ActionButtons from './ActionButtons/ActionButtons';
 import CurrentDeckTitle from './CurrentDeckTitle/CurrentDeckTitle';
 import Boxes from './Boxes/Boxes';
 import CardSwitcher from './CardSwitcher/CardSwitcher';
+import ThereAreNoDecks from './ThereAreNoDecks';
+import ThereIsNoActiveDeck from './ThereIsNoActiveDeck';
 import styles from './StudySession.module.css';
-
+import ThereAreNoCards from './ThereAreNoCards';
 
 const StudySession: FC = () => {
   const dispatch = useAppDispatch();
@@ -37,8 +36,6 @@ const StudySession: FC = () => {
   const deckCatalogItems = useAppSelector(selectDeckCatalogItems);
   const [direction, setDirection] = useState<'left' | 'right'>('left');
 
-  const thereAreNoDecks = deckCatalogItems.length < 1 && dataLoaded;
-  const thereIsNoActiveDeck = !activeDeck && !thereAreNoDecks && dataLoaded;
   const readyToUse = activeDeck && deckCatalogItems.length > 0 && dataLoaded;
 
   const handlePromote = () => {
@@ -51,18 +48,6 @@ const StudySession: FC = () => {
     setDirection('left');
     dispatch(demote());
     dispatch(saveDeck());
-  };
-
-  const handleSelectDeck = () => {
-    dispatch(changeView('settings/deck/list'));
-  };
-
-  const handleCreateDeck = () => {
-    dispatch(changeView('settings/deck/edit'));
-  };
-
-  const startNewSession = () => {
-    dispatch(startNextSession());
   };
 
   useEffect(() => {
@@ -82,30 +67,9 @@ const StudySession: FC = () => {
       <CurrentDeckTitle className={styles.title} />
       <Boxes className={styles.boxes} />
       <div className={styles.content}>
-        {thereAreNoDecks && (
-          <NonIdealState
-            icon={IconNames.INBOX}
-            title="There are no decks"
-            description="It seems you have not created any deck yet."
-            action={
-              <Button intent={Intent.PRIMARY} large onClick={handleCreateDeck}>
-                Create one
-              </Button>
-            }
-          />
-        )}
-        {thereIsNoActiveDeck && (
-          <NonIdealState
-            icon={IconNames.INBOX}
-            title="There is no active deck"
-            description="You should select a deck to start practicing."
-            action={
-              <Button intent={Intent.PRIMARY} large onClick={handleSelectDeck}>
-                Select one
-              </Button>
-            }
-          />
-        )}
+        <ThereAreNoDecks />
+        <ThereIsNoActiveDeck />
+        <ThereAreNoCards />
         {readyToUse && (
           <>
             <div className={styles.cards}>
@@ -113,25 +77,10 @@ const StudySession: FC = () => {
                 <CardSwitcher direction={direction} currentCard={lastCard} />
               ) : null}
             </div>
-            {!sessionFinished ? (
+            {!sessionFinished && (
               <ActionButtons
                 onPromote={handlePromote}
                 onDemote={handleDemote}
-              />
-            ) : (
-              <NonIdealState
-                title="The cards are out"
-                action={
-                  <Button
-                    intent={Intent.PRIMARY}
-                    large
-                    onClick={() => {
-                      startNewSession();
-                    }}
-                  >
-                    Start Session {sessionCounter + 1}
-                  </Button>
-                }
               />
             )}
           </>
