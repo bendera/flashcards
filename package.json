@@ -40,7 +40,7 @@
     "lint": "eslint src/**/*.{ts,tsx}",
     "lint:fix": "eslint src/**/*.{ts,tsx} --fix",
     "zip": "node scripts/zip.js",
-    "package": "npm run build && npm run zip"
+    "package": "yarn run build && yarn run zip"
   },
   "eslintConfig": {
     "extends": "react-app"
