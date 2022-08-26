@@ -9,7 +9,7 @@ import {
   TextArea,
 } from '@blueprintjs/core';
 import { IconNames } from '@blueprintjs/icons';
-import { useDebounce } from 'rooks';
+import { useDebouncedValue } from 'rooks';
 import { nanoid } from 'nanoid';
 
 import { FlashCard } from 'types';
@@ -26,9 +26,11 @@ interface ImportCardsProps {
 const ImportCards: FC<ImportCardsProps> = ({ onImport: onSave = noop }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [csvData, setCsvData] = useState('');
-  const [csvDataDelayed, setCsvDataDelayed] = useState('');
   const [importedCards, setImportedCards] = useState<FlashCard[]>([]);
-  const setCsvDataDebounced = useDebounce(setCsvDataDelayed, 500);
+  const [csvDataDebounced, setCsvDataDebounced] = useDebouncedValue<string>(
+    csvData,
+    500
+  );
   const [columnSeparator, setColumnSeparator] = useState('\t');
   const [rowSeparator, setRowSeparator] = useState('\n');
   const [previewData, setPreviewData] = useState<FlashCard[]>([]);
@@ -37,7 +39,6 @@ const ImportCards: FC<ImportCardsProps> = ({ onImport: onSave = noop }) => {
     const val = (event.target as HTMLTextAreaElement).value;
 
     setCsvData(val);
-    setCsvDataDebounced(val);
   };
 
   const handleColumnSeparatorChange = (event: FormEvent<HTMLInputElement>) => {
@@ -56,13 +57,13 @@ const ImportCards: FC<ImportCardsProps> = ({ onImport: onSave = noop }) => {
     if (importedCards.length > 0) {
       onSave(importedCards);
       setCsvData('');
-      setCsvDataDelayed('');
+      setCsvDataDebounced('');
       setIsOpen(false);
     }
   };
 
   useEffect(() => {
-    const imported = parseCsv(csvDataDelayed);
+    const imported = parseCsv(csvDataDebounced as string);
     const cardsToAdd = imported.map(({ frontSide, backSide }) => ({
       id: nanoid(),
       frontSide,
@@ -71,7 +72,7 @@ const ImportCards: FC<ImportCardsProps> = ({ onImport: onSave = noop }) => {
 
     setPreviewData(cardsToAdd.slice(0, 5));
     setImportedCards(cardsToAdd);
-  }, [csvDataDelayed]);
+  }, [csvDataDebounced]);
 
   return (
     <Card>

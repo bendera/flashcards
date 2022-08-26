@@ -1,12 +1,11 @@
 import { Switch } from '@blueprintjs/core';
-import { useAppSelector } from 'app/hooks';
+import { useAppDispatch, useAppSelector } from 'app/hooks';
 import { saveOption } from 'features/options/optionsSlice';
 import { ChangeEvent, FC } from 'react';
-import { useDispatch } from 'react-redux';
 import { OptionKey } from 'utils/OptionsAPI';
 
 const Options: FC = () => {
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const { boxes, darkMode, progress } = useAppSelector(
     (state) => state.options.data
   );

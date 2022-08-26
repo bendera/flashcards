@@ -1,4 +1,10 @@
-import React, { createContext, FC, useEffect, useState } from 'react';
+import React, {
+  createContext,
+  FC,
+  ReactElement,
+  useEffect,
+  useState,
+} from 'react';
 import DialogWrapper from './DialogWrapper';
 import { ModalOptions } from '.';
 
@@ -50,7 +56,9 @@ export const DialogContext = createContext<DialogContextData>({
   },
 });
 
-export const DialogProvider: FC = ({ children }) => {
+export const DialogProvider: FC<{ children: ReactElement }> = ({
+  children,
+}) => {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [dialogConfig, setDialogConfig] =
     useState<DialogConfig>(defaultDialogConfig);

@@ -16,9 +16,9 @@ describe('CardItem', () => {
       />
     );
 
-    const cb = queryByTestId('CardItem__checkbox');
+    const cb = queryByTestId('CardItem__checkbox') as HTMLInputElement;
 
-    expect(cb.checked).toBe(true);
+    expect(cb?.checked).toBe(true);
     expect(container).toMatchSnapshot();
   });
 
@@ -38,7 +38,7 @@ describe('CardItem', () => {
     );
 
     const cb = queryByTestId('CardItem__checkbox');
-    cb.click();
+    cb!.click();
 
     expect(changeHandler).toHaveBeenCalledWith({
       backSide: 'Test back',
@@ -64,7 +64,7 @@ describe('CardItem', () => {
     );
 
     const bt = queryByTitle('Swap sides');
-    bt.click();
+    bt!.click();
 
     expect(changeHandler).toHaveBeenCalledWith({
       backSide: 'Test front',
@@ -144,7 +144,7 @@ describe('CardItem', () => {
     );
 
     const bt = queryByTitle('Delete card');
-    bt.click();
+    bt!.click();
 
     expect(deleteHandler).toHaveBeenCalledWith({
       backSide: 'Test back',
