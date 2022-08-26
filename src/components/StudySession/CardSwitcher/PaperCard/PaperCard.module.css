@@ -46,7 +46,7 @@
   width: 100%;
 }
 
-:global(.bp3-dark) .side {
+:global(.bp4-dark) .side {
   background-color: rgb(46, 56, 86);
   color: #fff;
 }

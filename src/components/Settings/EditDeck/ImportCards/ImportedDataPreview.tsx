@@ -11,9 +11,9 @@ interface ImportedDataPreviewProps {
 const ImportedDataPreview: FC<ImportedDataPreviewProps> = ({ data }) => {
   const filtered = data.filter((_, i) => i < 5);
   const classes = cn([
-    'bp3-html-table',
-    'bp3-html-table-condensed',
-    'bp3-html-table-striped',
+    'bp4-html-table',
+    'bp4-html-table-condensed',
+    'bp4-html-table-striped',
     styles.table,
   ]);
   const empty = filtered.length < 1;

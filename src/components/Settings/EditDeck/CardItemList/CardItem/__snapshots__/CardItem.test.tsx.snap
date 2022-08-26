@@ -6,7 +6,7 @@ exports[`CardItem should render correctly with required props 1`] = `
     class="root"
   >
     <label
-      class="bp3-control bp3-checkbox checkbox"
+      class="bp4-control bp4-checkbox checkbox"
     >
       <input
         checked=""
@@ -15,27 +15,27 @@ exports[`CardItem should render correctly with required props 1`] = `
         value="testId"
       />
       <span
-        class="bp3-control-indicator"
+        class="bp4-control-indicator"
       />
     </label>
     <div
-      class="bp3-form-group formGroup"
+      class="bp4-form-group formGroup"
     >
       <label
-        class="bp3-label"
+        class="bp4-label"
         for="f_testId"
       >
         Front side
          
         <span
-          class="bp3-text-muted"
+          class="bp4-text-muted"
         />
       </label>
       <div
-        class="bp3-form-content"
+        class="bp4-form-content"
       >
         <textarea
-          class="bp3-input bp3-fill textarea"
+          class="bp4-input bp4-fill textarea"
           id="f_testId"
           style="height: 0px;"
         >
@@ -44,13 +44,13 @@ exports[`CardItem should render correctly with required props 1`] = `
       </div>
     </div>
     <button
-      class="bp3-button bp3-minimal swapButton"
+      class="bp4-button bp4-minimal swapButton"
       title="Swap sides"
       type="button"
     >
       <span
         aria-hidden="true"
-        class="bp3-icon bp3-icon-swap-horizontal"
+        class="bp4-icon bp4-icon-swap-horizontal"
         icon="swap-horizontal"
       >
         <svg
@@ -67,23 +67,23 @@ exports[`CardItem should render correctly with required props 1`] = `
       </span>
     </button>
     <div
-      class="bp3-form-group formGroup"
+      class="bp4-form-group formGroup"
     >
       <label
-        class="bp3-label"
+        class="bp4-label"
         for="b_testId"
       >
         Back side
          
         <span
-          class="bp3-text-muted"
+          class="bp4-text-muted"
         />
       </label>
       <div
-        class="bp3-form-content"
+        class="bp4-form-content"
       >
         <textarea
-          class="bp3-input bp3-fill textarea"
+          class="bp4-input bp4-fill textarea"
           id="b_testId"
           style="height: 0px;"
         >
@@ -92,13 +92,13 @@ exports[`CardItem should render correctly with required props 1`] = `
       </div>
     </div>
     <button
-      class="bp3-button bp3-minimal deleteButton"
+      class="bp4-button bp4-minimal deleteButton"
       title="Delete card"
       type="button"
     >
       <span
         aria-hidden="true"
-        class="bp3-icon bp3-icon-trash"
+        class="bp4-icon bp4-icon-trash"
         icon="trash"
       >
         <svg

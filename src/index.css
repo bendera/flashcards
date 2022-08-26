@@ -9,7 +9,7 @@ body {
   margin: 0;
 }
 
-.bp3-dark body {
+.bp4-dark body {
   background: rgb(10, 9, 45);
 }
 
@@ -20,15 +20,15 @@ body {
   --color-box-icon: #5c7080;
 }
 
-.bp3-dark {
+.bp4-dark {
   --color-text-default: #f5f8fa;
   --color-box-icon: #a7b6c2;
 }
 
-.bp3-select-popover .bp3-popover-content {
+.bp4-select-popover .bp4-popover-content {
     padding: 5px;
 }
 
-.bp3-select-popover .bp3-menu {
+.bp4-select-popover .bp4-menu {
   padding: 5px 0 0;
 }

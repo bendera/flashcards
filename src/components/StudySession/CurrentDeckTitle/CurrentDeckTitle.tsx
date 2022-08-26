@@ -10,7 +10,7 @@ interface CurrentDeckTitleProps {
 
 const CurrentDeckTitle: FC<CurrentDeckTitleProps> = ({ className = '' }) => {
   const title = useSelector(selectCurrentDeckTitle);
-  const classes = cn('bp3-heading', styles.root, className);
+  const classes = cn('bp4-heading', styles.root, className);
 
   return <h1 className={classes}>{title}</h1>;
 };

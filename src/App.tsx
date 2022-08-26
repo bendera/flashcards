@@ -55,7 +55,7 @@ function App() {
   }, [optionsLoaded, firstRun, dispatch]);
 
   useEffect(() => {
-    document.documentElement.classList.toggle('bp3-dark', darkMode);
+    document.documentElement.classList.toggle('bp4-dark', darkMode);
   }, [darkMode]);
 
   // #endregion

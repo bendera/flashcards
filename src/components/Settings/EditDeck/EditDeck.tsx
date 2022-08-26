@@ -193,7 +193,7 @@ const EditDeck: FC<EditDecksProps> = ({
 
   return (
     <div>
-      <h1 className={cn('bp3-heading', styles.heading)}>
+      <h1 className={cn('bp4-heading', styles.heading)}>
         <EditableText
           onChange={handleTitleChange}
           placeholder="Edit title..."
