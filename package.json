@@ -38,7 +38,9 @@
     "test:watch": "react-scripts test",
     "eject": "react-scripts eject",
     "lint": "eslint src/**/*.{ts,tsx}",
-    "lint:fix": "eslint src/**/*.{ts,tsx} --fix"
+    "lint:fix": "eslint src/**/*.{ts,tsx} --fix",
+    "zip": "node scripts/zip.js",
+    "package": "npm run build && npm run zip"
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -65,5 +67,8 @@
     "transformIgnorePatterns": [
       "node_modules/(?!idb)/with-async-ittr"
     ]
+  },
+  "devDependencies": {
+    "archiver": "^5.3.1"
   }
 }
