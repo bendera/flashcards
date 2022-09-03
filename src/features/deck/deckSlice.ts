@@ -107,7 +107,7 @@ const createDemoDeck = createAsyncThunk(
 
 // #endregion
 
-const initialState: DeckState = {
+export const createInitialDeckState = (): DeckState => ({
   data: {
     cards: [],
     cardsByBoxes: {},
@@ -122,7 +122,9 @@ const initialState: DeckState = {
   saveStatus: 'idle',
   loadStatus: 'idle',
   loaded: false,
-};
+});
+
+const initialState = createInitialDeckState();
 
 export const deckSlice = createSlice({
   name: 'deck',

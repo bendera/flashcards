@@ -10,9 +10,11 @@ interface NavigationState {
   currentView: AppView;
 }
 
-const initialState: NavigationState = {
+export const createInitialNavigationState = (): NavigationState => ({
   currentView: 'study_session',
-};
+});
+
+const initialState = createInitialNavigationState();
 
 export const navigationSlice = createSlice({
   name: 'navigation',
