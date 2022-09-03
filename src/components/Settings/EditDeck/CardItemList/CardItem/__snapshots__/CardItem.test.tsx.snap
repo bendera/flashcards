@@ -56,6 +56,7 @@ exports[`CardItem should render correctly with required props 1`] = `
         <svg
           data-icon="swap-horizontal"
           height="16"
+          role="img"
           viewBox="0 0 16 16"
           width="16"
         >
@@ -104,6 +105,7 @@ exports[`CardItem should render correctly with required props 1`] = `
         <svg
           data-icon="trash"
           height="16"
+          role="img"
           viewBox="0 0 16 16"
           width="16"
         >

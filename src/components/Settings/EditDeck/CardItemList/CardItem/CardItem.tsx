@@ -89,7 +89,7 @@ const CardItem: FC<CardItemProps> = ({
           growVertically
           id={`f_${id}`}
           onChange={handleChange}
-          value={frontSide}
+          defaultValue={frontSide}
         />
       </FormGroup>
       <Button
@@ -109,7 +109,7 @@ const CardItem: FC<CardItemProps> = ({
           growVertically
           fill
           onChange={handleChange}
-          value={backSide}
+          defaultValue={backSide}
           className={styles.textarea}
         />
       </FormGroup>
