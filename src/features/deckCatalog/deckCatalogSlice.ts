@@ -1,7 +1,4 @@
-import {
-  createAsyncThunk,
-  createSlice,
-} from '@reduxjs/toolkit';
+import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { RootState } from 'app/store';
 import { AsyncStatus } from 'types';
 import FlashcardsAPI, { DeckCatalogItem } from 'utils/FlashcardsAPI';
@@ -17,11 +14,13 @@ export interface DeckCatalogState {
   loaded: boolean;
 }
 
-const initialState: DeckCatalogState = {
+export const createInitialDeckCatalogState = (): DeckCatalogState => ({
   entities: { byId: {}, allIds: [] },
   status: 'idle',
   loaded: false,
-};
+});
+
+const initialState = createInitialDeckCatalogState();
 
 export const fetchCatalog = createAsyncThunk('deckCatalog/load', async () => {
   const api = new FlashcardsAPI();

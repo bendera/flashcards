@@ -11,7 +11,7 @@ interface OptionsState {
   loaded: boolean;
 }
 
-const initialState: OptionsState = {
+export const createInitialOptionsState = (): OptionsState => ({
   data: {
     boxes: false,
     darkMode: false,
@@ -19,7 +19,9 @@ const initialState: OptionsState = {
     firstRun: true,
   },
   loaded: false,
-};
+});
+
+const initialState = createInitialOptionsState();
 
 export const fetchAllOptions = createAsyncThunk('options/get', async () => {
   const optionsAPI = new OptionsAPI();
