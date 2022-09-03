@@ -1,6 +1,6 @@
 import React from 'react';
-import { render } from '@testing-library/react';
-import userEvent from '@testing-library/user-event'
+import { fireEvent, render } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import CardItem from './CardItem';
 
 describe('CardItem', () => {
@@ -71,17 +71,19 @@ describe('CardItem', () => {
       frontSide: 'Test back',
       id: 'testId',
       selected: false,
-    })
+    });
   });
 
-  it('onChange should be called with proper params when value of the front side textarea changed', () => {
+  it('onChange should be called with proper params when value of the front side textarea changed', async () => {
     const changeHandler = jest.fn();
+    const user = userEvent.setup();
+    const TYPED_TEXT = 'test';
 
     const { queryAllByRole } = render(
       <CardItem
         card={{
           id: 'testId',
-          frontSide: 'Test front',
+          frontSide: '',
           backSide: 'Test back',
           selected: false,
         }}
@@ -90,42 +92,44 @@ describe('CardItem', () => {
     );
 
     const ta = queryAllByRole('textbox')[0];
-    userEvent.type(ta, 'Changed front');
+    await user.type(ta, TYPED_TEXT);
 
-    expect(changeHandler).toHaveBeenCalledTimes(13);
+    expect(changeHandler).toHaveBeenCalledTimes(TYPED_TEXT.length);
     expect(changeHandler).toHaveBeenLastCalledWith({
       backSide: 'Test back',
-      frontSide: 'Changed front',
+      frontSide: 'test',
       id: 'testId',
       selected: false,
-    })
+    });
   });
 
-  it('onChange should be called with proper params when value of the back side textarea changed', () => {
+  it('onChange should be called with proper params when value of the back side textarea changed', async () => {
     const changeHandler = jest.fn();
+    const user = userEvent.setup();
+    const TYPED_TEXT = 'test';
 
     const { queryAllByRole } = render(
       <CardItem
         card={{
           id: 'testId',
           frontSide: 'Test front',
-          backSide: 'Test back',
+          backSide: '',
           selected: false,
         }}
         onChange={changeHandler}
       />
     );
 
-    const ta = queryAllByRole('textbox')[1];
-    userEvent.type(ta, 'Changed back');
+    const textarea = queryAllByRole('textbox')[1];
+    await user.type(textarea, TYPED_TEXT);
 
-    expect(changeHandler).toHaveBeenCalledTimes(12);
+    expect(changeHandler).toHaveBeenCalledTimes(TYPED_TEXT.length);
     expect(changeHandler).toHaveBeenLastCalledWith({
-      backSide: 'Changed back',
-      frontSide: 'Test front',
       id: 'testId',
+      frontSide: 'Test front',
+      backSide: TYPED_TEXT,
       selected: false,
-    })
+    });
   });
 
   it('onDelete should be called with proper params when card is removed', () => {
@@ -151,6 +155,6 @@ describe('CardItem', () => {
       frontSide: 'Test front',
       id: 'testId',
       selected: false,
-    })
+    });
   });
 });
