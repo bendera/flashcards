@@ -1,7 +1,7 @@
 import { FC, useState, useEffect } from 'react';
 import { CSSTransition } from 'react-transition-group';
 import cn from 'classnames';
-import FormattedText from './FormattedText';
+import FormattedText from './FormattedText/FormattedText';
 import styles from './PaperCard.module.css';
 
 interface PaperCardProps {
