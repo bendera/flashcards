@@ -1,8 +1,9 @@
+import { ChangeEvent, FC } from 'react';
 import { Switch } from '@blueprintjs/core';
 import { useAppDispatch, useAppSelector } from 'app/hooks';
 import { saveOption } from 'features/options/optionsSlice';
-import { ChangeEvent, FC } from 'react';
 import { OptionKey } from 'utils/OptionsAPI';
+import SettingsPage from '../SettingsPage';
 
 const Options: FC = () => {
   const dispatch = useAppDispatch();
@@ -16,7 +17,7 @@ const Options: FC = () => {
   };
 
   return (
-    <div>
+    <SettingsPage>
       <Switch
         label="Dark theme"
         onChange={handleChange}
@@ -38,7 +39,7 @@ const Options: FC = () => {
         checked={boxes}
         large
       />
-    </div>
+    </SettingsPage>
   );
 };
 

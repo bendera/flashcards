@@ -1,7 +1,5 @@
-import { FC, useRef, useState } from 'react';
-import { Button, ButtonGroup, Classes } from '@blueprintjs/core';
+import { FC, useState } from 'react';
 import { nanoid } from 'nanoid';
-import cn from 'classnames';
 import noop from 'utils/noop';
 import { DeckCatalogItem } from 'utils/FlashcardsAPI';
 import { useAppDispatch, useAppSelector } from 'app/hooks';
@@ -14,7 +12,6 @@ import { deleteDeck, resetDeckStats } from 'features/deck/deckSlice';
 import Options from './Options/Options';
 import EditDeck from './EditDeck/EditDeck';
 import ListDecks from './ListDecks/ListDecks';
-import styles from './Settings.module.css';
 
 const createAnEmptyDeck = (): DeckCatalogItem => ({
   id: nanoid(),
@@ -30,9 +27,10 @@ interface SettingsProps {
 
 const Settings: FC<SettingsProps> = ({ onComplete = noop }) => {
   const view = useAppSelector((state) => state.navigation.currentView);
-  const drawerBodyRef = useRef<HTMLDivElement>(null);
   const dispatch = useAppDispatch();
-  const [deckToEdit, setDeckToEdit] = useState<DeckCatalogItem>(createAnEmptyDeck());
+  const [deckToEdit, setDeckToEdit] = useState<DeckCatalogItem>(
+    createAnEmptyDeck()
+  );
 
   const handleEdit = (item: DeckCatalogItem) => {
     setDeckToEdit(item);
@@ -40,8 +38,8 @@ const Settings: FC<SettingsProps> = ({ onComplete = noop }) => {
   };
 
   const handleReset = (id: string) => {
-    dispatch(resetDeckStats(id))
-  }
+    dispatch(resetDeckStats(id));
+  };
 
   const handleDelete = async (item: DeckCatalogItem) => {
     await dispatch(deleteCatalogItem(item.id));
@@ -62,56 +60,19 @@ const Settings: FC<SettingsProps> = ({ onComplete = noop }) => {
 
   return (
     <>
-      <div className={Classes.DRAWER_BODY} ref={drawerBodyRef}>
-        <div className={Classes.DIALOG_BODY}>
-          <ButtonGroup minimal className={styles.nav}>
-            <Button
-              active={
-                view === 'settings/deck/edit' || view === 'settings/deck/list'
-              }
-              className={styles.button}
-              onClick={() => {
-                dispatch(changeView('settings/deck/list'));
-              }}
-              text="Decks"
-            />
-            <Button
-              active={view === 'settings/options'}
-              className={styles.button}
-              onClick={() => {
-                dispatch(changeView('settings/options'));
-              }}
-              text="Options"
-            />
-          </ButtonGroup>
-          {view === 'settings/deck/list' && (
-            <ListDecks
-              onCreate={handleCreate}
-              onComplete={() => onComplete()}
-              onReset={handleReset}
-              onDelete={handleDelete}
-              onEdit={handleEdit}
-            />
-          )}
-          {view === 'settings/options' && <Options />}
-          {view === 'settings/deck/edit' && (
-            <EditDeck
-              deckToEdit={deckToEdit}
-              onEditFinished={handleEditFinished}
-              ancestorElementRef={drawerBodyRef}
-            />
-          )}
-        </div>
-      </div>
-      <div className={cn(Classes.DRAWER_FOOTER, styles.footer)}>
-        <Button
-          onClick={() => {
-            onComplete();
-          }}
-        >
-          Done
-        </Button>
-      </div>
+      {view === 'settings/deck/list' && (
+        <ListDecks
+          onCreate={handleCreate}
+          onComplete={() => onComplete()}
+          onReset={handleReset}
+          onDelete={handleDelete}
+          onEdit={handleEdit}
+        />
+      )}
+      {view === 'settings/options' && <Options />}
+      {view === 'settings/deck/edit' && (
+        <EditDeck deckToEdit={deckToEdit} onEditFinished={handleEditFinished} />
+      )}
     </>
   );
 };

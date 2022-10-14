@@ -12,6 +12,7 @@ import { fetchActiveDeck, startNextSession } from 'features/deck/deckSlice';
 import DeckListItemCard from './DeckListItemCard';
 import styles from './ListDecks.module.css';
 import { useConfirm } from 'utils/dialogs';
+import SettingsPage from '../SettingsPage';
 
 interface ListDecksProps {
   onEdit: (item: DeckCatalogItem) => void;
@@ -86,30 +87,32 @@ const ListDecks: FC<ListDecksProps> = ({
   }, [dispatch]);
 
   return (
-    <div className={styles.wrapper}>
-      {decks.map(({ id, title, active }) => (
-        <DeckListItemCard
-          key={id}
-          id={id}
-          title={title}
-          onActive={handleActive}
-          onEdit={handleEdit}
-          onReset={handleReset}
-          onDelete={handleDelete}
-          active={active === 1}
-        />
-      ))}
-      <div className={styles.buttons}>
-        <Button
-          className={styles.buttonAdd}
-          intent={Intent.PRIMARY}
-          large
-          onClick={handleAddNew}
-        >
-          Add new deck
-        </Button>
+    <SettingsPage>
+      <div className={styles.wrapper}>
+        {decks.map(({ id, title, active }) => (
+          <DeckListItemCard
+            key={id}
+            id={id}
+            title={title}
+            onActive={handleActive}
+            onEdit={handleEdit}
+            onReset={handleReset}
+            onDelete={handleDelete}
+            active={active === 1}
+          />
+        ))}
+        <div className={styles.buttons}>
+          <Button
+            className={styles.buttonAdd}
+            intent={Intent.PRIMARY}
+            large
+            onClick={handleAddNew}
+          >
+            Add new deck
+          </Button>
+        </div>
       </div>
-    </div>
+    </SettingsPage>
   );
 };
 

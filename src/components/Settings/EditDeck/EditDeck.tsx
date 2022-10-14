@@ -1,12 +1,5 @@
-import {
-  FC,
-  RefObject,
-  useEffect,
-  useLayoutEffect,
-  useRef,
-  useState,
-} from 'react';
-import { Button, EditableText, Intent } from '@blueprintjs/core';
+import { FC, useEffect, useLayoutEffect, useRef, useState } from 'react';
+import { EditableText } from '@blueprintjs/core';
 import cn from 'classnames';
 
 import FlashcardsAPI, { DeckCatalogItem, DeckItem } from 'utils/FlashcardsAPI';
@@ -25,22 +18,19 @@ import {
   saveDeck,
   startNextSession,
 } from 'features/deck/deckSlice';
+import SettingsPage from '../SettingsPage';
+import EditDeckButtons from './EditDeckButtons/EditDeckButtons';
 
 type DeckMetaData = Omit<DeckItem, 'id' | 'title' | 'cards'>;
 
 interface EditDecksProps {
   deckToEdit?: DeckCatalogItem;
   onEditFinished: () => void;
-  /**
-   * Reference to ancestor element to scroll
-   */
-  ancestorElementRef?: RefObject<HTMLElement>;
 }
 
 const EditDeck: FC<EditDecksProps> = ({
   deckToEdit = { id: '', title: '', active: 0 },
   onEditFinished,
-  ancestorElementRef = null,
 }) => {
   const { active, id, title } = deckToEdit;
 
@@ -56,6 +46,7 @@ const EditDeck: FC<EditDecksProps> = ({
     numberOfSessionCards: 0,
     lastCard: '',
   });
+  const settingsPageRef = useRef<HTMLDivElement>(null);
   const isSaveButtonActive = deckTitle.length > 0 && cards.length > 0;
 
   const handleTitleChange = (value: string) => {
@@ -161,12 +152,11 @@ const EditDeck: FC<EditDecksProps> = ({
   }, [deckToEdit]);
 
   useLayoutEffect(() => {
-    if (shouldScroll && ancestorElementRef?.current) {
-      ancestorElementRef.current.scrollTop =
-        ancestorElementRef.current.scrollHeight;
+    if (shouldScroll && settingsPageRef?.current) {
+      settingsPageRef.current.scrollTop = settingsPageRef.current.scrollHeight;
       setShouldScroll(false);
     }
-  }, [ancestorElementRef, shouldScroll]);
+  }, [settingsPageRef, shouldScroll]);
 
   const handleCardItemListChange = (
     cards: CardListItemData[],
@@ -192,7 +182,16 @@ const EditDeck: FC<EditDecksProps> = ({
   };
 
   return (
-    <div>
+    <SettingsPage
+      ref={settingsPageRef}
+      footerContent={
+        <EditDeckButtons
+          onSave={handleSave}
+          onCancel={handleCancel}
+          isSaveButtonActive={isSaveButtonActive}
+        />
+      }
+    >
       <h1 className={cn('bp4-heading', styles.heading)}>
         <EditableText
           onChange={handleTitleChange}
@@ -202,21 +201,7 @@ const EditDeck: FC<EditDecksProps> = ({
       </h1>
       <ImportCards onImport={handleImport} />
       <CardItemList cards={cards} onChange={handleCardItemListChange} />
-      <div className={styles.buttonGroup}>
-        <Button
-          className={styles.button}
-          disabled={!isSaveButtonActive}
-          intent={Intent.PRIMARY}
-          large
-          onClick={handleSave}
-        >
-          Save deck
-        </Button>
-        <Button className={styles.button} large minimal onClick={handleCancel}>
-          Cancel
-        </Button>
-      </div>
-    </div>
+    </SettingsPage>
   );
 };
 

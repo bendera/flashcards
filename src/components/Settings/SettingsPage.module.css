@@ -1,0 +1,8 @@
+.nav {
+  margin-bottom: 40px;
+}
+
+.footer {
+  justify-content: flex-end;
+  text-align: right;
+}
