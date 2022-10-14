@@ -1,7 +1,7 @@
 import { FC } from 'react';
 import { Button, Intent, NonIdealState } from '@blueprintjs/core';
 import { useAppDispatch, useAppSelector } from 'app/hooks';
-import { startNextSession } from 'features/deck/deckSlice';
+import { saveDeck, startNextSession } from 'features/deck/deckSlice';
 import { selectSessionCounter } from 'features/deck/selectors';
 
 const ThereAreNoCards: FC = () => {
@@ -13,6 +13,7 @@ const ThereAreNoCards: FC = () => {
 
   const startNewSession = () => {
     dispatch(startNextSession());
+    dispatch(saveDeck());
   };
 
   return sessionFinished ? (
