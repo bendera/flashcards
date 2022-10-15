@@ -1,11 +1,9 @@
 import { FC, useEffect, useLayoutEffect, useRef, useState } from 'react';
-import { EditableText } from '@blueprintjs/core';
+import { Button, EditableText } from '@blueprintjs/core';
 import cn from 'classnames';
+import { IconNames } from '@blueprintjs/icons';
 
 import FlashcardsAPI, { DeckCatalogItem, DeckItem } from 'utils/FlashcardsAPI';
-
-import ImportCards from './ImportCards/ImportCards';
-import styles from './EditDeck.module.css';
 import CardItemList, {
   CardItemListOperation,
   CardListItemData,
@@ -20,6 +18,8 @@ import {
 } from 'features/deck/deckSlice';
 import SettingsPage from '../SettingsPage';
 import EditDeckButtons from './EditDeckButtons/EditDeckButtons';
+import ImportCards from './ImportCards/ImportCards';
+import styles from './EditDeck.module.css';
 
 type DeckMetaData = Omit<DeckItem, 'id' | 'title' | 'cards'>;
 
@@ -38,6 +38,7 @@ const EditDeck: FC<EditDecksProps> = ({
   const [cards, setCards] = useState<CardListItemData[]>([]);
   const [shouldScroll, setShouldScroll] = useState(false);
   const [deckTitle, setDeckTitle] = useState(title);
+  const [showImportCardsDialog, setShowImportCardsDialog] = useState(false);
   const deckMetaDataRef = useRef<DeckMetaData>({
     cardsByBoxes: {},
     drawCounter: 0,
@@ -169,6 +170,10 @@ const EditDeck: FC<EditDecksProps> = ({
     }
   };
 
+  const handleImportButtonClick = () => {
+    setShowImportCardsDialog(true);
+  };
+
   const handleImport = (imported: FlashCard[]) => {
     const importedWithSelectedFlag = imported.map((c) => ({
       ...c,
@@ -179,6 +184,10 @@ const EditDeck: FC<EditDecksProps> = ({
     imported.forEach((c) => {
       deckMetaDataRef.current.cardsByBoxes[c.id] = 1;
     });
+  };
+
+  const handleImportDialogClose = () => {
+    setShowImportCardsDialog(false);
   };
 
   return (
@@ -199,7 +208,14 @@ const EditDeck: FC<EditDecksProps> = ({
           value={deckTitle}
         />
       </h1>
-      <ImportCards onImport={handleImport} />
+      <Button icon={IconNames.IMPORT} onClick={handleImportButtonClick}>
+        Import cards
+      </Button>
+      <ImportCards
+        show={showImportCardsDialog}
+        onImport={handleImport}
+        onClose={handleImportDialogClose}
+      />
       <CardItemList cards={cards} onChange={handleCardItemListChange} />
     </SettingsPage>
   );

@@ -1,14 +1,14 @@
 import { FC, FormEvent, useEffect, useState } from 'react';
+import cn from 'classnames';
 import {
   Button,
-  Card,
-  Collapse,
+  Classes,
+  Dialog,
   FormGroup,
   Radio,
   RadioGroup,
   TextArea,
 } from '@blueprintjs/core';
-import { IconNames } from '@blueprintjs/icons';
 import { useDebouncedValue } from 'rooks';
 import { nanoid } from 'nanoid';
 
@@ -20,18 +20,23 @@ import ImportedDataPreview from './ImportedDataPreview';
 import styles from './ImportCards.module.css';
 
 interface ImportCardsProps {
+  show?: boolean;
+  onClose?: () => void;
   onImport?: (cards: FlashCard[]) => void;
 }
 
-const ImportCards: FC<ImportCardsProps> = ({ onImport: onSave = noop }) => {
-  const [isOpen, setIsOpen] = useState(false);
+const ImportCards: FC<ImportCardsProps> = ({
+  show,
+  onImport = noop,
+  onClose = noop,
+}) => {
   const [csvData, setCsvData] = useState('');
   const [importedCards, setImportedCards] = useState<FlashCard[]>([]);
   const [csvDataDebounced, setCsvDataDebounced] = useDebouncedValue<string>(
     csvData,
     500
   );
-  const [columnSeparator, setColumnSeparator] = useState('\t');
+  const [colSeparator, setColSeparator] = useState('\t');
   const [rowSeparator, setRowSeparator] = useState('\n');
   const [previewData, setPreviewData] = useState<FlashCard[]>([]);
 
@@ -42,28 +47,27 @@ const ImportCards: FC<ImportCardsProps> = ({ onImport: onSave = noop }) => {
   };
 
   const handleColumnSeparatorChange = (event: FormEvent<HTMLInputElement>) => {
-    setColumnSeparator((event.target as HTMLInputElement).value);
+    setColSeparator((event.target as HTMLInputElement).value);
   };
 
   const handleRowSeparatorChange = (event: FormEvent<HTMLInputElement>) => {
     setRowSeparator((event.target as HTMLInputElement).value);
   };
 
-  const handleToggleClick = () => {
-    setIsOpen(!isOpen);
-  };
-
   const handleUseItemsClick = () => {
     if (importedCards.length > 0) {
-      onSave(importedCards);
+      onImport(importedCards);
       setCsvData('');
       setCsvDataDebounced('');
-      setIsOpen(false);
+      onClose();
     }
   };
 
   useEffect(() => {
-    const imported = parseCsv(csvDataDebounced as string);
+    const imported = parseCsv(csvDataDebounced as string, {
+      rowSeparator,
+      colSeparator,
+    });
     const cardsToAdd = imported.map(({ frontSide, backSide }) => ({
       id: nanoid(),
       frontSide,
@@ -72,66 +76,65 @@ const ImportCards: FC<ImportCardsProps> = ({ onImport: onSave = noop }) => {
 
     setPreviewData(cardsToAdd.slice(0, 5));
     setImportedCards(cardsToAdd);
-  }, [csvDataDebounced]);
+  }, [csvDataDebounced, colSeparator, rowSeparator]);
 
   return (
-    <Card>
-      <Button
-        icon={isOpen ? IconNames.DELETE : IconNames.IMPORT}
-        onClick={handleToggleClick}
-      >
-        {isOpen ? 'Cancel import' : 'Import flashcards'}
-      </Button>
-      <Collapse isOpen={isOpen}>
-        <div className={styles.form}>
-          <FormGroup
-            labelFor="import-data"
-            label="Data to import"
-            helperText="Copy and paste tabular data here from your favorite spreadsheet application (Excel, Google Spreadsheets, OpenOffice Calc, etc.)"
+    <Dialog
+      isOpen={show}
+      title="Import cards"
+      onClose={onClose}
+      className={styles.dialog}
+    >
+      <div className={cn(Classes.DIALOG_BODY, styles.dialogBody)}>
+        <FormGroup
+          labelFor="import-data"
+          label="Data to import"
+          helperText="Copy and paste tabular data here from your favorite spreadsheet application (Excel, Google Spreadsheets, OpenOffice Calc, etc.)"
+        >
+          <TextArea
+            className={styles.textarea}
+            fill
+            id="import-data"
+            onChange={handleCsvDataChange}
+            rows={10}
+            value={csvData}
+          />
+        </FormGroup>
+        <div className={styles.separatorOptions}>
+          <RadioGroup
+            className={styles.radioGroup}
+            inline
+            label="Column separator"
+            name="column-separator"
+            onChange={handleColumnSeparatorChange}
+            selectedValue={colSeparator}
           >
-            <TextArea
-              className={styles.textarea}
-              fill
-              id="import-data"
-              onChange={handleCsvDataChange}
-              rows={10}
-              value={csvData}
-            />
-          </FormGroup>
-          <div className={styles.separatorOptions}>
-            <RadioGroup
-              className={styles.radioGroup}
-              inline
-              label="Column separator"
-              name="column-separator"
-              onChange={handleColumnSeparatorChange}
-              selectedValue={columnSeparator}
-            >
-              <Radio label="Tab" value={'\t'} />
-              <Radio label="Comma" value="," />
-            </RadioGroup>
-            <RadioGroup
-              className={styles.radioGroup}
-              inline
-              label="Row separator"
-              name="row-separator"
-              onChange={handleRowSeparatorChange}
-              selectedValue={rowSeparator}
-            >
-              <Radio label="Newline" value={'\n'} />
-              <Radio label="Semicolon" value=";" />
-            </RadioGroup>
-          </div>
-          <ImportedDataPreview data={previewData} />
-          <Button
-            onClick={handleUseItemsClick}
-            disabled={importedCards.length < 1}
+            <Radio label="Tab" value={'\t'} />
+            <Radio label="Comma" value="," />
+          </RadioGroup>
+          <RadioGroup
+            className={styles.radioGroup}
+            inline
+            label="Row separator"
+            name="row-separator"
+            onChange={handleRowSeparatorChange}
+            selectedValue={rowSeparator}
           >
-            Use items
-          </Button>
+            <Radio label="Newline" value={'\n'} />
+            <Radio label="Semicolon" value=";" />
+          </RadioGroup>
         </div>
-      </Collapse>
-    </Card>
+        <ImportedDataPreview data={previewData} />
+      </div>
+      <div className={Classes.DIALOG_FOOTER}>
+        <Button
+          onClick={handleUseItemsClick}
+          disabled={importedCards.length < 1}
+        >
+          Use items
+        </Button>
+      </div>
+    </Dialog>
   );
 };
 

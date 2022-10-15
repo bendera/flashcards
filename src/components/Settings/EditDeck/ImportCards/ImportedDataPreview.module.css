@@ -9,7 +9,7 @@
 }
 
 .tableWrapper:after {
-  background: linear-gradient(#ffffff00, #ffffffff);
+  background: linear-gradient(#edeff200, #edeff2ff);
   bottom: 0;
   content: '';
   display: block;
@@ -17,6 +17,10 @@
   left: 0;
   position: absolute;
   width: 100%;
+}
+
+:global(.bp4-dark) .tableWrapper:after {
+  background: linear-gradient(#252a3100, #252a31ff);
 }
 
 .table {
