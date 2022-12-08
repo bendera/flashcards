@@ -1,3 +1,15 @@
+.root :global(.b) {
+  font-weight: bold;
+}
+
+.root :global(.i) {
+  font-style: italic;
+}
+
+.root :global(.u) {
+  text-decoration: underline;
+}
+
 .smaller {
   font-size: 18px;
 }

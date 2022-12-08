@@ -29,7 +29,9 @@ const FormattedText: FC<FormattedTextProps> = ({ text }) => {
 
   return (
     <span
-      className={cn({ [styles.smaller]: requiredChars > MAX_LARGE_CHARS })}
+      className={cn(styles.root, {
+        [styles.smaller]: requiredChars > MAX_LARGE_CHARS,
+      })}
       dangerouslySetInnerHTML={{ __html: formatText(text) }}
     ></span>
   );

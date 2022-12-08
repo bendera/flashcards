@@ -10,8 +10,15 @@ const htmlSpecialChars = (text: string) =>
 
 const format = (text: string) =>
   text
-    .replace(/(\*\s?)([^\n*]+)\*/gm, '<b>$2</b>')
-    .replace(/(_{1}\s?)([^\n_]+)_/gm, '<i>$2</i>');
+    .replace(
+      /(?<![/|<])\/(?!\/)([^/]+)(?<![/|<])\/(?!\/)/gm,
+      '<span class="i">$1</span>'
+    )
+    .replace(
+      /(?<!\*)\*(?!\*)([^*]+)(?<!\*)\*(?!\*)/gm,
+      '<span class="b">$1</span>'
+    )
+    .replace(/(?<!_)_(?!_)([^_]+)(?<!_)_(?!_)/gm, '<span class="u">$1</span>');
 
 const formatText = (rawText: string) => {
   let formatted = '';
