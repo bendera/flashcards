@@ -5,8 +5,6 @@ import {
   Classes,
   Dialog,
   FormGroup,
-  Radio,
-  RadioGroup,
   TextArea,
 } from '@blueprintjs/core';
 import { useDebouncedValue } from 'rooks';
@@ -18,6 +16,7 @@ import noop from 'utils/noop';
 
 import ImportedDataPreview from './ImportedDataPreview';
 import styles from './ImportCards.module.css';
+import SeparatorOptions from '../SeparatorOptions/SeparatorOptions';
 
 interface ImportCardsProps {
   show?: boolean;
@@ -46,12 +45,12 @@ const ImportCards: FC<ImportCardsProps> = ({
     setCsvData(val);
   };
 
-  const handleColumnSeparatorChange = (event: FormEvent<HTMLInputElement>) => {
-    setColSeparator((event.target as HTMLInputElement).value);
-  };
-
-  const handleRowSeparatorChange = (event: FormEvent<HTMLInputElement>) => {
-    setRowSeparator((event.target as HTMLInputElement).value);
+  const handleSeparatorChange = (
+    colSeparator: string,
+    rowSeparator: string
+  ) => {
+    setColSeparator(colSeparator);
+    setRowSeparator(rowSeparator);
   };
 
   const handleUseItemsClick = () => {
@@ -100,30 +99,11 @@ const ImportCards: FC<ImportCardsProps> = ({
             value={csvData}
           />
         </FormGroup>
-        <div className={styles.separatorOptions}>
-          <RadioGroup
-            className={styles.radioGroup}
-            inline
-            label="Column separator"
-            name="column-separator"
-            onChange={handleColumnSeparatorChange}
-            selectedValue={colSeparator}
-          >
-            <Radio label="Tab" value={'\t'} />
-            <Radio label="Comma" value="," />
-          </RadioGroup>
-          <RadioGroup
-            className={styles.radioGroup}
-            inline
-            label="Row separator"
-            name="row-separator"
-            onChange={handleRowSeparatorChange}
-            selectedValue={rowSeparator}
-          >
-            <Radio label="Newline" value={'\n'} />
-            <Radio label="Semicolon" value=";" />
-          </RadioGroup>
-        </div>
+        <SeparatorOptions
+          defaultColSeparator={colSeparator}
+          defaultRowSeparator={rowSeparator}
+          onChange={handleSeparatorChange}
+        />
         <ImportedDataPreview data={previewData} />
       </div>
       <div className={Classes.DIALOG_FOOTER}>

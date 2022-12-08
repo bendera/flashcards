@@ -1,0 +1,8 @@
+.root {
+  display: flex;
+  margin-bottom: 15px;
+}
+
+.radioGroup {
+  margin-right: 20px;
+}
