@@ -20,6 +20,7 @@ import SettingsPage from '../SettingsPage';
 import EditDeckButtons from './EditDeckButtons/EditDeckButtons';
 import ImportCards from './ImportCards/ImportCards';
 import styles from './EditDeck.module.css';
+import ExportCards from './ExportCards/ExportCards';
 
 type DeckMetaData = Omit<DeckItem, 'id' | 'title' | 'cards'>;
 
@@ -39,6 +40,7 @@ const EditDeck: FC<EditDecksProps> = ({
   const [shouldScroll, setShouldScroll] = useState(false);
   const [deckTitle, setDeckTitle] = useState(title);
   const [showImportCardsDialog, setShowImportCardsDialog] = useState(false);
+  const [showExportCardsDialog, setShowExportCardsDialog] = useState(false);
   const deckMetaDataRef = useRef<DeckMetaData>({
     cardsByBoxes: {},
     drawCounter: 0,
@@ -174,6 +176,10 @@ const EditDeck: FC<EditDecksProps> = ({
     setShowImportCardsDialog(true);
   };
 
+  const handleExportButtonClick = () => {
+    setShowExportCardsDialog(true);
+  };
+
   const handleImport = (imported: FlashCard[]) => {
     const importedWithSelectedFlag = imported.map((c) => ({
       ...c,
@@ -188,6 +194,10 @@ const EditDeck: FC<EditDecksProps> = ({
 
   const handleImportDialogClose = () => {
     setShowImportCardsDialog(false);
+  };
+
+  const handleExportDialogClose = () => {
+    setShowExportCardsDialog(false);
   };
 
   return (
@@ -208,13 +218,24 @@ const EditDeck: FC<EditDecksProps> = ({
           value={deckTitle}
         />
       </h1>
-      <Button icon={IconNames.IMPORT} onClick={handleImportButtonClick}>
-        Import cards
-      </Button>
+      <div className={styles.buttons}>
+        <Button icon={IconNames.IMPORT} onClick={handleImportButtonClick}>
+          Import cards
+        </Button>
+        <Button icon={IconNames.EXPORT} onClick={handleExportButtonClick}>
+          Export cards
+        </Button>
+      </div>
       <ImportCards
         show={showImportCardsDialog}
         onImport={handleImport}
         onClose={handleImportDialogClose}
+      />
+      <ExportCards
+        cards={cards}
+        deckTitle={deckTitle}
+        show={showExportCardsDialog}
+        onClose={handleExportDialogClose}
       />
       <CardItemList cards={cards} onChange={handleCardItemListChange} />
     </SettingsPage>

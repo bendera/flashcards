@@ -5,3 +5,7 @@
 .bottomDivider {
   margin-bottom: 20px;
 }
+
+.buttons button {
+  margin-right: 10px;
+}

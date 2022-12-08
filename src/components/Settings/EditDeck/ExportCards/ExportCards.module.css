@@ -1,0 +1,7 @@
+.dialog {
+  width: calc(100% - 60px);
+}
+
+.textarea {
+  resize: none;
+}
