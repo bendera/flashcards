@@ -26,16 +26,17 @@ type DeckMetaData = Omit<DeckItem, 'id' | 'title' | 'cards'>;
 
 interface EditDecksProps {
   deckToEdit?: DeckCatalogItem;
-  onEditFinished: () => void;
+  onCancel: () => void;
 }
 
 const EditDeck: FC<EditDecksProps> = ({
   deckToEdit = { id: '', title: '', active: 0 },
-  onEditFinished,
+  onCancel,
 }) => {
   const { active, id, title } = deckToEdit;
 
   const dispatch = useAppDispatch();
+  const [dirty, setDirty] = useState(false);
   const [cards, setCards] = useState<CardListItemData[]>([]);
   const [shouldScroll, setShouldScroll] = useState(false);
   const [deckTitle, setDeckTitle] = useState(title);
@@ -50,10 +51,11 @@ const EditDeck: FC<EditDecksProps> = ({
     lastCard: '',
   });
   const settingsPageRef = useRef<HTMLDivElement>(null);
-  const isSaveButtonActive = deckTitle.length > 0 && cards.length > 0;
+  const isSaveButtonActive = deckTitle.length > 0 && cards.length > 0 && dirty;
 
   const handleTitleChange = (value: string) => {
     setDeckTitle(value);
+    setDirty(true);
   };
 
   const handleSave = async () => {
@@ -105,11 +107,11 @@ const EditDeck: FC<EditDecksProps> = ({
     );
     await dispatch(fetchActiveDeck());
     dispatch(startNextSession());
-    onEditFinished();
+    setDirty(false);
   };
 
   const handleCancel = () => {
-    onEditFinished();
+    onCancel();
   };
 
   const fetchDeck = async () => {
@@ -166,6 +168,7 @@ const EditDeck: FC<EditDecksProps> = ({
     operation?: CardItemListOperation
   ) => {
     setCards(cards);
+    setDirty(true);
 
     if (operation === 'add') {
       setShouldScroll(true);
@@ -186,6 +189,7 @@ const EditDeck: FC<EditDecksProps> = ({
       selected: false,
     }));
     setCards([...cards, ...importedWithSelectedFlag]);
+    setDirty(true);
 
     imported.forEach((c) => {
       deckMetaDataRef.current.cardsByBoxes[c.id] = 1;

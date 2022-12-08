@@ -54,7 +54,7 @@ const Settings: FC<SettingsProps> = ({ onComplete = noop }) => {
     dispatch(changeView('settings/deck/edit'));
   };
 
-  const handleEditFinished = () => {
+  const handleEditCancel = () => {
     dispatch(changeView('settings/deck/list'));
   };
 
@@ -71,7 +71,7 @@ const Settings: FC<SettingsProps> = ({ onComplete = noop }) => {
       )}
       {view === 'settings/options' && <Options />}
       {view === 'settings/deck/edit' && (
-        <EditDeck deckToEdit={deckToEdit} onEditFinished={handleEditFinished} />
+        <EditDeck deckToEdit={deckToEdit} onCancel={handleEditCancel} />
       )}
     </>
   );
