@@ -20,6 +20,7 @@ import SettingsPage from '../SettingsPage';
 import EditDeckButtons from './EditDeckButtons/EditDeckButtons';
 import ImportCards from './ImportCards/ImportCards';
 import styles from './EditDeck.module.css';
+import CardEditor from './CardEditor/CardEditor';
 
 type DeckMetaData = Omit<DeckItem, 'id' | 'title' | 'cards'>;
 
@@ -201,6 +202,7 @@ const EditDeck: FC<EditDecksProps> = ({
         />
       }
     >
+      <CardEditor />
       <h1 className={cn('bp4-heading', styles.heading)}>
         <EditableText
           onChange={handleTitleChange}
