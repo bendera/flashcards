@@ -24,8 +24,8 @@ const formatText = (rawText: string) => {
   let formatted = '';
 
   formatted = htmlSpecialChars(rawText);
-  formatted = nl2br(formatted);
   formatted = format(formatted);
+  formatted = nl2br(formatted);
 
   return formatted;
 };
